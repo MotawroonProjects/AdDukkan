@@ -31,7 +31,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".uis.activity_language.LanguageActivity"></activity>
+        <activity android:name=".uis.activity_language.LanguageActivity" />
+        <activity android:name=".uis.activity_map.MapActivity" />
         <activity
             android:name=".uis.activity_login.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -48,6 +49,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_api_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

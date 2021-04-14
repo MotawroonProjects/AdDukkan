@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.addukkan.R;
 import com.addukkan.databinding.ActivitySplashBinding;
@@ -36,12 +39,19 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
         initView();
     }
 
     private void initView() {
+
+        checkData();
+
+
+    }
+
+    private void checkData() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Preferences preferences = Preferences.getInstance();
             UserModel userModel = preferences.getUserData(this);
@@ -51,6 +61,8 @@ public class SplashActivity extends AppCompatActivity {
 
             if (settings == null) {
                 intent = new Intent(this, LanguageActivity.class);
+                intent.putExtra("data", true);
+
                 startActivityForResult(intent, 100);
 
             } else {
@@ -67,6 +79,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 } else {
                     intent = new Intent(this, LanguageActivity.class);
+                    intent.putExtra("data", true);
                     startActivityForResult(intent, 100);
 
                 }
@@ -74,6 +87,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
         }, 2000);
+
     }
 
     @Override
@@ -89,12 +103,12 @@ public class SplashActivity extends AppCompatActivity {
 
         Preferences preferences = Preferences.getInstance();
         AppLocalSettings settings = preferences.isLanguageSelected(this);
-        if (settings==null){
+        if (settings == null) {
             settings = new AppLocalSettings();
 
         }
         settings.setLanguageSelected(true);
-        preferences.setIsLanguageSelected(this,settings);
+        preferences.setIsLanguageSelected(this, settings);
         Paper.init(this);
         Paper.book().write("lang", lang);
         Language.updateResources(this, lang);

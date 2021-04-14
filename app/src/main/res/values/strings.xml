@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">AdDukkan</string>
+    <string name="map_api_key">AIzaSyAnjvMAJEmiAv3yeCDUXWv-PboXiT_uaoQ</string>
+    <string name="search_key">AIzaSyAnjvMAJEmiAv3yeCDUXWv-PboXiT_uaoQ</string>
     <string name="field_req">Field required</string>
     <string name="login">Login</string>
     <string name="code">Code</string>
@@ -77,4 +79,5 @@
     <string name="next">Next</string>
     <string name="order">order</string>
     <string name="ok2">Ok</string>
+    <string name="select_location_on_map">Select location on map</string>
 </resources>
