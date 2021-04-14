@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.UserModel;
 import com.addukkan.tags.Tags;
 import com.google.gson.Gson;
@@ -39,16 +40,21 @@ public class Preferences {
 
     }
 
-    public void setIsLanguageSelected(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("language_selected", Context.MODE_PRIVATE);
+    public void setIsLanguageSelected(Context context, AppLocalSettings settings) {
+        SharedPreferences preferences = context.getSharedPreferences("settingPref", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String user_data = gson.toJson(settings);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("selected", true);
+        editor.putString("settings", user_data);
         editor.apply();
     }
 
-    public boolean isLanguageSelected(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("language_selected", Context.MODE_PRIVATE);
-        return preferences.getBoolean("selected", false);
+    public AppLocalSettings isLanguageSelected(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("settingPref", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String data = preferences.getString("settings", "");
+        AppLocalSettings settings = gson.fromJson(data, AppLocalSettings.class);
+        return settings;
     }
 
    public void create_update_userdata(Context context, UserModel userModel) {
