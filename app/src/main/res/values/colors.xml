@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#3AB54A</color>
     <color name="colorAccent">#3AB54A</color>
     <color name="color1">#0DD400</color>
+    <color name="color2">#006699</color>
     <color name="white">#fff</color>
     <color name="black">#000000</color>
     <color name="gray0">#fafafa</color>
@@ -16,10 +17,14 @@
     <color name="gray7">#f8f8f8</color>
     <color name="gray8">#b0afbb</color>
     <color name="gray9">#fafaf7</color>
+    <color name="gray10">#F6F6F6</color>
+    <color name="gray11">#7D7D7D</color>
+
     <color name="book_trans">#99000000</color>
     <color name="transparent">#00000000</color>
     <color name="colorred">#ef0607</color>
     <color name="color_gray_trans">#55e0e0e0</color>
     <color name="trans_black">#55000000</color>
-
+    <color name="gray5_tans">#22c3c3c3</color>
+    <color name="rate_color">#FFD800</color>
 </resources>
