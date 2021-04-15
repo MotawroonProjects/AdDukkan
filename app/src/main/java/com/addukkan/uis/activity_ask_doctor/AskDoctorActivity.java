@@ -21,7 +21,8 @@ import io.paperdb.Paper;
 
 public class AskDoctorActivity extends AppCompatActivity implements Listeners.BackListener {
     private ActivityAskDoctorBinding binding;
-private String lang;
+    private String lang;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -38,7 +39,7 @@ private String lang;
 
     private void initView() {
         Paper.init(this);
-        lang=Paper.book().read("lang","ar");
+        lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         binding.setBackListener(this);
         binding.llSpecialization.setOnClickListener(v -> openSheet());

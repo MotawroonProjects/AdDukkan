@@ -30,13 +30,14 @@ public class DoctorDetialsActivity extends AppCompatActivity implements Listener
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding= DataBindingUtil.setContentView(this, R.layout.activity_doctor_detials);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_doctor_detials);
         initView();
 
     }
+
     private void initView() {
         Paper.init(this);
-        lang=Paper.book().read("lang","ar");
+        lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         binding.setBackListener(this);
 
