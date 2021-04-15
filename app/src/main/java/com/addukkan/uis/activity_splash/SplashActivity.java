@@ -21,6 +21,7 @@ import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
 import com.addukkan.share.App;
+import com.addukkan.uis.activity_home.HomeActivity;
 import com.addukkan.uis.activity_language.LanguageActivity;
 import com.addukkan.uis.activity_login.LoginActivity;
 
@@ -67,13 +68,7 @@ public class SplashActivity extends AppCompatActivity {
 
             } else {
                 if (settings.isLanguageSelected()) {
-                    if (userModel == null) {
-                        intent = new Intent(this, LoginActivity.class);
-                    } else {
-                        intent = new Intent(this, LoginActivity.class);
-
-                        // intent = new Intent(this, HomeActivity.class);
-                    }
+                    intent = new Intent(this, HomeActivity.class);
                     startActivity(intent);
                     finish();
 

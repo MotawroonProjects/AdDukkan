@@ -16,7 +16,9 @@ import android.view.animation.AnimationUtils;
 import com.addukkan.R;
 import com.addukkan.databinding.ActivityLanguageBinding;
 import com.addukkan.language.Language;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.SelectedLocation;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_map.MapActivity;
 
 import io.paperdb.Paper;
@@ -26,6 +28,7 @@ public class LanguageActivity extends AppCompatActivity {
     private String lang = "";
     private Animation animation, animation2,animation3;
     private boolean isFromSplash = false;
+    private Preferences preferences;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -52,6 +55,7 @@ public class LanguageActivity extends AppCompatActivity {
         animation2 = AnimationUtils.loadAnimation(this, R.anim.scale_down_anim);
         animation3 = AnimationUtils.loadAnimation(this, R.anim.translate);
 
+        preferences = Preferences.getInstance();
         Paper.init(this);
         lang = Paper.book().read("lang", "ar");
 
@@ -169,6 +173,16 @@ public class LanguageActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==100&&resultCode==RESULT_OK&&data!=null){
             SelectedLocation location = (SelectedLocation) data.getSerializableExtra("location");
+            AppLocalSettings settings = preferences.isLanguageSelected(this);
+            if (settings==null){
+                settings = new AppLocalSettings();
+
+            }
+
+            settings.setAddress(location.getAddress());
+            settings.setLat(location.getLat());
+            settings.setLng(location.getLng());
+            preferences.setIsLanguageSelected(this,settings);
         }
     }
 }

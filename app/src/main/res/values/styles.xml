@@ -19,5 +19,9 @@
     </style>
 
 
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@fonts/Tajawal-Regular.ttf</item>
+    </style>
+
 
 </resources>

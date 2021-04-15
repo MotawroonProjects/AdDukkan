@@ -2,6 +2,8 @@
     <string name="app_name">دكان</string>
     <string name="map_api_key">AIzaSyAnjvMAJEmiAv3yeCDUXWv-PboXiT_uaoQ</string>
     <string name="search_key">AIzaSyAnjvMAJEmiAv3yeCDUXWv-PboXiT_uaoQ</string>
+    <string name="open">فتح</string>
+    <string name="close">غلق</string>
     <string name="field_req">الحقل مطلوب</string>
     <string name="login">تسجيل دخول</string>
     <string name="code">الكود</string>
@@ -21,8 +23,8 @@
     <string name="wait">انتظر</string>
     <string name="home">الرئيسية</string>
     <string name="chat">المحادثة</string>
-    <string name="profile">الملف الشخصي</string>
-    <string name="more">المذيد</string>
+    <string name="profile">حسابي</string>
+    <string name="more">المزيد</string>
     <string name="field_required">الحقل مطلوب</string>
     <string name="inv_email">البريد الالكتروني غير صحيح</string>
     <string name="cannot_signup">لا يمكن انشاء حساب دون الموافقة الشروط والاحكام</string>
@@ -80,6 +82,22 @@
     <string name="order">طلب</string>
     <string name="ok2">حسنا</string>
     <string name="select_location_on_map">حدد موقعك على الخريطة</string>
-
-
+    <string name="dukkans">دكاكين</string>
+    <string name="offers">العروض</string>
+    <string name="ask_doctor">اسأل طبيبك</string>
+    <string name="medical_prescription">روشتة طبية</string>
+    <string name="my_orders">طلباتي</string>
+    <string name="favorite">المفضلة</string>
+    <string name="chats">المحادثات</string>
+    <string name="country">الدولة</string>
+    <string name="chat_with_admin">تواصل مع الإدارة</string>
+    <string name="contact_us">إتصل بنا</string>
+    <string name="social_media">مواقع التواصل</string>
+    <string name="don_t_have_account_sign_up"><![CDATA[ ليس لدي حساب ؟ <font color="#1db198">إنشاء حساب</font>]]></string>
+    <string name="sign_up_text"><![CDATA[ لدي حساب بالفعل ؟ <font color="#1db198">تسجيل دخول</font>]]></string>
+    <string name="please_enter_code_sent_to">من فضلك ادخل الكود المرسل الى</string>
+    <string name="resend">اعد إرسال فى :</string>
+    <string name="resend2">اعد الارسال</string>
+    <string name="inv_code">الكود غير صحيح</string>
+    <string name="verification_code">كود التحقق</string>
 </resources>

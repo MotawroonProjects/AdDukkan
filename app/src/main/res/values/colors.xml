@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3AB54A</color>
     <color name="colorPrimaryDark">#3AB54A</color>
     <color name="colorAccent">#3AB54A</color>
-    <color name="color1">#0DD400</color>
+    <color name="color1">#F8FBFF</color>
     <color name="white">#fff</color>
     <color name="black">#000000</color>
     <color name="gray0">#fafafa</color>
@@ -15,7 +15,10 @@
     <color name="gray6">#a0a0a0</color>
     <color name="gray7">#f8f8f8</color>
     <color name="gray8">#b0afbb</color>
-    <color name="gray9">#fafaf7</color>
+    <color name="gray9">#7d7d7d</color>
+    <color name="gray10">#F7F7F7</color>
+
+
     <color name="book_trans">#99000000</color>
     <color name="transparent">#00000000</color>
     <color name="colorred">#ef0607</color>

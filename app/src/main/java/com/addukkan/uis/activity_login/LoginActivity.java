@@ -4,19 +4,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 
 
 import com.addukkan.R;
 import com.addukkan.databinding.ActivityLoginBinding;
 import com.addukkan.language.Language;
 import com.addukkan.models.LoginModel;
+import com.addukkan.uis.activity_sign_up.SignUpActivity;
 
 import io.paperdb.Paper;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private LoginModel loginModel;
+    private String lang = "ar";
+
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -31,17 +36,28 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        Paper.init(this);
+        lang = Paper.book().read("lang", "ar");
+        binding.setLang(lang);
+        binding.tvSignUp.setText(Html.fromHtml(getString(R.string.don_t_have_account_sign_up)));
         loginModel = new LoginModel();
         binding.setModel(loginModel);
         binding.btnLogin.setOnClickListener(v -> {
-            if (loginModel.isDataValid(this)){
+            if (loginModel.isDataValid(this)) {
                 login();
             }
         });
+
+        binding.tvSignUp.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivityForResult(intent,100);
+        });
+
+
+        binding.llBack.setOnClickListener(v -> finish());
     }
 
-    private void login()
-    {
+    private void login() {
        /* ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
