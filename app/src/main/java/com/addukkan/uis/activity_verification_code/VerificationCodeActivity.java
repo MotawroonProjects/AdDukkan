@@ -201,6 +201,7 @@ public class VerificationCodeActivity extends AppCompatActivity {
     public void onSuccessCode() {
         setResult(RESULT_OK);
         finish();
+
     }
 
     public void onCounterStarted(String time) {
