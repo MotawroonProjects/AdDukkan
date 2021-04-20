@@ -52,6 +52,7 @@
                 android:layout_marginTop="8dp"
                 >
                 <androidx.cardview.widget.CardView
+                   android:id="@+id/cardaskdoctor"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:layout_margin="3dp"
@@ -96,6 +97,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardroshta"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:layout_margin="3dp"
