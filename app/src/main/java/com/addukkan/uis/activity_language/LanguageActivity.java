@@ -102,7 +102,6 @@ public class LanguageActivity extends AppCompatActivity {
             binding.logo2.startAnimation(animation);
 
         }else {
-            Log.e("Dd", "ddd");
             binding.consData.setVisibility(View.VISIBLE);
             binding.logo2.setVisibility(View.GONE);
             binding.logo.setVisibility(View.VISIBLE);

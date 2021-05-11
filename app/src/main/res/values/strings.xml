@@ -106,5 +106,6 @@
     <string name="resend2">Resend</string>
     <string name="inv_code">Invalid Code</string>
     <string name="verification_code">Verification code</string>
+    <string name="ch_country">Choose country</string>
 
 </resources>

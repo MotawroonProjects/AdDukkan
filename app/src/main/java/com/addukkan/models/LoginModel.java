@@ -16,6 +16,7 @@ public class LoginModel extends BaseObservable implements Serializable {
     private String phone_code;
     private String phone;
     private String password;
+    private String country_code;
     public ObservableField<String> error_phone = new ObservableField<>();
     public ObservableField<String> error_password = new ObservableField<>();
 
@@ -23,11 +24,13 @@ public class LoginModel extends BaseObservable implements Serializable {
         phone_code ="+966";
         phone="";
         password="";
+        country_code = "sar";
     }
     public boolean isDataValid(Context context){
         if (!phone.isEmpty()&&
                 !password.isEmpty()&&
-                password.length()>=6
+                password.length()>=6&&
+                !country_code.isEmpty()
         ){
             error_phone.set(null);
             error_password.set(null);
@@ -78,5 +81,13 @@ public class LoginModel extends BaseObservable implements Serializable {
 
     public void setPhone_code(String phone_code) {
         this.phone_code = phone_code;
+    }
+
+    public String getCountry_code() {
+        return country_code;
+    }
+
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
     }
 }

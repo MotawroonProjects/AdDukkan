@@ -37,6 +37,13 @@
             {
               "client_id": "1056824970094-vstm0bd3597842ii8imr8o6n75f9nrp0.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1056824970094-0vim42bgi5acp6tndqisuenjnlcpmr16.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.endpoint.Dukkan"
+              }
             }
           ]
         }

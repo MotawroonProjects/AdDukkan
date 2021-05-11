@@ -1,6 +1,7 @@
 package com.addukkan.models;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -16,6 +17,7 @@ public class SignUpModel extends BaseObservable implements Serializable {
     private String phone_code;
     private String phone;
     private String password;
+    private String country_code;
     public ObservableField<String> error_name = new ObservableField<>();
     public ObservableField<String> error_phone = new ObservableField<>();
     public ObservableField<String> error_password = new ObservableField<>();
@@ -25,13 +27,15 @@ public class SignUpModel extends BaseObservable implements Serializable {
         phone_code ="+966";
         phone = "";
         password = "";
+        country_code = "sar";
     }
 
     public boolean isDataValid(Context context) {
         if (!name.isEmpty() &&
                 !phone.isEmpty() &&
                 !password.isEmpty() &&
-                password.length() >= 6
+                password.length() >= 6&&
+                !country_code.isEmpty()
         ) {
             error_name.set(null);
             error_phone.set(null);
@@ -44,6 +48,10 @@ public class SignUpModel extends BaseObservable implements Serializable {
             } else {
                 error_name.set(null);
 
+            }
+
+            if (country_code.isEmpty()) {
+                Toast.makeText(context, R.string.ch_country, Toast.LENGTH_SHORT).show();
             }
 
             if (phone.isEmpty()) {
@@ -102,5 +110,13 @@ public class SignUpModel extends BaseObservable implements Serializable {
 
     public void setPhone_code(String phone_code) {
         this.phone_code = phone_code;
+    }
+
+    public String getCountry_code() {
+        return country_code;
+    }
+
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
     }
 }

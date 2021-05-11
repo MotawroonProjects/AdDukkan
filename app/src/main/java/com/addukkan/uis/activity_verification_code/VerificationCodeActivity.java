@@ -35,6 +35,7 @@ public class VerificationCodeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String verificationId;
     private String smsCode = "";
+    private String lang = "ar";
 
 
     @Override
@@ -64,7 +65,9 @@ public class VerificationCodeActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         String mPhone = phone_code + phone;
         binding.setPhone(mPhone);
-
+        Paper.init(this);
+        lang = Paper.book().read("lang");
+        binding.setLang(lang);
 
         binding.btnConfirm.setOnClickListener(v -> {
             String sms = binding.edtCode.getText().toString().trim();
@@ -82,6 +85,9 @@ public class VerificationCodeActivity extends AppCompatActivity {
 
             }
         });
+
+        sendSmsCode();
+
     }
 
 
@@ -119,7 +125,7 @@ public class VerificationCodeActivity extends AppCompatActivity {
         };
         PhoneAuthProvider.getInstance()
                 .verifyPhoneNumber(
-                        "+20" + phone,
+                        phone_code + phone,
                         120,
                         TimeUnit.SECONDS,
                         this,
@@ -205,15 +211,15 @@ public class VerificationCodeActivity extends AppCompatActivity {
     }
 
     public void onCounterStarted(String time) {
-        binding.btnResendCode.setText(String.format(Locale.ENGLISH, "%s %s", getString(R.string.resend2), time));
-        binding.btnResendCode.setTextColor(ContextCompat.getColor(VerificationCodeActivity.this, R.color.colorPrimary));
+        binding.btnResendCode.setText(String.format(Locale.ENGLISH, "%s", time));
+        binding.btnResendCode.setTextColor(ContextCompat.getColor(VerificationCodeActivity.this, R.color.gray6));
         binding.btnResendCode.setBackgroundResource(R.color.transparent);
     }
 
     public void onCounterFinished() {
         canSend = true;
-        binding.btnResendCode.setText(R.string.resend);
-        binding.btnResendCode.setTextColor(ContextCompat.getColor(VerificationCodeActivity.this, R.color.gray4));
+        binding.btnResendCode.setText(R.string.resend2);
+        binding.btnResendCode.setTextColor(ContextCompat.getColor(VerificationCodeActivity.this, R.color.colorPrimary));
         binding.btnResendCode.setBackgroundResource(R.color.white);
     }
 

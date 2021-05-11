@@ -9,33 +9,52 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.addukkan.R;
 import com.addukkan.databinding.ActivityHomeBinding;
 import com.addukkan.language.Language;
+import com.addukkan.models.ResponseModel;
+import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
+import com.addukkan.remote.Api;
+import com.addukkan.share.Common;
+import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_home.fragments.FragmenDukkan;
 import com.addukkan.uis.activity_home.fragments.FragmentHome;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_home.fragments.FragmentProfile;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
+import java.io.IOException;
 import java.util.List;
 
 import io.paperdb.Paper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private String lang = "";
     private Preferences preferences;
+    private UserModel userModel;
     private FragmentManager fragmentManager;
     private FragmentHome fragmentHome;
     private FragmenDukkan fragmenDukkan;
     private FragmentOffer fragmentOffer;
     private FragmentProfile fragmentProfile;
     private ActionBarDrawerToggle toggle;
+
 
 
     @Override
@@ -53,6 +72,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        preferences = Preferences.getInstance();
+        userModel = preferences.getUserData(this);
         fragmentManager = getSupportFragmentManager();
         toggle = new ActionBarDrawerToggle(this,binding.drawerLayout,binding.toolBar,R.string.open,R.string.close);
         toggle.syncState();
@@ -64,6 +85,8 @@ public class HomeActivity extends AppCompatActivity {
         binding.llDukkan.setOnClickListener(v -> displayFragmentDukkan());
         binding.llOffer.setOnClickListener(v -> displayFragmentOffers());
         binding.llProfile.setOnClickListener(v -> displayFragmentProfile());
+
+        updateTokenFireBase();
 
     }
 
@@ -241,6 +264,137 @@ public class HomeActivity extends AppCompatActivity {
         binding.tvOffer.setTextColor(ContextCompat.getColor(this, R.color.gray9));
 
     }
+
+    public void refreshActivity(String lang) {
+        Paper.book().write("lang", lang);
+        Language.setNewLocale(this, lang);
+        new Handler()
+                .postDelayed(() -> {
+
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }, 500);
+
+
+    }
+
+    private void updateTokenFireBase()
+    {
+        if (userModel!=null){
+            try {
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        String token = task.getResult().getToken();
+                        Api.getService(Tags.base_url)
+                                .updateFirebaseToken("Bearer "+userModel.getData().getToken(),userModel.getData().getId(),token,"android")
+                                .enqueue(new Callback<ResponseModel>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                                        if (response.isSuccessful() && response.body() != null&&response.body().getStatus()==200) {
+                                            userModel.getData().setFirebase_token(token);
+                                            preferences.create_update_userdata(HomeActivity.this,userModel);
+
+                                        } else {
+                                            try {
+
+                                                Log.e("errorToken", response.code() + "_" + response.errorBody().string());
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                                        try {
+
+                                            if (t.getMessage() != null) {
+                                                Log.e("errorToken2", t.getMessage());
+                                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                                    //Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                   // Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+
+                                        } catch (Exception e) {
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+
+            } catch (Exception e) {
+
+
+            }
+        }
+    }
+
+    public void logout()
+    {
+        if (userModel==null){
+            return;
+        }
+        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .logout("Bearer "+userModel.getData().getToken(),userModel.getData().getId(),userModel.getData().getFirebase_token(),"android")
+                .enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                if (response.body().getStatus()==200){
+                                    userModel = null;
+                                    preferences.clear(HomeActivity.this);
+                                    if (fragmentProfile!=null&&fragmentProfile.isAdded()){
+                                        fragmentProfile.updateUserData();
+                                    }
+                                }else {
+                                }
+                            }
+
+
+                        } else {
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            if (t.getMessage() != null) {
+                                Log.e("errorToken2", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                                } else {
+                                     Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
