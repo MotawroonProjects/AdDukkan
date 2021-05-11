@@ -100,12 +100,13 @@
     <string name="resend2">اعد الارسال</string>
     <string name="inv_code">الكود غير صحيح</string>
     <string name="verification_code">كود التحقق</string>
-    <string name="ask_a_doctor">إسال طبيب</string>
+    <string name="ask_a_doctor">أسال طبيب</string>
     <string name="search2">بحث</string>
     <string name="specialization">التخصص</string>
     <string name="ratings">التقييمات</string>
-    <string name="ask_now">إسال الان</string>
     <string name="ch_country">إختر الدولة</string>
+    <string name="ask_now">اسال الان</string>
+    <string name="upload_your_prescription_and_we_will_contact_you_via_e_mail">قم برفع صورة الروشتة وسيتم التواصل معك علي البريد الالكتروني</string>
 
 
 </resources>

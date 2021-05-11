@@ -106,6 +106,7 @@
     <string name="resend2">Resend</string>
     <string name="inv_code">Invalid Code</string>
     <string name="verification_code">Verification code</string>
+    <string name="upload_your_prescription_and_we_will_contact_you_via_e_mail">Upload your prescription and we will contact you via e-mail</string>
     <string name="ch_country">Choose country</string>
 
 </resources>
