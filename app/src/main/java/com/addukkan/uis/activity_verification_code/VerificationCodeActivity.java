@@ -86,6 +86,8 @@ public class VerificationCodeActivity extends AppCompatActivity {
             }
         });
 
+        binding.llBack.setOnClickListener(v -> finish());
+
         sendSmsCode();
 
     }
@@ -221,6 +223,7 @@ public class VerificationCodeActivity extends AppCompatActivity {
         binding.btnResendCode.setText(R.string.resend2);
         binding.btnResendCode.setTextColor(ContextCompat.getColor(VerificationCodeActivity.this, R.color.colorPrimary));
         binding.btnResendCode.setBackgroundResource(R.color.white);
+        binding.tvResend.setText("");
     }
 
     public void onCodeFailed(String msg) {
