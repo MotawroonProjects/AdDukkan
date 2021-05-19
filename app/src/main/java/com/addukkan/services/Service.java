@@ -1,9 +1,11 @@
 package com.addukkan.services;
 
 import com.addukkan.models.CountryDataModel;
+import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.PlaceGeocodeData;
 import com.addukkan.models.PlaceMapDetailsData;
 import com.addukkan.models.ResponseModel;
+import com.addukkan.models.SliderDataModel;
 import com.addukkan.models.UserModel;
 
 import retrofit2.Call;
@@ -82,5 +84,12 @@ public interface Service {
                              @Field("software_type") String software_type
 
     );
+    @GET("api/slider")
+    Call<SliderDataModel> get_slider(
+            @Query("type") String type,
+            @Query("country_code") String country_code);
+
+    @GET("api/main-departments")
+    Call<MainCategoryDataModel> get_category();
 
 }

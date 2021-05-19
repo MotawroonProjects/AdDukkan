@@ -12,23 +12,41 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.addukkan.R;
+import com.addukkan.adapters.CountryAdapter2;
+import com.addukkan.adapters.SpinnerCountryAdapter;
 import com.addukkan.databinding.ActivityLanguageBinding;
 import com.addukkan.language.Language;
 import com.addukkan.models.AppLocalSettings;
+import com.addukkan.models.CountryDataModel;
+import com.addukkan.models.CountryModel;
 import com.addukkan.models.SelectedLocation;
 import com.addukkan.preferences.Preferences;
+import com.addukkan.remote.Api;
+import com.addukkan.tags.Tags;
+import com.addukkan.uis.activity_countries.CountryActivity;
 import com.addukkan.uis.activity_map.MapActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.paperdb.Paper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LanguageActivity extends AppCompatActivity {
     private ActivityLanguageBinding binding;
     private String lang = "";
-    private Animation animation, animation2,animation3;
+    private Animation animation, animation2, animation3;
     private boolean isFromSplash = false;
     private Preferences preferences;
+    private SpinnerCountryAdapter adapter;
+    private List<CountryModel> countryModelList;
+    private String countrycode;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -51,6 +69,7 @@ public class LanguageActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        countryModelList = new ArrayList<>();
         animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
         animation2 = AnimationUtils.loadAnimation(this, R.anim.scale_down_anim);
         animation3 = AnimationUtils.loadAnimation(this, R.anim.translate);
@@ -86,25 +105,26 @@ public class LanguageActivity extends AppCompatActivity {
         });
 
         binding.btnNext.setOnClickListener(view -> {
-            if (isFromSplash){
+            if (isFromSplash) {
                 Intent intent = getIntent();
                 intent.putExtra("lang", lang);
                 setResult(RESULT_OK, intent);
                 finish();
-            }else {
+            } else {
                 Intent intent = new Intent(this, MapActivity.class);
-                startActivityForResult(intent,100);
+                startActivityForResult(intent, 100);
             }
 
         });
 
-        if (isFromSplash){
+        if (isFromSplash) {
             binding.logo2.startAnimation(animation);
-
-        }else {
+        } else {
             binding.consData.setVisibility(View.VISIBLE);
             binding.logo2.setVisibility(View.GONE);
             binding.logo.setVisibility(View.VISIBLE);
+            binding.spinner.setVisibility(View.GONE);
+
         }
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -161,19 +181,107 @@ public class LanguageActivity extends AppCompatActivity {
             }
         });
 
+        adapter = new SpinnerCountryAdapter(countryModelList, this);
+        getCountries();
+        binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                countrycode = countryModelList.get(i).getCode();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
+    }
+
+    private void getCountries() {
+
+        Api.getService(Tags.base_url)
+                .getCountries(lang)
+                .enqueue(new Callback<CountryDataModel>() {
+                    @Override
+                    public void onResponse(Call<CountryDataModel> call, Response<CountryDataModel> response) {
+                        // binding.progBar.setVisibility(View.GONE);
+                        if (response.isSuccessful()) {
+
+                            if (response.body() != null && response.body().getStatus() == 200) {
+                                if (response.body().getData() != null) {
+                                    if (response.body().getData().size() > 0) {
+                                        // binding.tvNoData.setVisibility(View.GONE);
+                                        updateCountryData(response.body().getData());
+                                    } else {
+                                        //binding.tvNoData.setVisibility(View.VISIBLE);
+
+                                    }
+                                }
+                            } else {
+                                //Toast.makeText(CountryActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                            }
 
 
+                        } else {
+                            //binding.progBar.setVisibility(View.GONE);
+
+                            switch (response.code()) {
+                                case 500:
+                                    //      Toast.makeText(CountryActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                                    //    Toast.makeText(CountryActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                            try {
+                                Log.e("error_code", response.code() + "_");
+                            } catch (NullPointerException e) {
+
+                            }
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<CountryDataModel> call, Throwable t) {
+                        try {
+                            //binding.progBar.setVisibility(View.GONE);
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //      Toast.makeText(CountryActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else if (t.getMessage().toLowerCase().contains("socket") || t.getMessage().toLowerCase().contains("canceled")) {
+                                } else {
+                                    //    Toast.makeText(CountryActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+
+    }
+
+    private void updateCountryData(List<CountryModel> data) {
+        countryModelList.clear();
+        countryModelList.addAll(data);
+
+        adapter.notifyDataSetChanged();
+        binding.spinner.setAdapter(adapter);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==100&&resultCode==RESULT_OK&&data!=null){
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             SelectedLocation location = (SelectedLocation) data.getSerializableExtra("location");
             AppLocalSettings settings = preferences.isLanguageSelected(this);
-            if (settings==null){
+            if (settings == null) {
                 settings = new AppLocalSettings();
 
             }
@@ -181,7 +289,8 @@ public class LanguageActivity extends AppCompatActivity {
             settings.setAddress(location.getAddress());
             settings.setLat(location.getLat());
             settings.setLng(location.getLng());
-            preferences.setIsLanguageSelected(this,settings);
+            settings.setCountry_code(countrycode);
+            preferences.setIsLanguageSelected(this, settings);
         }
     }
 }

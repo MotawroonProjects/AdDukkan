@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 public class AppLocalSettings implements Serializable {
     private boolean isLanguageSelected = false;
-    private String address="";
-    private double lat =0.0;
+    private String address = "";
+    private double lat = 0.0;
     private double lng = 0.0;
+    private String country_code;
 
     public boolean isLanguageSelected() {
         return isLanguageSelected;
@@ -38,5 +39,13 @@ public class AppLocalSettings implements Serializable {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public String getCountry_code() {
+        return country_code;
+    }
+
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
     }
 }
