@@ -26,6 +26,8 @@ public class MainCategoryDataModel implements Serializable {
         private String created_at;
         private String updated_at;
         private Departments department_trans_fk;
+        private List<SubCategoryDataModel> sub_departments;
+        private List<ProductDataModel> product_list;
 
         public int getId() {
             return id;
@@ -61,6 +63,14 @@ public class MainCategoryDataModel implements Serializable {
 
         public Departments getDepartment_trans_fk() {
             return department_trans_fk;
+        }
+
+        public List<SubCategoryDataModel> getSub_departments() {
+            return sub_departments;
+        }
+
+        public List<ProductDataModel> getProduct_list() {
+            return product_list;
         }
 
         public class Departments implements Serializable {
