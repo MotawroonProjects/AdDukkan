@@ -125,9 +125,9 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         binding.progBar.setVisibility(View.VISIBLE);
         favouriteDataList.clear();
         favouriteProduct_adapter.notifyDataSetChanged();
-        // Log.e("sllsks", user_id + lang + country_coude);
+         Log.e("sllsks", userModel.getData().getToken());
         Api.getService(Tags.base_url)
-                .getFavoutite("Bearer "+userModel.getData().getToken(),lang, user_id, country_coude, "off")
+                .getFavoutite("Bearer"+userModel.getData().getToken(),lang, user_id, country_coude, "off")
                 .enqueue(new Callback<ALLProductDataModel>() {
                     @Override
                     public void onResponse(Call<ALLProductDataModel> call, Response<ALLProductDataModel> response) {

@@ -68,7 +68,6 @@ public interface Service {
     Call<CountryDataModel> getCountries(@Header("lang") String lang);
 
 
-
     @FormUrlEncoded
     @POST("api/update-firebase")
     Call<ResponseModel> updateFirebaseToken(@Header("Authorization") String token,
@@ -81,11 +80,12 @@ public interface Service {
     @FormUrlEncoded
     @POST("api/logout")
     Call<ResponseModel> logout(@Header("Authorization") String token,
-                             @Field("user_id") int user_id,
-                             @Field("phone_token") String phone_token,
-                             @Field("software_type") String software_type
+                               @Field("user_id") int user_id,
+                               @Field("phone_token") String phone_token,
+                               @Field("software_type") String software_type
 
     );
+
     @GET("api/slider")
     Call<SliderDataModel> get_slider(
             @Header("lang") String lang,
@@ -97,6 +97,7 @@ public interface Service {
             @Header("lang") String lang
 
     );
+
     @GET("api/main-department-sub-dep-product")
     Call<MainCategoryDataModel> get_categorySubProduct(
             @Header("lang") String lang,
@@ -104,6 +105,7 @@ public interface Service {
             @Query("country_code") String country_code
 
     );
+
     @GET("api/recently-arrived")
     Call<ALLProductDataModel> getRecentlyArrived(
             @Header("lang") String lang,
@@ -112,6 +114,7 @@ public interface Service {
             @Query("pagination") String pagination
 
     );
+
     @GET("api/best-seller")
     Call<ALLProductDataModel> getMostSell(
             @Header("lang") String lang,
@@ -120,11 +123,13 @@ public interface Service {
             @Query("pagination") String pagination
 
     );
+
     @GET("api/side-menu")
     Call<MainCategoryDataModel> getSideMenu(
             @Header("lang") String lang
 
     );
+
     @GET("api/offers")
     Call<ALLProductDataModel> getOffers(
             @Header("lang") String lang,
@@ -133,23 +138,23 @@ public interface Service {
             @Query("pagination") String pagination
 
     );
+
     @GET("api/my-favorites")
     Call<ALLProductDataModel> getFavoutite(
             @Header("Authorization") String Authorization,
-
             @Header("lang") String lang,
             @Query("user_id") String user_id,
             @Query("country_code") String country_code,
             @Query("pagination") String pagination
 
     );
+
     @FormUrlEncoded
     @POST("api/action-favorite")
     Call<ResponseModel> addFavoriteProduct(
             @Header("Authorization") String Authorization,
-            @Field("user_id")String user_id,
+            @Field("user_id") String user_id,
             @Field("product_id") String product_id)
-
 
 
             ;
