@@ -127,11 +127,12 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         favouriteProduct_adapter.notifyDataSetChanged();
          Log.e("sllsks", userModel.getData().getToken());
         Api.getService(Tags.base_url)
-                .getFavoutite("Bearer"+userModel.getData().getToken(),lang, user_id, country_coude, "off")
+                .getFavoutite("Bearer "+userModel.getData().getToken(),lang, user_id, country_coude, "off")
                 .enqueue(new Callback<ALLProductDataModel>() {
                     @Override
                     public void onResponse(Call<ALLProductDataModel> call, Response<ALLProductDataModel> response) {
                         binding.progBar.setVisibility(View.GONE);
+                   //     Log.e("Dldldl",response.message());
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
