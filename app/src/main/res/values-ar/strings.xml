@@ -107,6 +107,9 @@
     <string name="ch_country">إختر الدولة</string>
     <string name="ask_now">اسال الان</string>
     <string name="upload_your_prescription_and_we_will_contact_you_via_e_mail">قم برفع صورة الروشتة وسيتم التواصل معك علي البريد الالكتروني</string>
+    <string name="show_all">عرض الكل</string>
+    <string name="recently_arrived">وصل حديثا</string>
+    <string name="most_seller">الاكثر مبيعا</string>
 
 
 </resources>

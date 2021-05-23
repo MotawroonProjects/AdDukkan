@@ -1,0 +1,90 @@
+package com.addukkan.adapters;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.addukkan.R;
+import com.addukkan.databinding.MainCategorySubCategoryProductRowBinding;
+import com.addukkan.databinding.SubCategoryrowBinding;
+import com.addukkan.models.MainCategoryDataModel;
+import com.addukkan.models.SubCategoryDataModel;
+
+import java.util.List;
+
+import io.paperdb.Paper;
+
+public class MainCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private final String lang;
+    private List<MainCategoryDataModel.Data> list;
+    private Context context;
+    private LayoutInflater inflater;
+private Fragment fragment;
+    //private Fragment_Main fragment_main;
+    public MainCategoryAdapter(List<MainCategoryDataModel.Data> list, Context context,Fragment fragment) {
+        this.list = list;
+        this.context = context;
+        Paper.init(context);
+        lang = Paper.book().read("lang", "ar");
+        inflater = LayoutInflater.from(context);
+        this.fragment=fragment;
+        //  this.fragment_main=fragment_main;
+
+
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+
+        MainCategorySubCategoryProductRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.main_category_sub_category_product_row, parent, false);
+        return new MyHolder(binding);
+
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        MyHolder myHolder = (MyHolder) holder;
+        myHolder.binding.setModel(list.get(position));
+        myHolder.binding.setLang(lang);
+SubCategoryAdapter subCategoryAdapter=new SubCategoryAdapter(list.get(position).getSub_departments(),context);
+myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context,4));
+myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
+ProductAdapter productAdapter=new ProductAdapter(list.get(position).getProduct_list(),context,fragment);
+myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
+myHolder.binding.recView.setAdapter(productAdapter);
+        myHolder.itemView.setOnClickListener(view -> {
+            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
+
+            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public class MyHolder extends RecyclerView.ViewHolder {
+        public MainCategorySubCategoryProductRowBinding binding;
+
+        public MyHolder(@NonNull MainCategorySubCategoryProductRowBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+
+        }
+    }
+
+
+}

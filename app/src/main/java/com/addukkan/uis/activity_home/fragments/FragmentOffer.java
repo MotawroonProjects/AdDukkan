@@ -12,11 +12,15 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.addukkan.R;
+import com.addukkan.adapters.ProductOfferAdapter;
 import com.addukkan.adapters.SliderAdapter;
 import com.addukkan.databinding.FragmentOffersBinding;
+import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.AppLocalSettings;
+import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.SliderDataModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
@@ -25,9 +29,12 @@ import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_home.HomeActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,6 +48,10 @@ public class FragmentOffer extends Fragment {
     private Preferences preferences;
     private UserModel userModel;
     private AppLocalSettings settings;
+    private List<SingleProductModel> productModelList;
+    private ProductOfferAdapter productOfferAdapter;
+    private String lang;
+    private String country_coude;
 
     public static FragmentOffer newInstance() {
         return new FragmentOffer();
@@ -55,15 +66,29 @@ public class FragmentOffer extends Fragment {
     }
 
     private void initView() {
+        productModelList=new ArrayList<>();
         activity = (HomeActivity) getActivity();
+        Paper.init(activity);
+        lang = Paper.book().read("lang", "ar");
         preferences=Preferences.getInstance();
         settings=preferences.isLanguageSelected(activity);
         userModel=preferences.getUserData(activity);
-        binding.progBarSlider.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.white), PorterDuff.Mode.SRC_IN);
+        if (userModel != null) {
+            country_coude = userModel.getData().getCountry_code();
+        } else {
+            country_coude = settings.getCountry_code();
+        }
+        binding.progBarSlider.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+        binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+productOfferAdapter =new ProductOfferAdapter(productModelList,activity);
+binding.recView.setLayoutManager(new GridLayoutManager(activity,2));
+binding.recView.setAdapter(productOfferAdapter);
         //binding.tab.setupWithViewPager(binding.pager);
         get_slider();
+        getOffer();
         binding.swipeRefresh.setOnRefreshListener(() -> {
             get_slider();
+            getOffer();
         });
 
     }
@@ -78,7 +103,7 @@ public class FragmentOffer extends Fragment {
         }
         binding.progBarSlider.setVisibility(View.VISIBLE);
         binding.pager.setVisibility(View.GONE);
-        Api.getService(Tags.base_url).get_slider("offer",country_coude).enqueue(new Callback<SliderDataModel>() {
+        Api.getService(Tags.base_url).get_slider(lang,"offer",country_coude).enqueue(new Callback<SliderDataModel>() {
             @Override
             public void onResponse(Call<SliderDataModel> call, Response<SliderDataModel> response) {
                 binding.swipeRefresh.setRefreshing(false);
@@ -162,4 +187,75 @@ public class FragmentOffer extends Fragment {
         }
 
     }
+    private void getOffer() {
+        String user_id = null;
+        if (userModel != null) {
+            user_id = userModel.getData().getId() + "";
+        }
+        binding.progBar.setVisibility(View.VISIBLE);
+        productModelList.clear();
+        productOfferAdapter.notifyDataSetChanged();
+       // Log.e("sllsks", user_id + lang + country_coude);
+        Api.getService(Tags.base_url)
+                .getOffers(lang, user_id, country_coude, "off")
+                .enqueue(new Callback<ALLProductDataModel>() {
+                    @Override
+                    public void onResponse(Call<ALLProductDataModel> call, Response<ALLProductDataModel> response) {
+                        binding.progBar.setVisibility(View.GONE);
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+
+                                productModelList.clear();
+                                productModelList.addAll(response.body().getData());
+
+
+                                if (productModelList.size() > 0) {
+                                    productOfferAdapter.notifyDataSetChanged();
+
+//                                binding.tvNoDatadepart.setVisibility(View.GONE);
+                                    //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
+                                } else {
+//                                binding.tvNoDatadepart.setVisibility(View.VISIBLE);
+
+                                }
+
+                            }
+                        } else {
+                            binding.progBar.setVisibility(View.GONE);
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ALLProductDataModel> call, Throwable t) {
+                        try {
+                            binding.progBar.setVisibility(View.GONE);
+
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
+
 }

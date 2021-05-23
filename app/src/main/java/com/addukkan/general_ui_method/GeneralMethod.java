@@ -3,6 +3,7 @@ package com.addukkan.general_ui_method;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import androidx.databinding.BindingAdapter;
 
 import com.addukkan.R;
 import com.addukkan.tags.Tags;
+import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -113,7 +115,15 @@ public class GeneralMethod {
         String d = dateFormat.format(new Date(date * 1000));
         textView.setText(d);
     }
-
+    @BindingAdapter("rate")
+    public static void rate(SimpleRatingBar simpleRatingBar, double rate) {
+        SimpleRatingBar.AnimationBuilder builder = simpleRatingBar.getAnimationBuilder()
+                .setRatingTarget((float) rate)
+                .setDuration(1000)
+                .setRepeatCount(0)
+                .setInterpolator(new LinearInterpolator());
+        builder.start();
+    }
 }
 
 

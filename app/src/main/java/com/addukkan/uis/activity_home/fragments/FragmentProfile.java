@@ -23,6 +23,7 @@ import com.addukkan.uis.activity_countries.CountryActivity;
 import com.addukkan.uis.activity_home.HomeActivity;
 import com.addukkan.uis.activity_language.LanguageActivity;
 import com.addukkan.uis.activity_login.LoginActivity;
+import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
 import com.addukkan.uis.activity_sign_up.SignUpActivity;
 
 import io.paperdb.Paper;
@@ -31,7 +32,7 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     private FragmentProfileBinding binding;
     private HomeActivity activity;
     private String lang = "ar";
-    private UserModel  userModel;
+    private UserModel userModel;
     private Preferences preferences;
 
 
@@ -50,25 +51,26 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     private void initView() {
         activity = (HomeActivity) getActivity();
         Paper.init(activity);
-        lang = Paper.book().read("lang","ar");
+        lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
-        preferences  = Preferences.getInstance();
+        preferences = Preferences.getInstance();
         userModel = preferences.getUserData(activity);
+        binding.setModel(userModel);
         binding.setActions(this);
         binding.iconEdit.setOnClickListener(v -> {
             Intent intent = new Intent(activity, SignUpActivity.class);
-            startActivityForResult(intent,100);
+            startActivityForResult(intent, 100);
         });
 
 
     }
 
-    private void navigateToLoginActivity(){
+    private void navigateToLoginActivity() {
         Intent intent = new Intent(activity, LoginActivity.class);
-        startActivityForResult(intent,100);
+        startActivityForResult(intent, 100);
     }
 
-    public void updateUserData(){
+    public void updateUserData() {
         userModel = preferences.getUserData(activity);
         binding.setModel(userModel);
     }
@@ -77,9 +79,9 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     @Override
     public void onOrder() {
         userModel = preferences.getUserData(activity);
-        if (userModel==null){
+        if (userModel == null) {
             navigateToLoginActivity();
-        }else {
+        } else {
 
         }
     }
@@ -87,19 +89,20 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     @Override
     public void onFavorite() {
         userModel = preferences.getUserData(activity);
-        if (userModel==null){
+        if (userModel == null) {
             navigateToLoginActivity();
-        }else {
-
+        } else {
+            Intent intent = new Intent(activity, MyFavoriteActivity.class);
+            startActivity(intent);
         }
     }
 
     @Override
     public void onChat() {
         userModel = preferences.getUserData(activity);
-        if (userModel==null){
+        if (userModel == null) {
             navigateToLoginActivity();
-        }else {
+        } else {
 
         }
     }
@@ -107,17 +110,17 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     @Override
     public void onChangeLanguage() {
         Intent intent = new Intent(activity, LanguageActivity.class);
-        startActivityForResult(intent,200);
+        startActivityForResult(intent, 200);
     }
 
     @Override
     public void onCountry() {
         userModel = preferences.getUserData(activity);
-        if (userModel==null){
+        if (userModel == null) {
             navigateToLoginActivity();
-        }else {
+        } else {
             Intent intent = new Intent(activity, CountryActivity.class);
-            startActivityForResult(intent,100);
+            startActivityForResult(intent, 100);
         }
     }
 
@@ -129,9 +132,9 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     @Override
     public void onChatWithAdmin() {
         userModel = preferences.getUserData(activity);
-        if (userModel==null){
+        if (userModel == null) {
             navigateToLoginActivity();
-        }else {
+        } else {
 
         }
     }
@@ -174,9 +177,9 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==100&&resultCode== Activity.RESULT_OK){
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
             updateUserData();
-        }else if (requestCode==200&&resultCode== Activity.RESULT_OK&&data!=null){
+        } else if (requestCode == 200 && resultCode == Activity.RESULT_OK && data != null) {
             String lang = data.getStringExtra("lang");
             activity.refreshActivity(lang);
         }

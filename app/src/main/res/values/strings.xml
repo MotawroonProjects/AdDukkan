@@ -108,5 +108,8 @@
     <string name="verification_code">Verification code</string>
     <string name="upload_your_prescription_and_we_will_contact_you_via_e_mail">Upload your prescription and we will contact you via e-mail</string>
     <string name="ch_country">Choose country</string>
+    <string name="show_all">Show All</string>
+    <string name="recently_arrived">Recently Arrived</string>
+    <string name="most_seller">Most Seller</string>
 
 </resources>

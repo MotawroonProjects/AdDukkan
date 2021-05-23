@@ -1,5 +1,6 @@
 package com.addukkan.services;
 
+import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.CountryDataModel;
 import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.PlaceGeocodeData;
@@ -8,6 +9,7 @@ import com.addukkan.models.ResponseModel;
 import com.addukkan.models.SliderDataModel;
 import com.addukkan.models.UserModel;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -86,10 +88,69 @@ public interface Service {
     );
     @GET("api/slider")
     Call<SliderDataModel> get_slider(
+            @Header("lang") String lang,
             @Query("type") String type,
             @Query("country_code") String country_code);
 
     @GET("api/main-departments")
-    Call<MainCategoryDataModel> get_category();
+    Call<MainCategoryDataModel> get_category(
+            @Header("lang") String lang
 
+    );
+    @GET("api/main-department-sub-dep-product")
+    Call<MainCategoryDataModel> get_categorySubProduct(
+            @Header("lang") String lang,
+            @Query("user_id") String user_id,
+            @Query("country_code") String country_code
+
+    );
+    @GET("api/recently-arrived")
+    Call<ALLProductDataModel> getRecentlyArrived(
+            @Header("lang") String lang,
+            @Query("user_id") String user_id,
+            @Query("country_code") String country_code,
+            @Query("pagination") String pagination
+
+    );
+    @GET("api/best-seller")
+    Call<ALLProductDataModel> getMostSell(
+            @Header("lang") String lang,
+            @Query("user_id") String user_id,
+            @Query("country_code") String country_code,
+            @Query("pagination") String pagination
+
+    );
+    @GET("api/side-menu")
+    Call<MainCategoryDataModel> getSideMenu(
+            @Header("lang") String lang
+
+    );
+    @GET("api/offers")
+    Call<ALLProductDataModel> getOffers(
+            @Header("lang") String lang,
+            @Query("user_id") String user_id,
+            @Query("country_code") String country_code,
+            @Query("pagination") String pagination
+
+    );
+    @GET("api/my-favorites")
+    Call<ALLProductDataModel> getFavoutite(
+            @Header("Authorization") String Authorization,
+
+            @Header("lang") String lang,
+            @Query("user_id") String user_id,
+            @Query("country_code") String country_code,
+            @Query("pagination") String pagination
+
+    );
+    @FormUrlEncoded
+    @POST("api/action-favorite")
+    Call<ResponseModel> addFavoriteProduct(
+            @Header("Authorization") String Authorization,
+            @Field("user_id")String user_id,
+            @Field("product_id") String product_id)
+
+
+
+            ;
 }

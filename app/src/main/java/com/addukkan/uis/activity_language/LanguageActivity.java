@@ -108,6 +108,7 @@ public class LanguageActivity extends AppCompatActivity {
             if (isFromSplash) {
                 Intent intent = getIntent();
                 intent.putExtra("lang", lang);
+                intent.putExtra("countrycode",countrycode);
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
@@ -289,7 +290,7 @@ public class LanguageActivity extends AppCompatActivity {
             settings.setAddress(location.getAddress());
             settings.setLat(location.getLat());
             settings.setLng(location.getLng());
-            settings.setCountry_code(countrycode);
+            //settings.setCountry_code(countrycode);
             preferences.setIsLanguageSelected(this, settings);
         }
     }

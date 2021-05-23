@@ -89,7 +89,7 @@ public class SingleProductModel implements Serializable {
         return favourite;
     }
 
-    public class ProductTransFk implements Serializable{
+    public class ProductTransFk implements Serializable {
         private int id;
         private int product_id;
         private String title;
@@ -122,7 +122,7 @@ public class SingleProductModel implements Serializable {
         }
     }
 
-    public class ProductDefaultPrice implements Serializable{
+    public class ProductDefaultPrice implements Serializable {
         private int id;
         private int product_id;
         private int product_set_id;
@@ -175,7 +175,7 @@ public class SingleProductModel implements Serializable {
         }
     }
 
-    public class Favourite implements Serializable{
+    public class Favourite implements Serializable {
         private int id;
         private int product_id;
         private int user_id;

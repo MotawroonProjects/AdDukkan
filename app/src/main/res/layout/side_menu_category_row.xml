@@ -9,6 +9,9 @@
         <variable
             name="lang"
             type="String" />
+        <variable
+            name="type"
+            type="String" />
 
         <variable
             name="model"
@@ -28,12 +31,16 @@
             android:padding="3dp"
             android:weightSum="1">
 
-            <View
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:background="@color/colorPrimary"
-                android:padding="5dp" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:longClickable="false"
+                android:padding="3dp"
+                image="@{model.department_trans_fk.image}"
+                />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -43,54 +50,45 @@
                 android:layout_marginEnd="8dp"
                 android:text="@{model.department_trans_fk.title}"
                 android:textColor="@color/black"
-                android:textSize="17sp" />
+                android:textSize="14sp" />
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/show_all"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="17sp" />
 
 
             </FrameLayout>
 
             <ImageView
+                android:id="@+id/arrow"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:clickable="false"
                 android:longClickable="false"
                 android:padding="3dp"
-                android:rotation='@{lang.equals("en")?180:0}'
+                android:rotation='@{type.equals("1")?-90:lang.equals("en")?180:0}'
                 android:src="@drawable/ic_left_arrow"
-                app:tint="@color/colorAccent" />
+                app:tint="@color/black" />
         </LinearLayout>
 
-        <ImageView
-            image="@{model.department_trans_fk.banner}"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:scaleType="fitXY" />
+<net.cachapa.expandablelayout.ExpandableLayout
+    android:id="@+id/elexpend"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:el_duration="1000"
+    app:el_expanded="false"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recViewSubCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+</net.cachapa.expandablelayout.ExpandableLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 </layout>

@@ -90,11 +90,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             String lang = data.getStringExtra("lang");
-            refreshActivity(lang);
+            String countrycode=data.getStringExtra("countrycode");
+            refreshActivity(lang,countrycode);
         }
     }
 
-    public void refreshActivity(String lang) {
+    public void refreshActivity(String lang, String countrycode) {
 
         Preferences preferences = Preferences.getInstance();
         AppLocalSettings settings = preferences.isLanguageSelected(this);
@@ -103,6 +104,7 @@ public class SplashActivity extends AppCompatActivity {
 
         }
         settings.setLanguageSelected(true);
+        settings.setCountry_code(countrycode);
         preferences.setIsLanguageSelected(this, settings);
         Paper.init(this);
         Paper.book().write("lang", lang);

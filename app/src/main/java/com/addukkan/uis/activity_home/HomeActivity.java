@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,11 +16,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.addukkan.R;
+import com.addukkan.adapters.SideMenuCategoryAdapter;
+import com.addukkan.adapters.SideMenuSubCategoryAdapter;
 import com.addukkan.databinding.ActivityHomeBinding;
 import com.addukkan.language.Language;
+import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.ResponseModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
@@ -30,12 +35,14 @@ import com.addukkan.uis.activity_home.fragments.FragmenDukkan;
 import com.addukkan.uis.activity_home.fragments.FragmentHome;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_home.fragments.FragmentProfile;
+import com.addukkan.uis.activity_login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -54,7 +61,8 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentOffer fragmentOffer;
     private FragmentProfile fragmentProfile;
     private ActionBarDrawerToggle toggle;
-
+    private List<MainCategoryDataModel.Data> categoryDataModelDataList;
+    private SideMenuCategoryAdapter sideMenuSubCategoryAdapter;
 
 
     @Override
@@ -74,6 +82,10 @@ public class HomeActivity extends AppCompatActivity {
     private void initView() {
         preferences = Preferences.getInstance();
         userModel = preferences.getUserData(this);
+        categoryDataModelDataList=new ArrayList<>();
+        sideMenuSubCategoryAdapter=new SideMenuCategoryAdapter(categoryDataModelDataList,this);
+        binding.recView.setLayoutManager(new LinearLayoutManager(this));
+        binding.recView.setAdapter(sideMenuSubCategoryAdapter);
         fragmentManager = getSupportFragmentManager();
         toggle = new ActionBarDrawerToggle(this,binding.drawerLayout,binding.toolBar,R.string.open,R.string.close);
         toggle.syncState();
@@ -87,6 +99,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.llProfile.setOnClickListener(v -> displayFragmentProfile());
 
         updateTokenFireBase();
+        getSideMenu();
 
     }
 
@@ -393,6 +406,74 @@ public class HomeActivity extends AppCompatActivity {
                 });
 
 
+    }
+    public void navigateToSignInActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void getSideMenu() {
+
+        Api.getService(Tags.base_url)
+                .getSideMenu(lang)
+                .enqueue(new Callback<MainCategoryDataModel>() {
+                    @Override
+                    public void onResponse(Call<MainCategoryDataModel> call, Response<MainCategoryDataModel> response) {
+                        binding.progBar.setVisibility(View.GONE);
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+
+                                categoryDataModelDataList.clear();
+                                categoryDataModelDataList.addAll(response.body().getData());
+
+                                if (categoryDataModelDataList.size() > 0) {
+                                    sideMenuSubCategoryAdapter.notifyDataSetChanged();
+
+                                binding.tvNoData.setVisibility(View.GONE);
+                                    //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
+                                } else {
+                                binding.tvNoData.setVisibility(View.VISIBLE);
+
+                                }
+
+                            }
+                        } else {
+                            binding.progBar.setVisibility(View.GONE);
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MainCategoryDataModel> call, Throwable t) {
+                        try {
+                            binding.progBar.setVisibility(View.GONE);
+
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                   // Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
     }
 
 

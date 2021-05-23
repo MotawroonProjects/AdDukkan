@@ -31,7 +31,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-
+        <activity
+            android:name=".uis.activity_my_favorite.MyFavoriteActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".uis.activity_countries.CountryActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
