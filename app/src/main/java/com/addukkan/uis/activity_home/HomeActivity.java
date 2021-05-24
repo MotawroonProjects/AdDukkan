@@ -80,6 +80,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        Paper.init(this);
+        lang = Paper.book().read("lang", "ar");
         preferences = Preferences.getInstance();
         userModel = preferences.getUserData(this);
         categoryDataModelDataList=new ArrayList<>();
