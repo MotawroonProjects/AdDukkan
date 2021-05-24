@@ -2,7 +2,10 @@ package com.addukkan.services;
 
 import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.CountryDataModel;
+import com.addukkan.models.FavouriteProductDataModel;
 import com.addukkan.models.MainCategoryDataModel;
+import com.addukkan.models.NotificationCountModel;
+import com.addukkan.models.NotificationDataModel;
 import com.addukkan.models.PlaceGeocodeData;
 import com.addukkan.models.PlaceMapDetailsData;
 import com.addukkan.models.ResponseModel;
@@ -140,7 +143,7 @@ public interface Service {
     );
 
     @GET("api/my-favorites")
-    Call<ALLProductDataModel> getFavoutite(
+    Call<FavouriteProductDataModel> getFavoutite(
             @Header("Authorization") String Authorization,
             @Header("lang") String lang,
             @Query("user_id") String user_id,
@@ -158,4 +161,20 @@ public interface Service {
 
 
             ;
+    @GET("api/count-unread")
+    Call<NotificationCountModel> getNotificationCount(@Header("Authorization") String bearer_token,
+                                                      @Query("user_id") int user_id
+    );
+    @GET("api/my-notification")
+    Call<NotificationDataModel> getNotifications(@Header("Authorization") String bearer_token,
+                                                 @Query("user_id") int user_id
+    );
+
+    @FormUrlEncoded
+    @POST("api/delete-notification")
+    Call<ResponseModel> deleteNotification(@Header("Authorization") String bearer_token,
+                                            @Field("notification_id") int notification_id
+
+
+    );
 }

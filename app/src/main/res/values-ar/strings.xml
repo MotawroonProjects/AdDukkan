@@ -110,6 +110,9 @@
     <string name="show_all">عرض الكل</string>
     <string name="recently_arrived">وصل حديثا</string>
     <string name="most_seller">الاكثر مبيعا</string>
-
+    <string name="buy"> اشترى </string>
+    <string name="product"> منتج </string>
+    <string name="and_got"> واحصل على </string>
+    <string name="bouns"> هديه </string>
 
 </resources>

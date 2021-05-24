@@ -3,6 +3,7 @@ package com.addukkan.uis.activity_home.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +17,26 @@ import com.addukkan.R;
 import com.addukkan.databinding.FragmentHomeBinding;
 import com.addukkan.databinding.FragmentProfileBinding;
 import com.addukkan.interfaces.Listeners;
+import com.addukkan.models.NotificationCountModel;
 import com.addukkan.models.SignUpModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
+import com.addukkan.remote.Api;
+import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_countries.CountryActivity;
 import com.addukkan.uis.activity_home.HomeActivity;
 import com.addukkan.uis.activity_language.LanguageActivity;
 import com.addukkan.uis.activity_login.LoginActivity;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
+import com.addukkan.uis.activity_notification.NotificationActivity;
 import com.addukkan.uis.activity_sign_up.SignUpActivity;
 
+import java.io.IOException;
+
 import io.paperdb.Paper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FragmentProfile extends Fragment implements Listeners.ProfileActions {
     private FragmentProfileBinding binding;
@@ -61,8 +71,10 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
             Intent intent = new Intent(activity, SignUpActivity.class);
             startActivityForResult(intent, 100);
         });
-
-
+        binding.setNotcount("0");
+        if (userModel != null) {
+            getNotificationCount();
+        }
     }
 
     private void navigateToLoginActivity() {
@@ -175,6 +187,17 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     }
 
     @Override
+    public void onNotification() {
+        if (userModel == null) {
+            navigateToLoginActivity();
+        } else {
+            binding.setNotcount("0");
+            Intent intent = new Intent(activity, NotificationActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
@@ -184,4 +207,47 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
             activity.refreshActivity(lang);
         }
     }
+
+    private void getNotificationCount() {
+        if (userModel == null) {
+            binding.setNotcount("0");
+
+            return;
+        }
+        Api.getService(Tags.base_url).getNotificationCount(userModel.getData().getToken(), userModel.getData().getId())
+                .enqueue(new Callback<NotificationCountModel>() {
+                    @Override
+                    public void onResponse(Call<NotificationCountModel> call, Response<NotificationCountModel> response) {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+                                binding.setNotcount(String.valueOf(response.body().getData().getCount()));
+                            }
+                        } else {
+
+                            try {
+                                Log.e("error", response.code() + "_" + response.errorBody().string());
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<NotificationCountModel> call, Throwable t) {
+                        try {
+
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage() + "__");
+
+                            }
+
+
+                        } catch (Exception e) {
+                        }
+
+                    }
+                });
+    }
+
 }

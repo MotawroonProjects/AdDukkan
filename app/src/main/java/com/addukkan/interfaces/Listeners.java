@@ -23,6 +23,7 @@ public interface Listeners {
         void onInstagram();
         void onWhatsApp();
         void onLogout();
+        void onNotification();
     }
 
 }

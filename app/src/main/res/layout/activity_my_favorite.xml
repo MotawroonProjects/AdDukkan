@@ -42,7 +42,6 @@
                 android:padding="10dp"
                 android:rotation='@{lang.equals("ar")?180:0}'
                 android:src="@drawable/ic_left_arrow"
-                app:tint="@color/white"
 
                 />
 
@@ -51,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/favorite"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
             <FrameLayout
                 android:id="@+id/flCart"

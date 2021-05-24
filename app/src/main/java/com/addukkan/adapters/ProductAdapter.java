@@ -65,7 +65,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 FragmentHome fragment_main = (FragmentHome) fragment;
 
 
-                    fragment_main.like_dislike(list.get(myHolder.getAdapterPosition()).getProduct_data(), myHolder.getAdapterPosition(),0);
+                    fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()).getProduct_data(), myHolder.getLayoutPosition(),2);
 
             }
 

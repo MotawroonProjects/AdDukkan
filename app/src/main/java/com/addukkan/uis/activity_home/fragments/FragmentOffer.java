@@ -20,6 +20,7 @@ import com.addukkan.adapters.SliderAdapter;
 import com.addukkan.databinding.FragmentOffersBinding;
 import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.AppLocalSettings;
+import com.addukkan.models.ResponseModel;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.SliderDataModel;
 import com.addukkan.models.UserModel;
@@ -66,13 +67,13 @@ public class FragmentOffer extends Fragment {
     }
 
     private void initView() {
-        productModelList=new ArrayList<>();
+        productModelList = new ArrayList<>();
         activity = (HomeActivity) getActivity();
         Paper.init(activity);
         lang = Paper.book().read("lang", "ar");
-        preferences=Preferences.getInstance();
-        settings=preferences.isLanguageSelected(activity);
-        userModel=preferences.getUserData(activity);
+        preferences = Preferences.getInstance();
+        settings = preferences.isLanguageSelected(activity);
+        userModel = preferences.getUserData(activity);
         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
         } else {
@@ -80,9 +81,9 @@ public class FragmentOffer extends Fragment {
         }
         binding.progBarSlider.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-productOfferAdapter =new ProductOfferAdapter(productModelList,activity);
-binding.recView.setLayoutManager(new GridLayoutManager(activity,2));
-binding.recView.setAdapter(productOfferAdapter);
+        productOfferAdapter = new ProductOfferAdapter(productModelList, activity, this);
+        binding.recView.setLayoutManager(new GridLayoutManager(activity, 2));
+        binding.recView.setAdapter(productOfferAdapter);
         //binding.tab.setupWithViewPager(binding.pager);
         get_slider();
         getOffer();
@@ -95,15 +96,14 @@ binding.recView.setAdapter(productOfferAdapter);
 
     private void get_slider() {
         String country_coude;
-        if(userModel!=null){
-            country_coude=userModel.getData().getCountry_code();
-        }
-        else {
-            country_coude=settings.getCountry_code();
+        if (userModel != null) {
+            country_coude = userModel.getData().getCountry_code();
+        } else {
+            country_coude = settings.getCountry_code();
         }
         binding.progBarSlider.setVisibility(View.VISIBLE);
         binding.pager.setVisibility(View.GONE);
-        Api.getService(Tags.base_url).get_slider(lang,"offer",country_coude).enqueue(new Callback<SliderDataModel>() {
+        Api.getService(Tags.base_url).get_slider(lang, "offer", country_coude).enqueue(new Callback<SliderDataModel>() {
             @Override
             public void onResponse(Call<SliderDataModel> call, Response<SliderDataModel> response) {
                 binding.swipeRefresh.setRefreshing(false);
@@ -159,6 +159,70 @@ binding.recView.setAdapter(productOfferAdapter);
         });
 
     }
+
+    public int like_dislike(SingleProductModel productModel, int pos, int i) {
+        // Log.e("lslsl",productModel.getMain_image());
+        if (userModel != null) {
+            try {
+                // Log.e("llll", userModel.getUser().getToken());
+
+                Api.getService(Tags.base_url)
+                        .addFavoriteProduct("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", productModel.getId() + "")
+                        .enqueue(new Callback<ResponseModel>() {
+                            @Override
+                            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                                //  Log.e("dlldl",response.body().getStatus()+"");
+                                if (response.isSuccessful() && response.body().getStatus() == 200) {
+
+getOffer();
+                                } else {
+
+
+                                    if (response.code() == 500) {
+                                        //      Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                    } else {
+                                        //       Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                                        try {
+
+                                            Log.e("error", response.code() + "_" + response.errorBody().string());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                                try {
+
+                                    if (t.getMessage() != null) {
+                                        Log.e("error", t.getMessage());
+                                        if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                            //            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            //          Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+            }
+            return 1;
+        } else {
+            activity.navigateToSignInActivity();
+            // Common.CreateDialogAlert(activity, getString(R.string.please_sign_in_or_sign_up));
+            return 0;
+
+        }
+    }
+
     public class MyTask extends TimerTask {
         @Override
         public void run() {
@@ -187,6 +251,7 @@ binding.recView.setAdapter(productOfferAdapter);
         }
 
     }
+
     private void getOffer() {
         String user_id = null;
         if (userModel != null) {
@@ -195,7 +260,7 @@ binding.recView.setAdapter(productOfferAdapter);
         binding.progBar.setVisibility(View.VISIBLE);
         productModelList.clear();
         productOfferAdapter.notifyDataSetChanged();
-       // Log.e("sllsks", user_id + lang + country_coude);
+        // Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
                 .getOffers(lang, user_id, country_coude, "off")
                 .enqueue(new Callback<ALLProductDataModel>() {

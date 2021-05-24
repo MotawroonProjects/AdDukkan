@@ -111,5 +111,8 @@
     <string name="show_all">Show All</string>
     <string name="recently_arrived">Recently Arrived</string>
     <string name="most_seller">Most Seller</string>
-
+    <string name="buy">Buy </string>
+    <string name="product"> Product </string>
+    <string name="and_got"> And Got </string>
+    <string name="bouns"> As Bouns </string>
 </resources>

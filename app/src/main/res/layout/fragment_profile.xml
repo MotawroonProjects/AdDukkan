@@ -6,6 +6,9 @@
             name="lang"
             type="String" />
         <variable
+            name="notcount"
+            type="String" />
+        <variable
             name="model"
             type="com.addukkan.models.UserModel" />
         <import type="android.view.View"/>
@@ -179,6 +182,55 @@
                            android:textSize="16sp"
                            android:text="@string/favorite"
                            />
+                   </LinearLayout>
+
+                   <View
+                       android:layout_width="match_parent"
+                       android:layout_height="4dp"
+                       android:layerType="software"
+                       android:layout_marginTop="10dp"
+                       android:layout_marginBottom="10dp"
+                       android:background="@drawable/stroke_line"
+                       />
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:orientation="horizontal"
+                       android:gravity="center_vertical"
+                       android:onClick="@{()->actions.onNotification()}"
+
+                       >
+                       <ImageView
+                           android:layout_width="24dp"
+                           android:layout_height="24dp"
+                           android:src="@drawable/ic_nav_notification"
+                           app:tint="@color/colorPrimary"
+                           android:padding="3dp"
+                           />
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginStart="8dp"
+                           android:layout_marginEnd="8dp"
+                           android:textColor="@color/black"
+                           android:textSize="16sp"
+                           android:text="@string/notifications"
+                           />
+                       <FrameLayout
+                           android:layout_width="0dp"
+                           android:layout_height="match_parent"
+                           android:layout_weight="1">
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_marginStart="8dp"
+                               android:layout_marginEnd="8dp"
+                               android:textColor="@color/colorAccent"
+                               android:textSize="13sp"
+                               android:layout_gravity="end|center_vertical"
+                               android:text='@{notcount.equals("0")?"":notcount}'
+                               />
+                       </FrameLayout>
                    </LinearLayout>
 
                    <View

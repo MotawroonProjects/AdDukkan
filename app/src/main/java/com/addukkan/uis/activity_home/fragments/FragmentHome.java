@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -68,13 +69,14 @@ public class FragmentHome extends Fragment {
     private Preferences preferences;
     private UserModel userModel;
     private List<MainCategoryDataModel.Data> categoryDataModelDataList, getCategoryDataModelDataList;
-    private List<SingleProductModel> productModelList,productModelList2;
-    private Product2Adapter product2Adapter,product2Adapter2;
+    private List<SingleProductModel> productModelList, productModelList2;
+    private Product2Adapter product2Adapter, product2Adapter2;
     private CategoryAdapter categoryAdapter;
     private AppLocalSettings settings;
     private String lang = "";
     private MainCategoryAdapter mainCategoryAdapter;
     private String country_coude;
+    private Handler handler;
 
     public static FragmentHome newInstance() {
         return new FragmentHome();
@@ -92,7 +94,7 @@ public class FragmentHome extends Fragment {
         categoryDataModelDataList = new ArrayList<>();
         getCategoryDataModelDataList = new ArrayList<>();
         productModelList = new ArrayList<>();
-        productModelList2=new ArrayList<>();
+        productModelList2 = new ArrayList<>();
         activity = (HomeActivity) getActivity();
         Paper.init(activity);
         lang = Paper.book().read("lang", "ar");
@@ -129,9 +131,9 @@ public class FragmentHome extends Fragment {
         binding.tab.setupWithViewPager(binding.pager);
 
         categoryAdapter = new CategoryAdapter(categoryDataModelDataList, activity);
-        mainCategoryAdapter = new MainCategoryAdapter(getCategoryDataModelDataList, activity,this);
-        product2Adapter = new Product2Adapter(productModelList, activity,this,1);
-        product2Adapter2 = new Product2Adapter(productModelList, activity,this,0);
+        mainCategoryAdapter = new MainCategoryAdapter(getCategoryDataModelDataList, activity, this);
+        product2Adapter = new Product2Adapter(productModelList, activity, this, 1);
+        product2Adapter2 = new Product2Adapter(productModelList2, activity, this, 0);
 
         binding.recViewCategory.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
         binding.recViewCategory.setAdapter(categoryAdapter);
@@ -198,7 +200,7 @@ public class FragmentHome extends Fragment {
                                 Log.e("error_not_code", t.getMessage() + "__");
 
                                 if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                   // Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
                                 } else {
                                     //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                                 }
@@ -211,6 +213,8 @@ public class FragmentHome extends Fragment {
     }
 
     private void getMainCategorySubCategoryProduct() {
+        getCategoryDataModelDataList.clear();
+        mainCategoryAdapter.notifyDataSetChanged();
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
@@ -265,7 +269,7 @@ public class FragmentHome extends Fragment {
                                 Log.e("error_not_code", t.getMessage() + "__");
 
                                 if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                 //   Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                    //   Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
                                 } else {
                                     //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                                 }
@@ -278,17 +282,20 @@ public class FragmentHome extends Fragment {
     }
 
     private void getRecentArrived() {
+        productModelList.clear();
+        product2Adapter.notifyDataSetChanged();
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
         }
-        Log.e("sllsks", user_id + lang + country_coude);
+        //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
                 .getRecentlyArrived(lang, user_id, country_coude, "off")
                 .enqueue(new Callback<ALLProductDataModel>() {
                     @Override
                     public void onResponse(Call<ALLProductDataModel> call, Response<ALLProductDataModel> response) {
                         binding.progBarrecent.setVisibility(View.GONE);
+                        Log.e("Slslls", response.message());
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
@@ -332,7 +339,7 @@ public class FragmentHome extends Fragment {
                                 Log.e("error_not_code", t.getMessage() + "__");
 
                                 if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                  //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
                                 } else {
                                     //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                                 }
@@ -343,12 +350,15 @@ public class FragmentHome extends Fragment {
                     }
                 });
     }
+
     private void getMostSell() {
+        productModelList2.clear();
+        product2Adapter2.notifyDataSetChanged();
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
         }
-        Log.e("sllsks", user_id + lang + country_coude);
+        // Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
                 .getMostSell(lang, user_id, country_coude, "off")
                 .enqueue(new Callback<ALLProductDataModel>() {
@@ -398,7 +408,7 @@ public class FragmentHome extends Fragment {
                                 Log.e("error_not_code", t.getMessage() + "__");
 
                                 if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                           //         Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                    //         Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
                                 } else {
                                     //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                                 }
@@ -527,29 +537,30 @@ public class FragmentHome extends Fragment {
         }
 
     }
-    public int like_dislike(SingleProductModel productModel, int pos, int i) {
+
+    public void like_dislike(SingleProductModel productModel, int pos, int i) {
         if (userModel != null) {
             try {
-               // Log.e("llll", userModel.getUser().getToken());
+                Log.e("llll", "Bearer " + userModel.getData().getToken());
 
                 Api.getService(Tags.base_url)
-                        .addFavoriteProduct("Bearer "+userModel.getData().getToken(),userModel.getData().getId()+"", productModel.getId() + "")
+                        .addFavoriteProduct("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", productModel.getId() + "")
                         .enqueue(new Callback<ResponseModel>() {
                             @Override
                             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                                Log.e("dlldl",response.body().getStatus()+"");
-                                if (response.isSuccessful()&&response.body().getStatus()==200) {
-                                update();
+                                //  Log.e("dlldl",response.body().getStatus()+"");
+                                if (response.isSuccessful() && response.body().getStatus() == 200) {
+                                    update(i);
 
                                 } else {
 
 
                                     if (response.code() == 500) {
-                                  //      Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                                        //      Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
 
 
                                     } else {
-                                 //       Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                        //       Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
 
                                         try {
 
@@ -568,9 +579,9 @@ public class FragmentHome extends Fragment {
                                     if (t.getMessage() != null) {
                                         Log.e("error", t.getMessage());
                                         if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                //            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                            //            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
                                         } else {
-                                  //          Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                            //          Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
@@ -580,19 +591,31 @@ public class FragmentHome extends Fragment {
                         });
             } catch (Exception e) {
             }
-            return 1;
         } else {
             activity.navigateToSignInActivity();
-           // Common.CreateDialogAlert(activity, getString(R.string.please_sign_in_or_sign_up));
-            return 0;
+            // Common.CreateDialogAlert(activity, getString(R.string.please_sign_in_or_sign_up));
 
         }
     }
 
-    private void update() {
-        getRecentArrived();
-        getMostSell();
-        getMainCategorySubCategoryProduct();
+    private void update(int i) {
+       // Log.e("llll",i+"");
+        if (i == 1) {
+            getMainCategorySubCategoryProduct();
+            getMostSell();
+
+        } else if (i == 0) {
+            getMainCategorySubCategoryProduct();
+            getRecentArrived();
+
+
+        } else {
+            getRecentArrived();
+            getMostSell();
+
+        }
+
+
     }
 
 

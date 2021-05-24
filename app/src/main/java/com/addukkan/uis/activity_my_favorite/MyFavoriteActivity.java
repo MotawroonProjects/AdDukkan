@@ -22,6 +22,9 @@ import com.addukkan.interfaces.Listeners;
 import com.addukkan.language.Language;
 import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.AppLocalSettings;
+import com.addukkan.models.FavouriteProductDataModel;
+import com.addukkan.models.ProductDataModel;
+import com.addukkan.models.ResponseModel;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
@@ -51,7 +54,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
     private int selected_pos = -1;
     private boolean isFavoriteChange = false;
     private boolean isItemAdded = false;
-    private List<SingleProductModel> favouriteDataList;
+    private List<FavouriteProductDataModel.Data> favouriteDataList;
     private FavouriteProductAdapter favouriteProduct_adapter;
     private String country_coude;
     private AppLocalSettings settings;
@@ -121,18 +124,18 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
         }
-        
+
         binding.progBar.setVisibility(View.VISIBLE);
         favouriteDataList.clear();
         favouriteProduct_adapter.notifyDataSetChanged();
-         Log.e("sllsks", userModel.getData().getToken());
+        Log.e("sllsks", userModel.getData().getToken());
         Api.getService(Tags.base_url)
-                .getFavoutite("Bearer "+userModel.getData().getToken(),lang, user_id, country_coude, "off")
-                .enqueue(new Callback<ALLProductDataModel>() {
+                .getFavoutite("Bearer " + userModel.getData().getToken(), lang, user_id, country_coude, "off")
+                .enqueue(new Callback<FavouriteProductDataModel>() {
                     @Override
-                    public void onResponse(Call<ALLProductDataModel> call, Response<ALLProductDataModel> response) {
+                    public void onResponse(Call<FavouriteProductDataModel> call, Response<FavouriteProductDataModel> response) {
                         binding.progBar.setVisibility(View.GONE);
-                   //     Log.e("Dldldl",response.message());
+                        //     Log.e("Dldldl",response.message());
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
@@ -143,10 +146,10 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
                                 if (favouriteDataList.size() > 0) {
                                     favouriteProduct_adapter.notifyDataSetChanged();
 
-//                                binding.tvNoDatadepart.setVisibility(View.GONE);
+                                    binding.tvNoData.setVisibility(View.GONE);
                                     //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
                                 } else {
-//                                binding.tvNoDatadepart.setVisibility(View.VISIBLE);
+                                    binding.tvNoData.setVisibility(View.VISIBLE);
 
                                 }
 
@@ -169,7 +172,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
                     }
 
                     @Override
-                    public void onFailure(Call<ALLProductDataModel> call, Throwable t) {
+                    public void onFailure(Call<FavouriteProductDataModel> call, Throwable t) {
                         try {
                             binding.progBar.setVisibility(View.GONE);
 
@@ -189,9 +192,6 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
                 });
     }
 
-   
-
-
 
     @Override
     public void onBackPressed() {
@@ -202,4 +202,68 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
     public void back() {
         finish();
     }
+
+    public int like_dislike(SingleProductModel productModel, int pos, int i) {
+        // Log.e("lslsl",productModel.getMain_image());
+        if (userModel != null) {
+            try {
+                // Log.e("llll", userModel.getUser().getToken());
+
+                Api.getService(Tags.base_url)
+                        .addFavoriteProduct("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", productModel.getId() + "")
+                        .enqueue(new Callback<ResponseModel>() {
+                            @Override
+                            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                                //  Log.e("dlldl",response.body().getStatus()+"");
+                                if (response.isSuccessful() && response.body().getStatus() == 200) {
+                                    getData();
+
+                                } else {
+
+
+                                    if (response.code() == 500) {
+                                        //      Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                    } else {
+                                        //       Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                                        try {
+
+                                            Log.e("error", response.code() + "_" + response.errorBody().string());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                                try {
+
+                                    if (t.getMessage() != null) {
+                                        Log.e("error", t.getMessage());
+                                        if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                            //            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            //          Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+            }
+            return 1;
+        } else {
+            //navigateToSignInActivity();
+            // Common.CreateDialogAlert(activity, getString(R.string.please_sign_in_or_sign_up));
+            return 0;
+
+        }
+    }
+
 }
