@@ -105,7 +105,7 @@ public class LanguageActivity extends AppCompatActivity {
         });
 
         binding.btnNext.setOnClickListener(view -> {
-            if (isFromSplash) {
+            if (!isFromSplash) {
                 Intent intent = getIntent();
                 intent.putExtra("lang", lang);
                 intent.putExtra("countrycode",countrycode);
