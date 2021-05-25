@@ -1,8 +1,11 @@
 package com.addukkan.services;
 
 import com.addukkan.models.ALLProductDataModel;
+import com.addukkan.models.BrandDataModel;
+import com.addukkan.models.CompanyDataModel;
 import com.addukkan.models.CountryDataModel;
 import com.addukkan.models.FavouriteProductDataModel;
+import com.addukkan.models.FilterModel;
 import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.NotificationCountModel;
 import com.addukkan.models.NotificationDataModel;
@@ -14,6 +17,7 @@ import com.addukkan.models.UserModel;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -177,4 +181,12 @@ public interface Service {
 
 
     );
+    @POST("api/search")
+    Call<ALLProductDataModel> Filter(
+            @Header("lang") String lang,
+            @Body FilterModel filterModel);
+    @GET("api/companies")
+    Call<CompanyDataModel> getCompany(@Query("search_key") String search_key);
+    @GET("api/brands")
+    Call<BrandDataModel> getBrands(@Query("search_key") String search_key);
 }

@@ -115,4 +115,14 @@
     <string name="product"> Product </string>
     <string name="and_got"> And Got </string>
     <string name="bouns"> As Bouns </string>
+    <string name="rate">Rate</string>
+    <string name="recently">Recently</string>
+    <string name="low_price">Low Price</string>
+    <string name="high_price">High Price</string>
+    <string name="filter_your_results">Filter your Results</string>
+    <string name="department">Department</string>
+    <string name="company">Company</string>
+    <string name="the_brand">The brand</string>
+    <string name="reset">Reset</string>
+    <string name="activation">Activation</string>
 </resources>

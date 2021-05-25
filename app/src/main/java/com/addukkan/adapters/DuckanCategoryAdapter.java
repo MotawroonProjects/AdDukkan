@@ -28,17 +28,17 @@ public class DuckanCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<MainCategoryDataModel.Data> list;
     private Context context;
     private LayoutInflater inflater;
-    private int i=0;
-private Fragment fragment;
+    private int i = 0;
+    private Fragment fragment;
 
     //private Fragment_Main fragment_main;
-    public DuckanCategoryAdapter(List<MainCategoryDataModel.Data> list, Context context,Fragment fragment) {
+    public DuckanCategoryAdapter(List<MainCategoryDataModel.Data> list, Context context, Fragment fragment) {
         this.list = list;
         this.context = context;
         Paper.init(context);
         lang = Paper.book().read("lang", "ar");
         inflater = LayoutInflater.from(context);
-        this.fragment=fragment;
+        this.fragment = fragment;
         //  this.fragment_main=fragment_main;
 
 
@@ -61,30 +61,29 @@ private Fragment fragment;
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
 
-myHolder.itemView.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        i=holder.getLayoutPosition();
+        myHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = holder.getLayoutPosition();
 
-        notifyDataSetChanged();
-    }
-});
-if(i==position){
-    if(fragment instanceof FragmenDukkan){
-        FragmenDukkan fragmenDukkan=(FragmenDukkan)fragment;
-        fragmenDukkan.showSub(list.get(position).getSub_departments());
-    }
-    myHolder.binding.card.setCardBackgroundColor(context.getResources().getColor(R.color.colorAccent));
-    ((MyHolder) holder).binding.tvName.setTextColor(context.getResources().getColor(R.color.white));
-    ((MyHolder) holder).binding.image.setColorFilter(ContextCompat.getColor(context, R.color.white));
-}
-else {
-    myHolder.binding.card.setCardBackgroundColor(context.getResources().getColor(R.color.white));
+                notifyDataSetChanged();
+            }
+        });
+        if (i == position) {
+            if (fragment instanceof FragmenDukkan) {
+                FragmenDukkan fragmenDukkan = (FragmenDukkan) fragment;
+                fragmenDukkan.showSub(list.get(position));
+            }
+            myHolder.binding.card.setCardBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+            ((MyHolder) holder).binding.tvName.setTextColor(context.getResources().getColor(R.color.white));
+            ((MyHolder) holder).binding.image.setColorFilter(ContextCompat.getColor(context, R.color.white));
+        } else {
+            myHolder.binding.card.setCardBackgroundColor(context.getResources().getColor(R.color.white));
 
-    ((MyHolder) holder).binding.tvName.setTextColor(context.getResources().getColor(R.color.black));
-    ((MyHolder) holder).binding.image.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
+            ((MyHolder) holder).binding.tvName.setTextColor(context.getResources().getColor(R.color.black));
+            ((MyHolder) holder).binding.image.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
 
-}
+        }
 
     }
 

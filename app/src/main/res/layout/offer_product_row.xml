@@ -163,6 +163,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
+            android:background="@drawable/rounded_gray9"
+
             android:orientation="horizontal">
 
 

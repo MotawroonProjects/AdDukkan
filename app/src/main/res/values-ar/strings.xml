@@ -114,5 +114,15 @@
     <string name="product"> منتج </string>
     <string name="and_got"> واحصل على </string>
     <string name="bouns"> هديه </string>
+    <string name="rate">التقييم</string>
+    <string name="recently">الاحدث</string>
+    <string name="low_price">الاقل سعرا</string>
+    <string name="high_price">الاعلى سعرا</string>
+    <string name="filter_your_results">تصفية النتائج</string>
+    <string name="department">قسم</string>
+    <string name="company">شركه</string>
+    <string name="the_brand">الماركه</string>
+    <string name="reset">إعادة تعيين</string>
+    <string name="activation">تفعيل</string>
 
 </resources>

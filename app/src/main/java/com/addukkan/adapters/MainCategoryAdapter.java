@@ -27,15 +27,16 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<MainCategoryDataModel.Data> list;
     private Context context;
     private LayoutInflater inflater;
-private Fragment fragment;
+    private Fragment fragment;
+
     //private Fragment_Main fragment_main;
-    public MainCategoryAdapter(List<MainCategoryDataModel.Data> list, Context context,Fragment fragment) {
+    public MainCategoryAdapter(List<MainCategoryDataModel.Data> list, Context context, Fragment fragment) {
         this.list = list;
         this.context = context;
         Paper.init(context);
         lang = Paper.book().read("lang", "ar");
         inflater = LayoutInflater.from(context);
-        this.fragment=fragment;
+        this.fragment = fragment;
         //  this.fragment_main=fragment_main;
 
 
@@ -58,12 +59,12 @@ private Fragment fragment;
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.setLang(lang);
-SubCategoryAdapter subCategoryAdapter=new SubCategoryAdapter(list.get(position).getSub_departments(),context);
-myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context,4));
-myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
-ProductAdapter productAdapter=new ProductAdapter(list.get(position).getProduct_list(),context,fragment);
-myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
-myHolder.binding.recView.setAdapter(productAdapter);
+        SubCategoryAdapter subCategoryAdapter = new SubCategoryAdapter(list.get(position).getSub_departments(), context, fragment);
+        myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context, 4));
+        myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
+        ProductAdapter productAdapter = new ProductAdapter(list.get(position).getProduct_list(), context, fragment);
+        myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+        myHolder.binding.recView.setAdapter(productAdapter);
         myHolder.itemView.setOnClickListener(view -> {
             // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
 

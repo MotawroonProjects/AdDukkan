@@ -1,5 +1,6 @@
 package com.addukkan.uis.activity_home.fragments;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.addukkan.models.SubCategoryDataModel;
 import com.addukkan.remote.Api;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_home.HomeActivity;
+import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,8 +42,10 @@ public class FragmenDukkan extends Fragment {
     private String lang = "";
     private List<MainCategoryDataModel.Data> categoryDataModelDataList;
     private DuckanCategoryAdapter duckanCategoryAdapter;
-private SubCategoryAdapter subCategoryAdapter;
-private List<SubCategoryDataModel> subCategoryDataModelList;
+    private SubCategoryAdapter subCategoryAdapter;
+    private List<SubCategoryDataModel> subCategoryDataModelList;
+    private MainCategoryDataModel.Data sub_departments;
+
     public static FragmenDukkan newInstance() {
         return new FragmenDukkan();
     }
@@ -55,21 +59,22 @@ private List<SubCategoryDataModel> subCategoryDataModelList;
     }
 
     private void initView() {
-        categoryDataModelDataList=new ArrayList<>();
-        subCategoryDataModelList=new ArrayList<>();
+        categoryDataModelDataList = new ArrayList<>();
+        subCategoryDataModelList = new ArrayList<>();
 
         activity = (HomeActivity) getActivity();
         Paper.init(activity);
         lang = Paper.book().read("lang", "ar");
-        duckanCategoryAdapter=new DuckanCategoryAdapter(categoryDataModelDataList,activity,this);
-        subCategoryAdapter=new SubCategoryAdapter(subCategoryDataModelList,activity);
+        duckanCategoryAdapter = new DuckanCategoryAdapter(categoryDataModelDataList, activity, this);
+        subCategoryAdapter = new SubCategoryAdapter(subCategoryDataModelList, activity,this);
         binding.recViewMainCategory.setLayoutManager(new LinearLayoutManager(activity));
         binding.recViewMainCategory.setAdapter(duckanCategoryAdapter);
-        binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(activity,2));
+        binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(activity, 2));
         binding.recViewSubCategory.setAdapter(subCategoryAdapter);
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-getCategory();
+        getCategory();
     }
+
     private void getCategory() {
 
         Api.getService(Tags.base_url)
@@ -134,12 +139,20 @@ getCategory();
     }
 
 
-    public void showSub(List<SubCategoryDataModel> sub_departments) {
+    public void showSub(MainCategoryDataModel.Data sub_departments) {
+        this.sub_departments = sub_departments;
         subCategoryDataModelList.clear();
-        subCategoryDataModelList.addAll(sub_departments);
+        subCategoryDataModelList.addAll(sub_departments.getSub_departments());
         subCategoryAdapter.notifyDataSetChanged();
-        if(subCategoryDataModelList.size()==0){
+        if (subCategoryDataModelList.size() == 0) {
             binding.tvNoData.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void filter(int layoutPosition) {
+        Intent intent=new Intent(activity, ProductFilterActivity.class);
+        intent.putExtra("pos",layoutPosition);
+        intent.putExtra("data",sub_departments);
+        startActivity(intent);
     }
 }
