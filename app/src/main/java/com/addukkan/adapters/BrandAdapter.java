@@ -2,6 +2,7 @@ package com.addukkan.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import com.addukkan.databinding.BrandRowBinding;
 import com.addukkan.databinding.CompanyRowBinding;
 import com.addukkan.models.BrandDataModel;
 import com.addukkan.models.CompanyModel;
+import com.addukkan.uis.activity_filter.FilterActivity;
 
 import java.util.List;
 
@@ -42,6 +44,15 @@ public class BrandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
+        myHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof FilterActivity){
+                    FilterActivity activity=(FilterActivity)context;
+                    activity.addBrandid(list.get(holder.getLayoutPosition()));
+                }
+            }
+        });
     }
 
     @Override

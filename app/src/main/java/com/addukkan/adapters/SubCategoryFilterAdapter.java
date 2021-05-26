@@ -2,6 +2,7 @@ package com.addukkan.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import com.addukkan.databinding.SubCategoryRow3Binding;
 import com.addukkan.databinding.SubCategoryrowBinding;
 import com.addukkan.models.CountryModel;
 import com.addukkan.models.SubCategoryDataModel;
+import com.addukkan.uis.activity_filter.FilterActivity;
 import com.addukkan.uis.activity_login.LoginActivity;
 import com.addukkan.uis.activity_sign_up.SignUpActivity;
 
@@ -24,19 +26,22 @@ public class SubCategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.
     private LayoutInflater inflater;
     private Context context;
     private AppCompatActivity activity;
+    private int pos;
 
-    public SubCategoryFilterAdapter(Context context, List<SubCategoryDataModel> list) {
-        inflater=LayoutInflater.from(context);
+    public SubCategoryFilterAdapter(Context context, List<SubCategoryDataModel> list, int pos) {
+        inflater = LayoutInflater.from(context);
         this.context = context;
         this.list = list;
         activity = (AppCompatActivity) context;
+        this.pos = pos;
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         SubCategoryRow3Binding binding = DataBindingUtil.inflate(inflater, R.layout.sub_category_row3, parent, false);
-            return new MyHolder(binding);
+        return new MyHolder(binding);
 
 
     }
@@ -46,8 +51,18 @@ public class SubCategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.
 
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
-
-
+        if (position == pos) {
+            myHolder.binding.rb.setChecked(true);
+        }
+        myHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof FilterActivity){
+                    FilterActivity activity=(FilterActivity)context;
+                    activity.addDepartid(list.get(holder.getLayoutPosition()));
+                }
+            }
+        });
 
     }
 

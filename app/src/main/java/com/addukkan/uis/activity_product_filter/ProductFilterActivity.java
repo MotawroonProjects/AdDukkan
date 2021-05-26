@@ -113,6 +113,7 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
             public void onClick(View v) {
                 Intent intent=new Intent(ProductFilterActivity.this, FilterActivity.class);
                 intent.putExtra("data",sub_departments);
+                intent.putExtra("pos",pos);
                 startActivityForResult(intent,100);
             }
         });
@@ -263,6 +264,7 @@ binding.immenu.setOnClickListener(new View.OnClickListener() {
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
         }
+        binding.progBar.setVisibility(View.VISIBLE);
         //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
                 .Filter(lang, filterModel)
@@ -327,4 +329,16 @@ binding.immenu.setOnClickListener(new View.OnClickListener() {
                 });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100&&resultCode==RESULT_OK){
+            FilterModel filterModel= (FilterModel) data.getSerializableExtra("data");
+            this.filterModel.setProduct_company_id(filterModel.getProduct_company_id());
+            this.filterModel.setDepartments(filterModel.getDepartments());
+            this.filterModel.setBrand_id(filterModel.getBrand_id());
+            filterData();
+        }
+
+    }
 }
