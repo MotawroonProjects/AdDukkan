@@ -45,6 +45,7 @@ public class FragmenDukkan extends Fragment {
     private SubCategoryAdapter subCategoryAdapter;
     private List<SubCategoryDataModel> subCategoryDataModelList;
     private MainCategoryDataModel.Data sub_departments;
+    private int id;
 
     public static FragmenDukkan newInstance() {
         return new FragmenDukkan();
@@ -65,8 +66,8 @@ public class FragmenDukkan extends Fragment {
         activity = (HomeActivity) getActivity();
         Paper.init(activity);
         lang = Paper.book().read("lang", "ar");
-        duckanCategoryAdapter = new DuckanCategoryAdapter(categoryDataModelDataList, activity, this);
-        subCategoryAdapter = new SubCategoryAdapter(subCategoryDataModelList, activity,this);
+        duckanCategoryAdapter = new DuckanCategoryAdapter(categoryDataModelDataList, activity, this,id);
+        subCategoryAdapter = new SubCategoryAdapter(subCategoryDataModelList, activity,this, null);
         binding.recViewMainCategory.setLayoutManager(new LinearLayoutManager(activity));
         binding.recViewMainCategory.setAdapter(duckanCategoryAdapter);
         binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(activity, 2));
@@ -76,6 +77,7 @@ public class FragmenDukkan extends Fragment {
     }
 
     private void getCategory() {
+
 
         Api.getService(Tags.base_url)
                 .getSideMenu(lang)
@@ -154,5 +156,14 @@ public class FragmenDukkan extends Fragment {
         intent.putExtra("pos",layoutPosition);
         intent.putExtra("data",sub_departments);
         startActivity(intent);
+    }
+
+    public void setDepartid(int id) {
+        this.id=id;
+        if(duckanCategoryAdapter!=null){
+//            categoryDataModelDataList.clear();
+//            duckanCategoryAdapter.notifyDataSetChanged();
+            duckanCategoryAdapter.setid(id);
+        getCategory();}
     }
 }

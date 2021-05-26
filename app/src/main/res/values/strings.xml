@@ -125,4 +125,5 @@
     <string name="the_brand">The brand</string>
     <string name="reset">Reset</string>
     <string name="activation">Activation</string>
+    <string name="message">Message</string>
 </resources>

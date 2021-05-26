@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.addukkan.R;
 import com.addukkan.adapters.SideMenuCategoryAdapter;
-import com.addukkan.adapters.SideMenuSubCategoryAdapter;
 import com.addukkan.databinding.ActivityHomeBinding;
 import com.addukkan.language.Language;
 import com.addukkan.models.MainCategoryDataModel;
@@ -36,10 +35,8 @@ import com.addukkan.uis.activity_home.fragments.FragmentHome;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_home.fragments.FragmentProfile;
 import com.addukkan.uis.activity_login.LoginActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
 
         displayFragmentHome();
         binding.llHome.setOnClickListener(v -> displayFragmentHome());
-        binding.llDukkan.setOnClickListener(v -> displayFragmentDukkan());
+        binding.llDukkan.setOnClickListener(v -> displayFragmentDukkan(0));
         binding.llOffer.setOnClickListener(v -> displayFragmentOffers());
         binding.llProfile.setOnClickListener(v -> displayFragmentProfile());
 
@@ -137,13 +134,13 @@ public class HomeActivity extends AppCompatActivity {
         updateNavUiHome();
     }
 
-    private void displayFragmentDukkan() {
+    public void displayFragmentDukkan(int id) {
         if (fragmenDukkan == null) {
             fragmenDukkan = FragmenDukkan.newInstance();
 
         }
 
-
+fragmenDukkan.setDepartid(id);
         if (fragmentHome != null && fragmentHome.isAdded()) {
             fragmentManager.beginTransaction().hide(fragmentHome).commit();
         }
@@ -506,5 +503,11 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             displayFragmentHome();
         }
+    }
+    public void filter(int layoutPosition,MainCategoryDataModel.Data sub_departments) {
+        Intent intent=new Intent(HomeActivity.this, ProductFilterActivity.class);
+        intent.putExtra("pos",layoutPosition);
+        intent.putExtra("data",sub_departments);
+        startActivity(intent);
     }
 }

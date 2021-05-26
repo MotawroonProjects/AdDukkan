@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.addukkan.R;
-import com.addukkan.databinding.ProductRowBinding;
 import com.addukkan.databinding.SubCategoryrowBinding;
-import com.addukkan.models.SingleProductModel;
+import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.SubCategoryDataModel;
 import com.addukkan.uis.activity_home.fragments.FragmenDukkan;
+import com.addukkan.uis.activity_home.fragments.FragmentHome;
 
 import java.util.List;
 
@@ -24,13 +24,14 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private LayoutInflater inflater;
     private Fragment fragment;
-
+    private MainCategoryDataModel.Data data;
     //private Fragment_Main fragment_main;
-    public SubCategoryAdapter(List<SubCategoryDataModel> list, Context context,Fragment fragment) {
+    public SubCategoryAdapter(List<SubCategoryDataModel> list, Context context, Fragment fragment, MainCategoryDataModel.Data data) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.fragment=fragment;
+        this.data=data;
       //  this.fragment_main=fragment_main;
 
 
@@ -61,6 +62,11 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 FragmenDukkan fragmenDukkan=(FragmenDukkan)fragment;
                 fragmenDukkan.filter(holder.getLayoutPosition());
             }
+            else if(fragment instanceof FragmentHome){
+                    FragmentHome fragmentHome=(FragmentHome)fragment;
+                    fragmentHome.filter(holder.getLayoutPosition(),data);
+                }
+
         });
     }
 

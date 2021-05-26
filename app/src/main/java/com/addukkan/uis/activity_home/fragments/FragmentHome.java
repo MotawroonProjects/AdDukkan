@@ -47,6 +47,7 @@ import com.addukkan.remote.Api;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_ask_doctor.AskDoctorActivity;
 import com.addukkan.uis.activity_home.HomeActivity;
+import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -130,7 +131,7 @@ public class FragmentHome extends Fragment {
 
         binding.tab.setupWithViewPager(binding.pager);
 
-        categoryAdapter = new CategoryAdapter(categoryDataModelDataList, activity);
+        categoryAdapter = new CategoryAdapter(categoryDataModelDataList, activity,this);
         mainCategoryAdapter = new MainCategoryAdapter(getCategoryDataModelDataList, activity, this);
         product2Adapter = new Product2Adapter(productModelList, activity, this, 1);
         product2Adapter2 = new Product2Adapter(productModelList2, activity, this, 0);
@@ -509,6 +510,10 @@ public class FragmentHome extends Fragment {
         dialog.show();
     }
 
+    public void showDepart(int id) {
+        activity.displayFragmentDukkan(id);
+    }
+
     public class MyTask extends TimerTask {
         @Override
         public void run() {
@@ -617,6 +622,11 @@ public class FragmentHome extends Fragment {
 
 
     }
-
+    public void filter(int layoutPosition,MainCategoryDataModel.Data sub_departments) {
+        Intent intent=new Intent(activity, ProductFilterActivity.class);
+        intent.putExtra("pos",layoutPosition);
+        intent.putExtra("data",sub_departments);
+        startActivity(intent);
+    }
 
 }

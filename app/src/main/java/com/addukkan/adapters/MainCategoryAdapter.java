@@ -16,6 +16,8 @@ import com.addukkan.databinding.MainCategorySubCategoryProductRowBinding;
 import com.addukkan.databinding.SubCategoryrowBinding;
 import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.SubCategoryDataModel;
+import com.addukkan.uis.activity_home.fragments.FragmenDukkan;
+import com.addukkan.uis.activity_home.fragments.FragmentHome;
 
 import java.util.List;
 
@@ -59,16 +61,17 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.setLang(lang);
-        SubCategoryAdapter subCategoryAdapter = new SubCategoryAdapter(list.get(position).getSub_departments(), context, fragment);
+        SubCategoryAdapter subCategoryAdapter = new SubCategoryAdapter(list.get(position).getSub_departments(), context, fragment,list.get(position));
         myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context, 4));
         myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
         ProductAdapter productAdapter = new ProductAdapter(list.get(position).getProduct_list(), context, fragment);
         myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
         myHolder.binding.recView.setAdapter(productAdapter);
-        myHolder.itemView.setOnClickListener(view -> {
-            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
-
-            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
+        myHolder.binding.imbanner.setOnClickListener(view -> {
+        if(fragment instanceof FragmentHome){
+            FragmentHome fragmentHome=(FragmentHome)fragment;
+            fragmentHome.showDepart(list.get(position).getId());
+        }
         });
     }
 

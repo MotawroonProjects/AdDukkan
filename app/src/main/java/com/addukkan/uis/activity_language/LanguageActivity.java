@@ -292,6 +292,12 @@ public class LanguageActivity extends AppCompatActivity {
             settings.setLng(location.getLng());
             //settings.setCountry_code(countrycode);
             preferences.setIsLanguageSelected(this, settings);
+            Intent intent = getIntent();
+            intent.putExtra("lang", lang);
+            intent.putExtra("countrycode",countrycode);
+            setResult(RESULT_OK, intent);
+            finish();
+
         }
     }
 }

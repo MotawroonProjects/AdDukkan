@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.addukkan.R;
 import com.addukkan.databinding.MainCategoryRowBinding;
 import com.addukkan.models.MainCategoryDataModel;
+import com.addukkan.uis.activity_home.fragments.FragmentHome;
 
 import java.util.List;
 
@@ -22,12 +24,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private LayoutInflater inflater;
     //private Fragment_Main fragment_main;
-    public CategoryAdapter(List<MainCategoryDataModel.Data> list, Context context) {
+    private Fragment fragment;
+    public CategoryAdapter(List<MainCategoryDataModel.Data> list, Context context, Fragment fragment) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
       //  this.fragment_main=fragment_main;
-
+this.fragment=fragment;
 
     }
 
@@ -49,9 +52,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         myHolder.binding.setModel(list.get(position));
 
         myHolder.itemView.setOnClickListener(view -> {
-           // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
-
-           // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
+            if(fragment instanceof FragmentHome){
+                FragmentHome fragmentHome=(FragmentHome)fragment;
+                fragmentHome.showDepart(list.get(position).getId());
+            }
         });
     }
 

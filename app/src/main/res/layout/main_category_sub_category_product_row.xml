@@ -76,6 +76,7 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/imbanner"
             image="@{model.department_trans_fk.banner}"
             android:layout_width="match_parent"
             android:layout_height="100dp"

@@ -1,12 +1,14 @@
 package com.addukkan.uis.activity_home.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,11 +20,15 @@ import com.addukkan.databinding.FragmentHomeBinding;
 import com.addukkan.databinding.FragmentProfileBinding;
 import com.addukkan.interfaces.Listeners;
 import com.addukkan.models.NotificationCountModel;
+import com.addukkan.models.SettingModel;
 import com.addukkan.models.SignUpModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
+import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
+import com.addukkan.uis.activity_about_us.AboutUsActivity;
+import com.addukkan.uis.activity_contact_us.ContactUsActivity;
 import com.addukkan.uis.activity_countries.CountryActivity;
 import com.addukkan.uis.activity_home.HomeActivity;
 import com.addukkan.uis.activity_language.LanguageActivity;
@@ -44,6 +50,7 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     private String lang = "ar";
     private UserModel userModel;
     private Preferences preferences;
+    private SettingModel settingModel;
 
 
     public static FragmentProfile newInstance() {
@@ -75,6 +82,7 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
         if (userModel != null) {
             getNotificationCount();
         }
+        getSetting();
     }
 
     private void navigateToLoginActivity() {
@@ -138,7 +146,15 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
 
     @Override
     public void onAboutApp() {
-
+        if (settingModel != null) {
+            Intent intent = new Intent(activity, AboutUsActivity.class);
+            String url = settingModel.getData().getTerms();
+            intent.putExtra("url", url);
+            intent.putExtra("type", "1");
+            startActivity(intent);
+        } else {
+            Toast.makeText(activity, getResources().getString(R.string.something), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -153,12 +169,21 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
 
     @Override
     public void onTerms() {
-
+        if (settingModel != null) {
+            Intent intent = new Intent(activity, AboutUsActivity.class);
+            String url = settingModel.getData().getTerms();
+            intent.putExtra("url", url);
+            intent.putExtra("type", "0");
+            startActivity(intent);
+        } else {
+            Toast.makeText(activity, getResources().getString(R.string.something), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onContactUs() {
-
+        Intent intent = new Intent(activity, ContactUsActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -246,6 +271,59 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
                         } catch (Exception e) {
                         }
 
+                    }
+                });
+    }
+    private void getSetting() {
+        ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        Api.getService(Tags.base_url).getSetting(lang)
+                .enqueue(new Callback<SettingModel>() {
+                    @Override
+                    public void onResponse(Call<SettingModel> call, Response<SettingModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                settingModel = response.body();
+
+
+                            }
+                        } else {
+
+                            dialog.dismiss();
+
+                            try {
+                                Log.e("error_code", response.code() + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<SettingModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    // Toast.makeText(SettingsActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else if (t.getMessage().toLowerCase().contains("socket") || t.getMessage().toLowerCase().contains("canceled")) {
+                                } else {
+                                    //Toast.makeText(SettingsActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+
+                        } catch (Exception e) {
+
+                        }
                     }
                 });
     }

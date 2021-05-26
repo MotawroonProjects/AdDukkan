@@ -57,7 +57,7 @@ public class SideMenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.setLang(lang);
-        SideMenuSubCategoryAdapter subCategoryAdapter = new SideMenuSubCategoryAdapter(list.get(position).getSub_departments(), context);
+        SideMenuSubCategoryAdapter subCategoryAdapter = new SideMenuSubCategoryAdapter(list.get(position).getSub_departments(), context,list.get(position));
         myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context, 1));
         myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
 

@@ -28,17 +28,22 @@ public class DuckanCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<MainCategoryDataModel.Data> list;
     private Context context;
     private LayoutInflater inflater;
-    private int i = 0;
+    private int i = -1;
     private Fragment fragment;
+    private int id;
 
     //private Fragment_Main fragment_main;
-    public DuckanCategoryAdapter(List<MainCategoryDataModel.Data> list, Context context, Fragment fragment) {
+    public DuckanCategoryAdapter(List<MainCategoryDataModel.Data> list, Context context, Fragment fragment, int id) {
         this.list = list;
         this.context = context;
         Paper.init(context);
         lang = Paper.book().read("lang", "ar");
         inflater = LayoutInflater.from(context);
         this.fragment = fragment;
+        this.id = id;
+        if(id==0){
+            i=0;
+        }
         //  this.fragment_main=fragment_main;
 
 
@@ -60,7 +65,10 @@ public class DuckanCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
-
+        if (list.get(position).getId() == id) {
+            i = position;
+          //  notifyDataSetChanged();
+        }
         myHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +98,17 @@ public class DuckanCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void setid(int id) {
+        this.id=id;
+        if(id!=0){
+            i=0;
+        }
+        else {
+            i=-1;
+        }
+        notifyDataSetChanged();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {

@@ -12,7 +12,9 @@ import com.addukkan.models.NotificationDataModel;
 import com.addukkan.models.PlaceGeocodeData;
 import com.addukkan.models.PlaceMapDetailsData;
 import com.addukkan.models.ResponseModel;
+import com.addukkan.models.SettingModel;
 import com.addukkan.models.SliderDataModel;
+import com.addukkan.models.StatusResponse;
 import com.addukkan.models.UserModel;
 
 import okhttp3.ResponseBody;
@@ -181,6 +183,11 @@ public interface Service {
 
 
     );
+    @GET("api/setting")
+    Call<SettingModel> getSetting(
+            @Header("lang") String lang
+
+            );
     @POST("api/search")
     Call<ALLProductDataModel> Filter(
             @Header("lang") String lang,
@@ -189,4 +196,10 @@ public interface Service {
     Call<CompanyDataModel> getCompany(@Query("search_key") String search_key);
     @GET("api/brands")
     Call<BrandDataModel> getBrands(@Query("search_key") String search_key);
+    @FormUrlEncoded
+    @POST("api/contact-us")
+    Call<StatusResponse> contactUs(@Field("name") String name,
+                                   @Field("email") String email,
+                                   @Field("phone") String phone,
+                                   @Field("message") String message);
 }
