@@ -3,6 +3,7 @@ package com.addukkan.uis.activity_home.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -188,22 +189,39 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
 
     @Override
     public void onFacebook() {
-
+        if (settingModel != null && settingModel.getData() != null && settingModel.getData().getFacebook() != null && !settingModel.getData().getFacebook().equals("#")) {
+            open(settingModel.getData().getFacebook());
+        } else {
+            Toast.makeText(activity, R.string.not_avail_now, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onTwitter() {
+        if (settingModel != null && settingModel.getData() != null && settingModel.getData().getTwitter() != null && !settingModel.getData().getTwitter().equals("#")) {
+            open(settingModel.getData().getTwitter());
 
+        } else {
+            Toast.makeText(activity, R.string.not_avail_now, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onInstagram() {
-
+        if (settingModel != null && settingModel.getData() != null && settingModel.getData().getInstagram() != null && !settingModel.getData().getInstagram().equals("#")) {
+            open(settingModel.getData().getInstagram());
+        } else {
+            Toast.makeText(activity, R.string.not_avail_now, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onWhatsApp() {
-
+        if (settingModel != null && settingModel.getData() != null && settingModel.getData().getWhatsapp() != null && !settingModel.getData().getWhatsapp().equals("#")) {
+            open("https://api.whatsapp.com/send?phone=" + settingModel.getData().getWhatsapp());
+        } else {
+            Toast.makeText(activity, R.string.not_avail_now, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -327,5 +345,8 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
                     }
                 });
     }
-
+    private void open(String path) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
+        startActivity(intent);
+    }
 }

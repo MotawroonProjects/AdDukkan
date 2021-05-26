@@ -126,4 +126,6 @@
     <string name="reset">Reset</string>
     <string name="activation">Activation</string>
     <string name="message">Message</string>
+    <string name="not_avail_now">Not Available Now</string>
+
 </resources>

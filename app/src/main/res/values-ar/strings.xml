@@ -124,6 +124,7 @@
     <string name="the_brand">الماركه</string>
     <string name="reset">إعادة تعيين</string>
     <string name="activation">تفعيل</string>
-    <string name="message">Message</string>
+    <string name="message">رساله</string>
+    <string name="not_avail_now">غير متاح الان</string>
 
 </resources>
