@@ -1,15 +1,23 @@
 package com.addukkan.uis.activity_sign_up;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,7 +61,11 @@ public class SignUpActivity extends AppCompatActivity {
     private UserModel userModel;
     private Preferences preferences;
     private AlertDialog dialog;
-
+    private final String READ_PERM = Manifest.permission.READ_EXTERNAL_STORAGE;
+    private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+    private final String camera_permission = Manifest.permission.CAMERA;
+    private final int READ_REQ = 1, CAMERA_REQ = 2;
+    private Uri uri = null;
 
     @Override
     protected void attachBaseContext(Context newBase) {

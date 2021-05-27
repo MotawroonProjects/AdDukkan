@@ -283,10 +283,10 @@ binding.immenu.setOnClickListener(new View.OnClickListener() {
                                     product2Adapter.notifyDataSetChanged();
                                     productLisProductAdapter.notifyDataSetChanged();
 
-//                                binding.tvNoDatadepart.setVisibility(View.GONE);
+                                binding.tvNoData.setVisibility(View.GONE);
                                     //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
                                 } else {
-//                                binding.tvNoDatadepart.setVisibility(View.VISIBLE);
+                                binding.tvNoData.setVisibility(View.VISIBLE);
 
                                 }
 

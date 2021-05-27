@@ -127,5 +127,6 @@
     <string name="activation">Activation</string>
     <string name="message">Message</string>
     <string name="not_avail_now">Not Available Now</string>
+    <string name="suc_and">Successfully completed and we will contact you</string>
 
 </resources>

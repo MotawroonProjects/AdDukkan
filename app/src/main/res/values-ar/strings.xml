@@ -126,5 +126,6 @@
     <string name="activation">تفعيل</string>
     <string name="message">رساله</string>
     <string name="not_avail_now">غير متاح الان</string>
+    <string name="suc_and">تم بنجاح وسيتم التواصل معك</string>
 
 </resources>
