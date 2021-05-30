@@ -14,15 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.addukkan.R;
 import com.addukkan.databinding.DoctorRowBinding;
+import com.addukkan.models.UserModel;
+import com.addukkan.uis.activity_ask_doctor.AskDoctorActivity;
 import com.addukkan.uis.activity_doctor_detials.DoctorDetialsActivity;
+
+import java.util.List;
 
 public class DoctorsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LayoutInflater inflater;
     private Context context;
+    private List<UserModel.Data> list;
+    private AskDoctorActivity activity;
 
-    public DoctorsAdapter(Context context) {
+    public DoctorsAdapter(Context context,List<UserModel.Data> list) {
         inflater = LayoutInflater.from(context);
         this.context = context;
+        this.list = list;
+        activity= (AskDoctorActivity) context;
     }
 
     @NonNull
@@ -37,19 +45,18 @@ public class DoctorsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, DoctorDetialsActivity.class);
-                context.startActivity(intent);
-            }
-        });
+        DoctorHolder doctorHolder = (DoctorHolder) holder;
+        doctorHolder.binding.setModel(list.get(position));
+        holder.itemView.setOnClickListener(v -> {
+            UserModel.Data model = list.get(doctorHolder.getAdapterPosition());
+            activity.setDoctorItemData(model);
 
+        });
     }
 
     @Override
     public int getItemCount() {
-        return 8;
+        return list.size();
     }
 
     public static class DoctorHolder extends RecyclerView.ViewHolder {

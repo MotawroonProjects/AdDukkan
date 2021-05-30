@@ -4,16 +4,22 @@ import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.BrandDataModel;
 import com.addukkan.models.CompanyDataModel;
 import com.addukkan.models.CountryDataModel;
+import com.addukkan.models.CreateRoomModel;
+import com.addukkan.models.DoctorsDataModel;
 import com.addukkan.models.FavouriteProductDataModel;
 import com.addukkan.models.FilterModel;
 import com.addukkan.models.MainCategoryDataModel;
+import com.addukkan.models.MessageDataModel;
 import com.addukkan.models.NotificationCountModel;
 import com.addukkan.models.NotificationDataModel;
 import com.addukkan.models.PlaceGeocodeData;
 import com.addukkan.models.PlaceMapDetailsData;
 import com.addukkan.models.ResponseModel;
+import com.addukkan.models.RoomDataModel;
 import com.addukkan.models.SettingModel;
+import com.addukkan.models.SingleMessageDataModel;
 import com.addukkan.models.SliderDataModel;
+import com.addukkan.models.SpecialDataModel;
 import com.addukkan.models.StatusResponse;
 import com.addukkan.models.UserModel;
 
@@ -215,5 +221,64 @@ public interface Service {
 
 
     );
+
+    @GET("api/specializations")
+    Call<SpecialDataModel> getSpecial(@Header("lang") String lang);
+
+    @GET("api/doctors")
+    Call<DoctorsDataModel> getDoctorsFilter(@Header("lang") String lang,
+                                            @Query("search_key") String search_key,
+                                            @Query("specialization_id") String specialization_id
+                                            );
+
+    @GET("api/one-doctor")
+    Call<UserModel> getDoctorById(@Query("doctor_id") int doctor_id
+    );
+
+    @GET("api/get-room-betwwen-user")
+    Call<CreateRoomModel> createRoom(@Header("Authorization") String bearer_token,
+                                     @Query("first_user_id") int first_user_id,
+                                     @Query("second_user_id") int second_user_id
+
+
+    );
+    @GET("api/user-rooms")
+    Call<RoomDataModel> getRoom(@Header("Authorization") String user_token,
+                                @Query("user_id") int user_id
+    );
+
+    @GET("api/room-messages")
+    Call<MessageDataModel> getChatMessages(@Header("Authorization") String bearer_token,
+                                           @Query(value = "pagination") String pagination,
+                                           @Query(value = "per_page") int per_page,
+                                           @Query(value = "page") int page,
+                                           @Query(value = "room_id") int room_id,
+                                           @Query(value = "user_id") int user_id
+
+    );
+
+    @FormUrlEncoded
+    @POST("api/send-chat-message")
+    Call<SingleMessageDataModel> sendChatMessage(@Header("Authorization") String bearer_token,
+                                                 @Field("user_room_id") int room_id,
+                                                 @Field("from_user_id") int from_user_id,
+                                                 @Field("to_user_id") int to_user_id,
+                                                 @Field("type") String type,
+                                                 @Field("message") String message
+
+
+    );
+
+    @Multipart
+    @POST("api/send-chat-message")
+    Call<SingleMessageDataModel> sendChatAttachment(@Header("Authorization") String user_token,
+                                                    @Part("user_room_id") RequestBody room_id,
+                                                    @Part("from_user_id") RequestBody from_user_id,
+                                                    @Part("to_user_id") RequestBody to_user_id,
+                                                    @Part("type") RequestBody message_type,
+                                                    @Part MultipartBody.Part attachment
+    );
+
+
 
 }

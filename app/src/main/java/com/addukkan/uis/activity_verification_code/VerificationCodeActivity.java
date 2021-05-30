@@ -87,8 +87,8 @@ public class VerificationCodeActivity extends AppCompatActivity {
         });
 
         binding.llBack.setOnClickListener(v -> finish());
-
-        sendSmsCode();
+        onSuccessCode();
+        //sendSmsCode();
 
     }
 

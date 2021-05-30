@@ -3,7 +3,7 @@ package com.addukkan.models;
 import java.io.Serializable;
 import java.util.List;
 
-public class UserModel  extends ResponseModel implements Serializable {
+public class UserModel extends ResponseModel implements Serializable {
 
     private Data data;
 
@@ -11,7 +11,7 @@ public class UserModel  extends ResponseModel implements Serializable {
         return data;
     }
 
-    public static class SpecializationTransFk implements Serializable{
+    public static class SpecializationTransFk implements Serializable {
         private int id;
         private int specialization_id;
         private String title;
@@ -34,7 +34,7 @@ public class UserModel  extends ResponseModel implements Serializable {
         }
     }
 
-    public static class CountrySettingTransFk implements Serializable{
+    public static class CountrySettingTransFk implements Serializable {
         private int id;
         private int country_setting_id;
         private String title;
@@ -57,7 +57,7 @@ public class UserModel  extends ResponseModel implements Serializable {
         }
     }
 
-    public static class UserSpecialization implements Serializable{
+    public static class UserSpecialization implements Serializable {
         public int id;
         public String image;
         public String is_shown;
@@ -80,7 +80,7 @@ public class UserModel  extends ResponseModel implements Serializable {
         }
     }
 
-    public static class UserCountry implements Serializable{
+    public static class UserCountry implements Serializable {
         private int id;
         private String code;
         private String phone_code;
@@ -113,7 +113,7 @@ public class UserModel  extends ResponseModel implements Serializable {
         }
     }
 
-    public static class Data implements Serializable{
+    public static class Data implements Serializable {
         private int id;
         private String code;
         private String user_type;
@@ -144,8 +144,10 @@ public class UserModel  extends ResponseModel implements Serializable {
         private String software_type;
         private String deleted_at;
         private String token;
+        private double rate;
         private UserSpecialization user_specialization;
         private UserCountry user_country;
+        private List<UserRateModel> user_rates;
         private String firebase_token;
 
 
@@ -269,6 +271,14 @@ public class UserModel  extends ResponseModel implements Serializable {
             return token;
         }
 
+        public double getRate() {
+            return rate;
+        }
+
+        public List<UserRateModel> getUser_rates() {
+            return user_rates;
+        }
+
         public UserSpecialization getUser_specialization() {
             return user_specialization;
         }
@@ -285,7 +295,6 @@ public class UserModel  extends ResponseModel implements Serializable {
             this.firebase_token = firebase_token;
         }
     }
-
 
 
 }

@@ -36,6 +36,7 @@ import com.addukkan.uis.activity_language.LanguageActivity;
 import com.addukkan.uis.activity_login.LoginActivity;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
 import com.addukkan.uis.activity_notification.NotificationActivity;
+import com.addukkan.uis.activity_rooms.RoomsActivity;
 import com.addukkan.uis.activity_sign_up.SignUpActivity;
 
 import java.io.IOException;
@@ -80,6 +81,7 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
             startActivityForResult(intent, 100);
         });
         binding.setNotcount("0");
+
         if (userModel != null) {
             getNotificationCount();
         }
@@ -124,7 +126,8 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
         if (userModel == null) {
             navigateToLoginActivity();
         } else {
-
+            Intent intent = new Intent(activity, RoomsActivity.class);
+            startActivity(intent);
         }
     }
 

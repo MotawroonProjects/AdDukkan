@@ -218,7 +218,6 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onResponse(Call<UserModel> call, Response<UserModel> response) {
                         dialog.dismiss();
                         if (response.isSuccessful()) {
-
                             if (response.body()!=null&&response.body().getStatus()==200){
                                 if (response.body() != null&&response.body().getData()!=null){
                                     Preferences preferences = Preferences.getInstance();
@@ -226,8 +225,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     setResult(RESULT_OK);
                                     finish();
                                 }
-                            }else if (response.body()!=null&&response.body().getStatus()==404){
-                                Toast.makeText(SignUpActivity.this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
+                            }else if (response.body()!=null&&response.body().getStatus()==409){
+                                Toast.makeText(SignUpActivity.this, R.string.ph_found, Toast.LENGTH_SHORT).show();
 
                             }else {
                                 Toast.makeText(SignUpActivity.this,getString(R.string.failed), Toast.LENGTH_SHORT).show();
@@ -238,6 +237,11 @@ public class SignUpActivity extends AppCompatActivity {
                         } else {
                             dialog.dismiss();
 
+                            try {
+                                Log.e("error_code",response.code()+"_");
+                            } catch (NullPointerException e){
+
+                            }
                             switch (response.code()){
                                 case 500:
                                     Toast.makeText(SignUpActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
@@ -246,11 +250,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     Toast.makeText(SignUpActivity.this,getString(R.string.failed), Toast.LENGTH_SHORT).show();
                                     break;
                             }
-                            try {
-                                Log.e("error_code",response.code()+"_");
-                            } catch (NullPointerException e){
 
-                            }
                         }
 
 

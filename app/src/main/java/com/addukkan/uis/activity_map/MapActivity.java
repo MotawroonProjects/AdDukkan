@@ -310,6 +310,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), zoom));
     }
 
+
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         initLocationRequest();
