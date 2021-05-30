@@ -100,7 +100,7 @@ public class NotificationActivity extends AppCompatActivity {
                 return;
             }
             Api.getService(Tags.base_url)
-                    .getNotifications(userModel.getData().getToken(), userModel.getData().getId())
+                    .getNotifications(userModel.getData().getToken(),lang, userModel.getData().getId())
                     .enqueue(new Callback<NotificationDataModel>() {
                         @Override
                         public void onResponse(Call<NotificationDataModel> call, Response<NotificationDataModel> response) {

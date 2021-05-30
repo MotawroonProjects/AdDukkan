@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -77,6 +78,23 @@ public class FavouriteProductAdapter extends RecyclerView.Adapter<RecyclerView.V
 
            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
         });
+        myHolder.binding.imgDecrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        myHolder.binding.imgIncrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myHolder.binding.tvCounter.setText((Integer.parseInt(myHolder.binding.tvCounter.getText().toString())+1)+"");
+                if(context instanceof  MyFavoriteActivity){
+                    MyFavoriteActivity myFavoriteActivity=(MyFavoriteActivity)context;
+                    myFavoriteActivity.additemtoCart(list.get(holder.getLayoutPosition()));
+                }
+            }
+        });
+
     }
 
     @Override

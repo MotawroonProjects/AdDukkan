@@ -128,5 +128,6 @@
     <string name="not_avail_now">غير متاح الان</string>
     <string name="suc_and">تم بنجاح وسيتم التواصل معك</string>
     <string name="ph_found">رقم الجوال موجود مسبقا</string>
+    <string name="total">الإجمالى</string>
 
 </resources>

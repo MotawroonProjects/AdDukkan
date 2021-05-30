@@ -2,6 +2,8 @@ package com.addukkan.services;
 
 import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.BrandDataModel;
+import com.addukkan.models.AddCartDataModel;
+import com.addukkan.models.CartDataModel;
 import com.addukkan.models.CompanyDataModel;
 import com.addukkan.models.CountryDataModel;
 import com.addukkan.models.CreateRoomModel;
@@ -25,7 +27,6 @@ import com.addukkan.models.UserModel;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -183,6 +184,7 @@ public interface Service {
     );
     @GET("api/my-notification")
     Call<NotificationDataModel> getNotifications(@Header("Authorization") String bearer_token,
+                                                 @Header("lang") String lang,
                                                  @Query("user_id") int user_id
     );
 
@@ -203,9 +205,13 @@ public interface Service {
             @Header("lang") String lang,
             @Body FilterModel filterModel);
     @GET("api/companies")
-    Call<CompanyDataModel> getCompany(@Query("search_key") String search_key);
+    Call<CompanyDataModel> getCompany(
+            @Header("lang") String lang,
+            @Query("search_key") String search_key);
     @GET("api/brands")
-    Call<BrandDataModel> getBrands(@Query("search_key") String search_key);
+    Call<BrandDataModel> getBrands(
+            @Header("lang") String lang,
+            @Query("search_key") String search_key);
     @FormUrlEncoded
     @POST("api/contact-us")
     Call<StatusResponse> contactUs(@Field("name") String name,
@@ -221,7 +227,10 @@ public interface Service {
 
 
     );
-
+    @POST("api/add-cart")
+    Call<CartDataModel> createCart(
+            @Header("Authorization") String bearer_token,
+            @Body AddCartDataModel addCartDataModel);
     @GET("api/specializations")
     Call<SpecialDataModel> getSpecial(@Header("lang") String lang);
 

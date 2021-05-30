@@ -201,7 +201,7 @@ private FilterModel filterModel;
 
 
         Api.getService(Tags.base_url)
-                .getCompany("all").enqueue(new Callback<CompanyDataModel>() {
+                .getCompany(lang,"all").enqueue(new Callback<CompanyDataModel>() {
             @Override
             public void onResponse(Call<CompanyDataModel> call, Response<CompanyDataModel> response) {
                 //   binding.progBar.setVisibility(View.GONE);
@@ -275,7 +275,7 @@ private FilterModel filterModel;
 
 
         Api.getService(Tags.base_url)
-                .getBrands("all").enqueue(new Callback<BrandDataModel>() {
+                .getBrands(lang,"all").enqueue(new Callback<BrandDataModel>() {
             @Override
             public void onResponse(Call<BrandDataModel> call, Response<BrandDataModel> response) {
                 //   binding.progBar.setVisibility(View.GONE);
