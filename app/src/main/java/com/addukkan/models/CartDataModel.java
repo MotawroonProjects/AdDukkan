@@ -15,7 +15,7 @@ public class CartDataModel extends ResponseModel implements Serializable {
         public String prescription_id;
         public int user_id;
         public double total_price;
-        private List<Detials> detials;
+        private List<Detials> details;
 
         public int getId() {
             return id;
@@ -33,8 +33,8 @@ public class CartDataModel extends ResponseModel implements Serializable {
             return total_price;
         }
 
-        public List<Detials> getDetials() {
-            return detials;
+        public List<Detials> getDetails() {
+            return details;
         }
 
         public class Detials implements Serializable{

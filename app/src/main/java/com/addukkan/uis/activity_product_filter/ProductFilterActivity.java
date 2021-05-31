@@ -18,24 +18,31 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.addukkan.R;
-import com.addukkan.adapters.DoctorsAdapter;
-import com.addukkan.adapters.DuckanCategoryAdapter;
-import com.addukkan.adapters.Product2Adapter;
+
 import com.addukkan.adapters.ProductLisProductAdapter;
 import com.addukkan.adapters.ProductOfferAdapter;
 import com.addukkan.databinding.ActivityProductFilterBinding;
+import com.addukkan.databinding.FavouriteProductRowBinding;
+import com.addukkan.databinding.ListProductRowBinding;
+import com.addukkan.databinding.OfferProductRowBinding;
 import com.addukkan.interfaces.Listeners;
 import com.addukkan.language.Language;
 import com.addukkan.models.ALLProductDataModel;
+import com.addukkan.models.AddCartDataModel;
+import com.addukkan.models.AddCartProductItemModel;
 import com.addukkan.models.AppLocalSettings;
+import com.addukkan.models.CartDataModel;
+import com.addukkan.models.FavouriteProductDataModel;
 import com.addukkan.models.FilterModel;
 import com.addukkan.models.MainCategoryDataModel;
+import com.addukkan.models.ResponseModel;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_filter.FilterActivity;
+import com.addukkan.uis.activity_login.LoginActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,6 +68,7 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
     private ProductOfferAdapter product2Adapter;
     private ProductLisProductAdapter productLisProductAdapter;
     private int pos;
+    private String country_coude;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -111,10 +119,10 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
         binding.imfilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(ProductFilterActivity.this, FilterActivity.class);
-                intent.putExtra("data",sub_departments);
-                intent.putExtra("pos",pos);
-                startActivityForResult(intent,100);
+                Intent intent = new Intent(ProductFilterActivity.this, FilterActivity.class);
+                intent.putExtra("data", sub_departments);
+                intent.putExtra("pos", pos);
+                startActivityForResult(intent, 100);
             }
         });
         departments.add(sub_departments.getSub_departments().get(pos).getId());
@@ -126,7 +134,11 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
         settings = preferences.isLanguageSelected(this);
 
         userModel = preferences.getUserData(this);
-
+        if (userModel != null) {
+            country_coude = userModel.getData().getCountry_code();
+        } else {
+            country_coude = settings.getCountry_code();
+        }
         if (userModel != null) {
             filterModel.setCountry_code(userModel.getData().getCountry_code());
         } else {
@@ -140,27 +152,27 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
         binding.cardclose.setOnClickListener(v -> closeSheet());
         //binding.progBar.setVisibility(View.GONE);
 
-       // binding.recView.scheduleLayoutAnimation();
-binding.imlist.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        binding.imlist.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.colorAccent));
-        binding.immenu.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.gray11));
+        // binding.recView.scheduleLayoutAnimation();
+        binding.imlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.imlist.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.colorAccent));
+                binding.immenu.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.gray11));
 
-        binding.recView.setLayoutManager(new LinearLayoutManager(ProductFilterActivity.this));
-  binding.recView.setAdapter(productLisProductAdapter);
+                binding.recView.setLayoutManager(new LinearLayoutManager(ProductFilterActivity.this));
+                binding.recView.setAdapter(productLisProductAdapter);
 
-    }
-});
-binding.immenu.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        binding.immenu.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.colorAccent));
-        binding.imlist.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.gray11));
-        binding.recView.setLayoutManager(new GridLayoutManager(ProductFilterActivity.this,2));
-   binding.recView.setAdapter(product2Adapter);
-    }
-});
+            }
+        });
+        binding.immenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.immenu.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.colorAccent));
+                binding.imlist.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.gray11));
+                binding.recView.setLayoutManager(new GridLayoutManager(ProductFilterActivity.this, 2));
+                binding.recView.setAdapter(product2Adapter);
+            }
+        });
         binding.radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -264,6 +276,7 @@ binding.immenu.setOnClickListener(new View.OnClickListener() {
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
         }
+        filterModel.setUser_id(user_id);
         binding.progBar.setVisibility(View.VISIBLE);
         //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
@@ -283,10 +296,10 @@ binding.immenu.setOnClickListener(new View.OnClickListener() {
                                     product2Adapter.notifyDataSetChanged();
                                     productLisProductAdapter.notifyDataSetChanged();
 
-                                binding.tvNoData.setVisibility(View.GONE);
+                                    binding.tvNoData.setVisibility(View.GONE);
                                     //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
                                 } else {
-                                binding.tvNoData.setVisibility(View.VISIBLE);
+                                    binding.tvNoData.setVisibility(View.VISIBLE);
 
                                 }
 
@@ -332,8 +345,8 @@ binding.immenu.setOnClickListener(new View.OnClickListener() {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==100&&resultCode==RESULT_OK){
-            FilterModel filterModel= (FilterModel) data.getSerializableExtra("data");
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            FilterModel filterModel = (FilterModel) data.getSerializableExtra("data");
             this.filterModel.setProduct_company_id(filterModel.getProduct_company_id());
             this.filterModel.setDepartments(filterModel.getDepartments());
             this.filterModel.setBrand_id(filterModel.getBrand_id());
@@ -341,4 +354,264 @@ binding.immenu.setOnClickListener(new View.OnClickListener() {
         }
 
     }
+
+    public void like_dislike(SingleProductModel productModel, int pos, int i) {
+        if (userModel != null) {
+            try {
+                Log.e("llll", productModel.getId() + "");
+
+                Api.getService(Tags.base_url)
+                        .addFavoriteProduct("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", productModel.getId() + "")
+                        .enqueue(new Callback<ResponseModel>() {
+                            @Override
+                            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                                Log.e("dlldl", response.body().getStatus() + "");
+                                if (response.isSuccessful() && response.body().getStatus() == 200) {
+                                    filterData();
+
+
+                                } else {
+
+
+                                    if (response.code() == 500) {
+                                        //      Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                    } else {
+                                        //       Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                                        try {
+
+                                            Log.e("error", response.code() + "_" + response.errorBody().string());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                                try {
+
+                                    if (t.getMessage() != null) {
+                                        Log.e("error", t.getMessage());
+                                        if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                            //            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            //          Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+            }
+        } else {
+            navigateToSignInActivity();
+            // Common.CreateDialogAlert(activity, getString(R.string.please_sign_in_or_sign_up));
+
+        }
+    }
+
+    public void navigateToSignInActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void additemtoCart(SingleProductModel data, ListProductRowBinding binding) {
+        if (userModel != null) {
+            binding.progBar.setVisibility(View.VISIBLE);
+            AddCartDataModel addCartDataModel = new AddCartDataModel();
+            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+            addCartDataModel.setCountry_code(country_coude);
+            addCartDataModel.setUser_id(userModel.getData().getId());
+            double totalprice = 0;
+            if (data.getHave_offer().equals("yes")) {
+                if (data.getOffer_type().equals("value")) {
+                    totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+                } else if (data.getOffer_type().equals("per")) {
+                    totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
+                } else {
+                    totalprice = data.getProduct_default_price().getPrice();
+
+                }
+            } else {
+                totalprice = data.getProduct_default_price().getPrice();
+            }
+            addCartDataModel.setTotal_price(totalprice);
+            addCartProductItemModel.setAmount(1);
+            addCartProductItemModel.setHave_offer(data.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(data.getOffer_min());
+            addCartProductItemModel.setOffer_type(data.getOffer_type());
+            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+            addCartProductItemModel.setPrice(totalprice);
+            addCartProductItemModel.setProduct_id(data.getId() + "");
+            addCartProductItemModel.setOffer_value(data.getOffer_value());
+            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+            addTocart(addCartDataModel, binding);
+        } else {
+            navigateToSignInActivity();
+        }
+    }
+
+    private void addTocart(AddCartDataModel addCartDataModel, ListProductRowBinding binding) {
+
+        binding.imgIncrease.setClickable(false);
+
+        //   Log.e("sllsks", user_id + lang + country_coude);
+        Api.getService(Tags.base_url)
+                .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
+                .enqueue(new Callback<CartDataModel>() {
+                    @Override
+                    public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
+                        binding.progBar.setVisibility(View.GONE);
+                        binding.imgIncrease.setClickable(true);
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) + 1) + "");
+
+
+                            }
+                        } else {
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CartDataModel> call, Throwable t) {
+                        try {
+                            binding.imgIncrease.setClickable(true);
+                            binding.progBar.setVisibility(View.GONE);
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
+
+    public void additemtoCart(SingleProductModel data, OfferProductRowBinding binding) {
+        if (userModel != null) {
+            binding.progBar.setVisibility(View.VISIBLE);
+            AddCartDataModel addCartDataModel = new AddCartDataModel();
+            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+            addCartDataModel.setCountry_code(country_coude);
+            addCartDataModel.setUser_id(userModel.getData().getId());
+            double totalprice = 0;
+            if (data.getHave_offer().equals("yes")) {
+                if (data.getOffer_type().equals("value")) {
+                    totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+                } else if (data.getOffer_type().equals("per")) {
+                    totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
+                } else {
+                    totalprice = data.getProduct_default_price().getPrice();
+
+                }
+            } else {
+                totalprice = data.getProduct_default_price().getPrice();
+            }
+            addCartDataModel.setTotal_price(totalprice);
+            addCartProductItemModel.setAmount(1);
+            addCartProductItemModel.setHave_offer(data.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(data.getOffer_min());
+            addCartProductItemModel.setOffer_type(data.getOffer_type());
+            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+            addCartProductItemModel.setPrice(totalprice);
+            addCartProductItemModel.setProduct_id(data.getId() + "");
+            addCartProductItemModel.setOffer_value(data.getOffer_value());
+            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+            addTocart(addCartDataModel, binding);
+        } else {
+            navigateToSignInActivity();
+        }
+    }
+
+    private void addTocart(AddCartDataModel addCartDataModel, OfferProductRowBinding binding) {
+
+        binding.imgIncrease.setClickable(false);
+
+        //   Log.e("sllsks", user_id + lang + country_coude);
+        Api.getService(Tags.base_url)
+                .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
+                .enqueue(new Callback<CartDataModel>() {
+                    @Override
+                    public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
+                        binding.progBar.setVisibility(View.GONE);
+                        binding.imgIncrease.setClickable(true);
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) + 1) + "");
+
+
+                            }
+                        } else {
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CartDataModel> call, Throwable t) {
+                        try {
+                            binding.imgIncrease.setClickable(true);
+                            binding.progBar.setVisibility(View.GONE);
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
+
 }

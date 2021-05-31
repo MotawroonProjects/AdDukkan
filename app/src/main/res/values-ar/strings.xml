@@ -129,5 +129,10 @@
     <string name="suc_and">تم بنجاح وسيتم التواصل معك</string>
     <string name="ph_found">رقم الجوال موجود مسبقا</string>
     <string name="total">الإجمالى</string>
+    <string name="cart">السله</string>
+    <string name="copoun">كوبون الخصم</string>
+    <string name="expierd">انتهى</string>
+    <string name="not_found">غير موجود</string>
+    <string name="buy2">شراء</string>
 
 </resources>
