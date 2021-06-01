@@ -125,6 +125,12 @@ public class CompleteOrderDetialsActivity extends AppCompatActivity {
                             if (response.body() != null && response.body().getStatus() == 200) {
                                 binding.flData.setVisibility(View.VISIBLE);
                                 binding.btnComplete.setVisibility(View.GONE);
+                            CompleteOrderDetialsActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            });
                             }
                         } else {
 
