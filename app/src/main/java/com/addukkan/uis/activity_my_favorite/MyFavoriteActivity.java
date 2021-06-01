@@ -2,6 +2,7 @@ package com.addukkan.uis.activity_my_favorite;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.addukkan.R;
 import com.addukkan.adapters.FavouriteProductAdapter;
 import com.addukkan.databinding.ActivityMyFavoriteBinding;
+import com.addukkan.databinding.FavouriteProductRowBinding;
 import com.addukkan.interfaces.Listeners;
 import com.addukkan.language.Language;
 import com.addukkan.models.ALLProductDataModel;
@@ -33,6 +35,8 @@ import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
 import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
+import com.addukkan.uis.activity_cart.CartActivity;
+import com.addukkan.uis.activity_home.HomeActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,6 +121,18 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
 //            }
 //        });*/
         getData();
+        binding.flCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userModel!=null){
+                    Intent intent=new Intent(MyFavoriteActivity.this, CartActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                  //  navigateToSignInActivity();
+                }
+            }
+        });
     }
 
 
@@ -268,8 +284,8 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         }
     }
 
-    public void additemtoCart(FavouriteProductDataModel.Data data) {
-
+    public void additemtoCart(FavouriteProductDataModel.Data data, FavouriteProductRowBinding binding) {
+        binding.progBar.setVisibility(View.VISIBLE);
         AddCartDataModel addCartDataModel = new AddCartDataModel();
         List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
         AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
@@ -296,31 +312,31 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         addCartProductItemModel.setOffer_type(data.getProduct_data().getOffer_type());
         addCartProductItemModel.setOld_price(data.getProduct_data().getProduct_default_price().getPrice());
         addCartProductItemModel.setPrice(totalprice);
+        addCartProductItemModel.setOffer_value(data.getProduct_data().getOffer_value());
         addCartProductItemModel.setProduct_id(data.getProduct_id() + "");
         addCartProductItemModel.setProduct_price_id(data.getProduct_data().getProduct_default_price().getId() + "");
         addCartProductItemModel.setVendor_id(data.getProduct_data().getVendor_id() + "");
         addCartProductItemModelList.add(addCartProductItemModel);
         addCartDataModel.setCart_products(addCartProductItemModelList);
-        addTocart(addCartDataModel);
+        addTocart(addCartDataModel,binding);
     }
 
-    private void addTocart(AddCartDataModel addCartDataModel) {
+    private void addTocart(AddCartDataModel addCartDataModel, FavouriteProductRowBinding binding) {
 
+binding.imgIncrease.setClickable(false);
 
-        ProgressDialog dialog = new ProgressDialog(this,R.style.TransparentProgressDialog);
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
         //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
                 .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
                 .enqueue(new Callback<CartDataModel>() {
                     @Override
                     public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
-                        dialog.dismiss();
+                      binding.progBar.setVisibility(View.GONE);
+                      binding.imgIncrease.setClickable(true);
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-
+                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString())+1)+"");
+MyFavoriteActivity.this.binding.setCartCount(response.body().getData().getDetails().size()+"");
 
                             }
                         } else {
@@ -342,7 +358,8 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
                     @Override
                     public void onFailure(Call<CartDataModel> call, Throwable t) {
                         try {
-                            dialog.dismiss();
+                            binding.imgIncrease.setClickable(true);
+                            binding.progBar.setVisibility(View.GONE);
                             if (t.getMessage() != null) {
                                 Log.e("error_not_code", t.getMessage() + "__");
 

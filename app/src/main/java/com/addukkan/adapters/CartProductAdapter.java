@@ -12,24 +12,22 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.addukkan.R;
+import com.addukkan.databinding.CartProductRowBinding;
 import com.addukkan.databinding.FavouriteProductRowBinding;
-import com.addukkan.databinding.OfferProductRowBinding;
-import com.addukkan.databinding.ProductRowBinding;
+import com.addukkan.models.CartDataModel;
 import com.addukkan.models.FavouriteProductDataModel;
-import com.addukkan.models.ProductDataModel;
-import com.addukkan.models.SingleProductModel;
-import com.addukkan.uis.activity_home.fragments.FragmentOffer;
+import com.addukkan.uis.activity_cart.CartActivity;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
 
 import java.util.List;
 
-public class FavouriteProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CartProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<FavouriteProductDataModel.Data> list;
+    private List<CartDataModel.Data.Detials> list;
     private Context context;
     private LayoutInflater inflater;
     //private Fragment_Main fragment_main;
-    public FavouriteProductAdapter(List<FavouriteProductDataModel.Data> list, Context context) {
+    public CartProductAdapter(List<CartDataModel.Data.Detials> list, Context context) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -43,7 +41,7 @@ public class FavouriteProductAdapter extends RecyclerView.Adapter<RecyclerView.V
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
 
-        FavouriteProductRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.favourite_product_row, parent, false);
+        CartProductRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.cart_product_row, parent, false);
         return new MyHolder(binding);
 
 
@@ -53,47 +51,47 @@ public class FavouriteProductAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
-        myHolder.binding.setModel(list.get(position).getProduct_data());
+        myHolder.binding.setModel(list.get(position));
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            ((MyHolder) holder).binding.checkbox.setChecked(true);
-        myHolder.binding.checkbox.setOnClickListener(v -> {
-
-            if (context instanceof MyFavoriteActivity) {
-
-                MyFavoriteActivity fragment_main = (MyFavoriteActivity) context;
-
-                fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()).getProduct_data(), myHolder.getLayoutPosition(), 0);
-
-            }
 
 
 
 
-        });
-
-//Log.e("eeee",list.get(position).getHave_offer());
+//Log.e("eeee",list.get(position).getOffer_value()+""+(list.get(position).getAmount()%list.get(position).getOffer_min()));
          // Log.e("ssss",((list.get(position).getHave_offer().equals("yes")?(list.get(position).getOffer_type().equals("per")?(list.get(position).getProduct_default_price().getPrice()-((list.get(position).getProduct_default_price().getPrice()*list.get(position).getOffer_value())/100)):list.get(position).getProduct_default_price().getPrice()-list.get(position).getOffer_value()):list.get(position).getProduct_default_price().getPrice())+""));
         myHolder.itemView.setOnClickListener(view -> {
            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
 
            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
         });
-        myHolder.binding.imgDecrease.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         myHolder.binding.imgIncrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(context instanceof  MyFavoriteActivity){
-                    MyFavoriteActivity myFavoriteActivity=(MyFavoriteActivity)context;
-                    myFavoriteActivity.additemtoCart(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding);
+                if(context instanceof  CartActivity){
+                    Log.e("D;dldlld","ldldldl");
+                    CartActivity cartActivity=(CartActivity) context;
+                    cartActivity.additemtoCart(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding,"increment");
                 }
             }
         });
-
+        myHolder.binding.imgDecrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof  CartActivity){
+                    CartActivity cartActivity=(CartActivity) context;
+                    cartActivity.additemtoCart(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding,"decrement");
+                }
+            }
+        });
+        myHolder.binding.imgRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof  CartActivity){
+                    CartActivity cartActivity=(CartActivity) context;
+                    cartActivity.deleteItemFromcart(list.get(holder.getLayoutPosition()));
+                }
+            }
+        });
     }
 
     @Override
@@ -102,9 +100,9 @@ public class FavouriteProductAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
-        public FavouriteProductRowBinding binding;
+        public CartProductRowBinding binding;
 
-        public MyHolder(@NonNull FavouriteProductRowBinding binding) {
+        public MyHolder(@NonNull CartProductRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 

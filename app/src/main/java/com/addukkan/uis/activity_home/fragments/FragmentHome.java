@@ -44,10 +44,17 @@ import com.addukkan.adapters.Product2Adapter;
 import com.addukkan.adapters.SliderAdapter;
 import com.addukkan.databinding.DialogAlertBinding;
 import com.addukkan.databinding.DialogRoshtaBinding;
+import com.addukkan.databinding.FavouriteProductRowBinding;
 import com.addukkan.databinding.FragmentHomeBinding;
+import com.addukkan.databinding.ProductRowBinding;
 import com.addukkan.models.ALLProductDataModel;
+import com.addukkan.models.AddCartDataModel;
+import com.addukkan.models.AddCartProductItemModel;
 import com.addukkan.models.AppLocalSettings;
+import com.addukkan.models.CartDataModel;
+import com.addukkan.models.FavouriteProductDataModel;
 import com.addukkan.models.MainCategoryDataModel;
+import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.ResponseModel;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.SliderDataModel;
@@ -185,7 +192,6 @@ public class FragmentHome extends Fragment {
             closeSheet();
             checkCameraPermission();
         });
-
         binding.btnCancel.setOnClickListener(view -> closeSheet());
 
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
@@ -877,6 +883,199 @@ public class FragmentHome extends Fragment {
                     }
                 });
 
+    }
+    public void additemtoCart(SingleProductModel data, ProductRowBinding binding) {
+        if(userModel!=null){
+        binding.progBar.setVisibility(View.VISIBLE);
+        AddCartDataModel addCartDataModel = new AddCartDataModel();
+        List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+        addCartDataModel.setCountry_code(country_coude);
+        addCartDataModel.setUser_id(userModel.getData().getId());
+        double totalprice = 0;
+        if (data.getHave_offer().equals("yes")) {
+            if (data.getOffer_type().equals("value")) {
+                totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+            } else if (data.getOffer_type().equals("per")) {
+                totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
+            } else {
+                totalprice = data.getProduct_default_price().getPrice();
+
+            }
+        } else {
+            totalprice = data.getProduct_default_price().getPrice();
+        }
+        addCartDataModel.setTotal_price(totalprice);
+        addCartProductItemModel.setAmount(1);
+        addCartProductItemModel.setHave_offer(data.getHave_offer());
+        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+        addCartProductItemModel.setOffer_min(data.getOffer_min());
+        addCartProductItemModel.setOffer_type(data.getOffer_type());
+        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+        addCartProductItemModel.setPrice(totalprice);
+        addCartProductItemModel.setProduct_id(data.getId() + "");
+        addCartProductItemModel.setOffer_value(data.getOffer_value());
+        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+        addCartProductItemModelList.add(addCartProductItemModel);
+        addCartDataModel.setCart_products(addCartProductItemModelList);
+        addTocart(addCartDataModel,binding);}
+        else {
+            activity.navigateToSignInActivity();
+        }
+    }
+
+    private void addTocart(AddCartDataModel addCartDataModel, ProductRowBinding binding) {
+        binding.imgIncrease.setClickable(false);
+
+        //   Log.e("sllsks", user_id + lang + country_coude);
+        Api.getService(Tags.base_url)
+                .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
+                .enqueue(new Callback<CartDataModel>() {
+                    @Override
+                    public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
+                        binding.progBar.setVisibility(View.GONE);
+                        binding.imgIncrease.setClickable(true);
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString())+1)+"");
+
+                                activity.binding.setCartCount(response.body().getData().getDetails().size()+"");
+
+                            }
+                        } else {
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CartDataModel> call, Throwable t) {
+                        try {
+                            binding.imgIncrease.setClickable(true);
+                            binding.progBar.setVisibility(View.GONE);
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
+
+    public void additemtoCart2(ProductDataModel data, ProductRowBinding binding) {
+       if(userModel!=null){
+        binding.progBar.setVisibility(View.VISIBLE);
+        AddCartDataModel addCartDataModel = new AddCartDataModel();
+        List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+        addCartDataModel.setCountry_code(country_coude);
+        addCartDataModel.setUser_id(userModel.getData().getId());
+        double totalprice = 0;
+        if (data.getProduct_data().getHave_offer().equals("yes")) {
+            if (data.getProduct_data().getOffer_type().equals("value")) {
+                totalprice = data.getProduct_data().getProduct_default_price().getPrice() - data.getProduct_data().getOffer_value();
+            } else if (data.getProduct_data().getOffer_type().equals("per")) {
+                totalprice = (data.getProduct_data().getProduct_default_price().getPrice()) - ((data.getProduct_data().getProduct_default_price().getPrice() * data.getProduct_data().getOffer_value()) / 100);
+            } else {
+                totalprice = data.getProduct_data().getProduct_default_price().getPrice();
+
+            }
+        } else {
+            totalprice = data.getProduct_data().getProduct_default_price().getPrice();
+        }
+        addCartDataModel.setTotal_price(totalprice);
+        addCartProductItemModel.setAmount(1);
+        addCartProductItemModel.setHave_offer(data.getProduct_data().getHave_offer());
+        addCartProductItemModel.setOffer_bonus(data.getProduct_data().getOffer_bonus());
+        addCartProductItemModel.setOffer_min(data.getProduct_data().getOffer_min());
+        addCartProductItemModel.setOffer_type(data.getProduct_data().getOffer_type());
+        addCartProductItemModel.setOld_price(data.getProduct_data().getProduct_default_price().getPrice());
+        addCartProductItemModel.setPrice(totalprice);
+           addCartProductItemModel.setOffer_value(data.getProduct_data().getOffer_value());
+           addCartProductItemModel.setProduct_id(data.getProduct_data().getId() + "");
+        addCartProductItemModel.setProduct_price_id(data.getProduct_data().getProduct_default_price().getId() + "");
+        addCartProductItemModel.setVendor_id(data.getProduct_data().getVendor_id() + "");
+        addCartProductItemModelList.add(addCartProductItemModel);
+        addCartDataModel.setCart_products(addCartProductItemModelList);
+        addTocart2(addCartDataModel,binding);}
+       else {
+           activity.navigateToSignInActivity();
+       }
+    }
+
+    private void addTocart2(AddCartDataModel addCartDataModel, ProductRowBinding binding) {
+
+        binding.imgIncrease.setClickable(false);
+
+        //   Log.e("sllsks", user_id + lang + country_coude);
+        Api.getService(Tags.base_url)
+                .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
+                .enqueue(new Callback<CartDataModel>() {
+                    @Override
+                    public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
+                       Log.e("dlldll",response.code()+"");
+                        binding.progBar.setVisibility(View.GONE);
+                        binding.imgIncrease.setClickable(true);
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString())+1)+"");
+                                activity.binding.setCartCount(response.body().getData().getDetails().size()+"");
+
+
+                            }
+                        } else {
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CartDataModel> call, Throwable t) {
+                        try {
+                            binding.imgIncrease.setClickable(true);
+                            binding.progBar.setVisibility(View.GONE);
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
     }
 
 }

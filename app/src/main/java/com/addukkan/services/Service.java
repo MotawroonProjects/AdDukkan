@@ -6,6 +6,7 @@ import com.addukkan.models.AddCartDataModel;
 import com.addukkan.models.CartDataModel;
 import com.addukkan.models.CompanyDataModel;
 import com.addukkan.models.CountryDataModel;
+import com.addukkan.models.CouponDataModel;
 import com.addukkan.models.CreateRoomModel;
 import com.addukkan.models.DoctorsDataModel;
 import com.addukkan.models.FavouriteProductDataModel;
@@ -289,5 +290,37 @@ public interface Service {
     );
 
 
+    @GET("api/my-cart")
+    Call<CartDataModel> getMyCart(
+            @Header("Authorization") String Authorization,
+            @Header("lang") String lang,
+            @Query("user_id") String user_id
+    );
+    @FormUrlEncoded
+    @POST("api/change-item-amount")
+    Call<CartDataModel> incrementDecrementCart(
+            @Header("Authorization") String bearer_token,
+            @Field("country_code") String country_code,
+            @Field("user_id") String user_id,
+            @Field("id") String id,
+            @Field("cart_id") String cart_id,
+            @Field("amount") String amount,
+            @Field("operation") String operation
+            );
+    @FormUrlEncoded
+    @POST("api/delete-item-cart")
+    Call<CartDataModel> deleteItemCart(
+            @Header("Authorization") String bearer_token,
 
+            @Field("id") String id,
+            @Field("cart_id") String cart_id
+    );
+    @FormUrlEncoded
+    @POST("api/active-coupon")
+    Call<CouponDataModel> checkCoupon(
+            @Header("Authorization") String bearer_token,
+
+            @Field("user_id") String user_id,
+            @Field(value = "code") String code
+    );
 }

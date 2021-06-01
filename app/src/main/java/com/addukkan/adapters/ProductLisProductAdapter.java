@@ -3,6 +3,7 @@ package com.addukkan.adapters;
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import com.addukkan.databinding.ListProductRowBinding;
 import com.addukkan.databinding.OfferProductRowBinding;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
+import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
+import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
 
 import java.util.List;
 
@@ -63,9 +66,9 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
         });
         myHolder.binding.checkbox.setOnClickListener(v -> {
 
-            if (fragment instanceof FragmentOffer) {
+            if (context instanceof ProductFilterActivity) {
 
-                FragmentOffer fragment_main = (FragmentOffer) fragment;
+                ProductFilterActivity fragment_main = (ProductFilterActivity) context;
 
                 fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), 0);
 
@@ -74,6 +77,15 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
 
 
 
+        });
+        myHolder.binding.imgIncrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof ProductFilterActivity){
+                    ProductFilterActivity productFilterActivity=(ProductFilterActivity)context;
+                    productFilterActivity.additemtoCart(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding);
+                }
+            }
         });
 
     }

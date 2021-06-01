@@ -23,6 +23,7 @@ import com.addukkan.R;
 import com.addukkan.adapters.SideMenuCategoryAdapter;
 import com.addukkan.databinding.ActivityHomeBinding;
 import com.addukkan.language.Language;
+import com.addukkan.models.CartDataModel;
 import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.ResponseModel;
 import com.addukkan.models.UserModel;
@@ -30,6 +31,7 @@ import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
 import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
+import com.addukkan.uis.activity_cart.CartActivity;
 import com.addukkan.uis.activity_home.fragments.FragmenDukkan;
 import com.addukkan.uis.activity_home.fragments.FragmentHome;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
@@ -48,7 +50,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
-    private ActivityHomeBinding binding;
+    public ActivityHomeBinding binding;
     private String lang = "";
     private Preferences preferences;
     private UserModel userModel;
@@ -81,12 +83,12 @@ public class HomeActivity extends AppCompatActivity {
         lang = Paper.book().read("lang", "ar");
         preferences = Preferences.getInstance();
         userModel = preferences.getUserData(this);
-        categoryDataModelDataList=new ArrayList<>();
-        sideMenuSubCategoryAdapter=new SideMenuCategoryAdapter(categoryDataModelDataList,this);
+        categoryDataModelDataList = new ArrayList<>();
+        sideMenuSubCategoryAdapter = new SideMenuCategoryAdapter(categoryDataModelDataList, this);
         binding.recView.setLayoutManager(new LinearLayoutManager(this));
         binding.recView.setAdapter(sideMenuSubCategoryAdapter);
         fragmentManager = getSupportFragmentManager();
-        toggle = new ActionBarDrawerToggle(this,binding.drawerLayout,binding.toolBar,R.string.open,R.string.close);
+        toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolBar, R.string.open, R.string.close);
         toggle.syncState();
         binding.toolBar.setNavigationIcon(R.drawable.ic_toolbar_nav_icon);
         updateCartCount(0);
@@ -99,7 +101,17 @@ public class HomeActivity extends AppCompatActivity {
 
         updateTokenFireBase();
         getSideMenu();
-
+        binding.flCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userModel != null) {
+                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                    startActivity(intent);
+                } else {
+                    navigateToSignInActivity();
+                }
+            }
+        });
     }
 
     private void updateCartCount(int count) {
@@ -140,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
-fragmenDukkan.setDepartid(id);
+        fragmenDukkan.setDepartid(id);
         if (fragmentHome != null && fragmentHome.isAdded()) {
             fragmentManager.beginTransaction().hide(fragmentHome).commit();
         }
@@ -291,21 +303,20 @@ fragmenDukkan.setDepartid(id);
 
     }
 
-    private void updateTokenFireBase()
-    {
-        if (userModel!=null){
+    private void updateTokenFireBase() {
+        if (userModel != null) {
             try {
                 FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         String token = task.getResult().getToken();
                         Api.getService(Tags.base_url)
-                                .updateFirebaseToken("Bearer "+userModel.getData().getToken(),userModel.getData().getId(),token,"android")
+                                .updateFirebaseToken("Bearer " + userModel.getData().getToken(), userModel.getData().getId(), token, "android")
                                 .enqueue(new Callback<ResponseModel>() {
                                     @Override
                                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                                        if (response.isSuccessful() && response.body() != null&&response.body().getStatus()==200) {
+                                        if (response.isSuccessful() && response.body() != null && response.body().getStatus() == 200) {
                                             userModel.getData().setFirebase_token(token);
-                                            preferences.create_update_userdata(HomeActivity.this,userModel);
+                                            preferences.create_update_userdata(HomeActivity.this, userModel);
 
                                         } else {
                                             try {
@@ -326,7 +337,7 @@ fragmenDukkan.setDepartid(id);
                                                 if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
                                                     //Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                   // Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    // Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
 
@@ -345,30 +356,29 @@ fragmenDukkan.setDepartid(id);
         }
     }
 
-    public void logout()
-    {
-        if (userModel==null){
+    public void logout() {
+        if (userModel == null) {
             return;
         }
-        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         dialog.show();
         Api.getService(Tags.base_url)
-                .logout("Bearer "+userModel.getData().getToken(),userModel.getData().getId(),userModel.getData().getFirebase_token(),"android")
+                .logout("Bearer " + userModel.getData().getToken(), userModel.getData().getId(), userModel.getData().getFirebase_token(), "android")
                 .enqueue(new Callback<ResponseModel>() {
                     @Override
                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                         dialog.dismiss();
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
-                                if (response.body().getStatus()==200){
+                                if (response.body().getStatus() == 200) {
                                     userModel = null;
                                     preferences.clear(HomeActivity.this);
-                                    if (fragmentProfile!=null&&fragmentProfile.isAdded()){
+                                    if (fragmentProfile != null && fragmentProfile.isAdded()) {
                                         fragmentProfile.updateUserData();
                                     }
-                                }else {
+                                } else {
                                 }
                             }
 
@@ -380,7 +390,6 @@ fragmenDukkan.setDepartid(id);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
 
 
                         }
@@ -395,7 +404,7 @@ fragmenDukkan.setDepartid(id);
                                 if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
                                     Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
                                 } else {
-                                     Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -406,6 +415,7 @@ fragmenDukkan.setDepartid(id);
 
 
     }
+
     public void navigateToSignInActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
@@ -429,10 +439,10 @@ fragmenDukkan.setDepartid(id);
                                 if (categoryDataModelDataList.size() > 0) {
                                     sideMenuSubCategoryAdapter.notifyDataSetChanged();
 
-                                binding.tvNoData.setVisibility(View.GONE);
+                                    binding.tvNoData.setVisibility(View.GONE);
                                     //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
                                 } else {
-                                binding.tvNoData.setVisibility(View.VISIBLE);
+                                    binding.tvNoData.setVisibility(View.VISIBLE);
 
                                 }
 
@@ -463,7 +473,7 @@ fragmenDukkan.setDepartid(id);
                                 Log.e("error_not_code", t.getMessage() + "__");
 
                                 if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                   // Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
                                 } else {
                                     //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                                 }
@@ -504,10 +514,82 @@ fragmenDukkan.setDepartid(id);
             displayFragmentHome();
         }
     }
-    public void filter(int layoutPosition,MainCategoryDataModel.Data sub_departments) {
-        Intent intent=new Intent(HomeActivity.this, ProductFilterActivity.class);
-        intent.putExtra("pos",layoutPosition);
-        intent.putExtra("data",sub_departments);
+
+    public void filter(int layoutPosition, MainCategoryDataModel.Data sub_departments) {
+        Intent intent = new Intent(HomeActivity.this, ProductFilterActivity.class);
+        intent.putExtra("pos", layoutPosition);
+        intent.putExtra("data", sub_departments);
         startActivity(intent);
+    }
+
+    public void getData() {
+
+        String user_id = null;
+        if (userModel != null) {
+            user_id = userModel.getData().getId() + "";
+        }
+
+        //binding.progBar.setVisibility(View.VISIBLE);
+
+        Api.getService(Tags.base_url)
+                .getMyCart("Bearer " + userModel.getData().getToken(), lang, user_id)
+                .enqueue(new Callback<CartDataModel>() {
+                    @Override
+                    public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
+                        //binding.progBar.setVisibility(View.GONE);
+                        //     Log.e("Dldldl",response.message());
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+
+                                if (response.body().getData() != null && response.body().getData().getDetails() != null) {
+                                    binding.setCartCount(response.body().getData().getDetails().size() + "");
+                                }
+
+
+                            }
+                        } else {
+                            //binding.progBar.setVisibility(View.GONE);
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CartDataModel> call, Throwable t) {
+                        try {
+                            binding.progBar.setVisibility(View.GONE);
+
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (userModel != null) {
+            getData();
+        }
     }
 }

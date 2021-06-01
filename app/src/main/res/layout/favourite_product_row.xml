@@ -36,18 +36,18 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/small_rounded_primary"
                     android:gravity="center"
+                    android:maxWidth="100dp"
                     android:paddingStart="8dp"
                     android:paddingTop="5dp"
                     android:paddingEnd="8dp"
-                    android:maxWidth="100dp"
                     android:text='@{model.offer_type.equals("per")?model.offer_value+"%":model.offer_type.equals("value")?model.offer_value+"":(@string/buy+model.offer_min+@string/and_got+model.offer_bonus+@string/bouns)}'
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:visibility='@{model.have_offer.equals("yes")?View.VISIBLE:View.GONE,default=gone}'
                     app:layout_constraintEnd_toStartOf="@+id/flcheck"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintHorizontal_bias="0"
                     tools:ignore="RtlCompat" />
 
                 <FrameLayout
@@ -170,52 +170,68 @@
                             android:textSize="13sp" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/ll"
+                    <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/rounded_gray9"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+
+                        >
 
 
-                        <ImageView
-                            android:id="@+id/imgIncrease"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginEnd="15dp"
-                            android:background="@drawable/add_bg"
-                            android:padding="2dp"
-                            android:src="@drawable/add"
-                            tools:ignore="RtlCompat" />
-
-                        <TextView
-                            android:id="@+id/tvCounter"
+                        <LinearLayout
+                            android:id="@+id/ll"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginEnd="15dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/rounded_gray9"
                             android:gravity="center"
-                            android:text="0"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
+                            android:orientation="horizontal">
 
-                        <ImageView
-                            android:id="@+id/imgDecrease"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:visibility="gone"
-                            android:layout_marginStart="15dp"
-                            android:background="@drawable/add_bg"
-                            android:padding="6dp"
-                            android:src="@drawable/ic_minus"
-                            app:tint="@color/white"
 
-                            tools:ignore="RtlCompat" />
-                    </LinearLayout>
+                            <ImageView
+                                android:id="@+id/imgIncrease"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginEnd="15dp"
+                                android:background="@drawable/add_bg"
+                                android:padding="2dp"
+                                android:src="@drawable/add"
+                                tools:ignore="RtlCompat" />
 
+                            <TextView
+                                android:id="@+id/tvCounter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/black"
+                                android:textSize="18sp" />
+
+                            <ImageView
+                                android:id="@+id/imgDecrease"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_marginStart="15dp"
+                                android:background="@drawable/add_bg"
+                                android:padding="6dp"
+                                android:src="@drawable/ic_minus"
+                                android:visibility="gone"
+                                app:tint="@color/white"
+
+                                tools:ignore="RtlCompat" />
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/progBar"
+android:visibility="gone"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center" />
+
+                    </FrameLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

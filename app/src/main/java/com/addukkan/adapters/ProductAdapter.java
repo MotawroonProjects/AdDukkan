@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -78,6 +79,16 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
 
            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
+        });
+        myHolder.binding.imgIncrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(fragment instanceof FragmentHome){
+                    FragmentHome fragmentHome=(FragmentHome)fragment;
+                    fragmentHome.additemtoCart2(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding);
+
+                }
+            }
         });
     }
 
