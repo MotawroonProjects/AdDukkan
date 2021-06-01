@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +30,7 @@ import com.addukkan.tags.Tags;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.paperdb.Paper;
 import retrofit2.Call;
@@ -125,6 +127,25 @@ public class CompleteOrderDetialsActivity extends AppCompatActivity {
                             if (response.body() != null && response.body().getStatus() == 200) {
                                 binding.flData.setVisibility(View.VISIBLE);
                                 binding.btnComplete.setVisibility(View.GONE);
+                                new CountDownTimer(10000, 1000) {
+
+                                    @Override
+                                    public void onTick(long millisUntilFinished) {
+
+
+                                        //    String time = String.format(Locale.ENGLISH, "%02d:%02d", minutes, seconds);
+
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        finish();
+
+                                    }
+                                }.start();
+
+
                             }
                         } else {
 
