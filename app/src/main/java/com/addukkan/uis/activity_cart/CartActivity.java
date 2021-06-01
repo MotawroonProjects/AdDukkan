@@ -2,12 +2,14 @@ package com.addukkan.uis.activity_cart;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -16,24 +18,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.addukkan.R;
 import com.addukkan.adapters.CartProductAdapter;
-import com.addukkan.adapters.FavouriteProductAdapter;
 import com.addukkan.databinding.ActivityCartBinding;
 import com.addukkan.databinding.CartProductRowBinding;
-import com.addukkan.databinding.FavouriteProductRowBinding;
+import com.addukkan.databinding.ProductRowBinding;
 import com.addukkan.interfaces.Listeners;
 import com.addukkan.language.Language;
 import com.addukkan.models.AddCartDataModel;
-import com.addukkan.models.AddCartProductItemModel;
+import com.addukkan.models.AddOrderModel;
 import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CartDataModel;
-import com.addukkan.models.CartDataModel;
 import com.addukkan.models.CouponDataModel;
-import com.addukkan.models.ResponseModel;
-import com.addukkan.models.SingleProductModel;
+import com.addukkan.models.SelectedLocation;
+import com.addukkan.models.SingleOrderModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
+import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
+import com.addukkan.uis.activity_location_detials.LocationDetialsActivity;
+import com.addukkan.uis.activity_map.MapActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,10 +57,12 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private Preferences preferences;
 
     private List<CartDataModel.Data.Detials> detialsList;
+    private CartDataModel.Data data2;
     private CartProductAdapter cartProductAdapter;
     private String country_coude;
     private AppLocalSettings settings;
-
+    private String couponid = null;
+private String copoun;
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -96,11 +101,11 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         binding.btcheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String copun=binding.edtCopun.getText().toString();
-                if(!copun.isEmpty()){
+                String copun = binding.edtCopun.getText().toString();
+                if (!copun.isEmpty()) {
                     binding.edtCopun.setError(null);
-                checkCoupon(copun);}
-                else {
+                    checkCoupon(copun);
+                } else {
                     binding.edtCopun.setError(getResources().getString(R.string.field_required));
                 }
             }
@@ -125,7 +130,14 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 //                }
 //            }
 //        });*/
-        getData();
+        binding.btBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartActivity.this, MapActivity.class);
+                startActivityForResult(intent, 100);
+            }
+        });
+      //  getData();
     }
 
 
@@ -155,8 +167,10 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
                                     binding.setModel(response.body().getData());
-                                }else {
-                                    binding.llContainer.setVisibility(View.GONE);
+                                    data2 = response.body().getData();
+                                } else {
+                                    binding.flcontain.setVisibility(View.GONE);
+                                    binding.fltotal.setVisibility(View.GONE);
                                 }
 
 
@@ -208,9 +222,10 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                     }
                 });
     }
+
     private void checkCoupon(String coupon_num) {
-binding.progBarcopun.setVisibility(View.VISIBLE);
-        Api.getService(Tags.base_url).checkCoupon("Bearer " + userModel.getData().getToken(),userModel.getData().getId()+"",coupon_num)
+        binding.progBarcopun.setVisibility(View.VISIBLE);
+        Api.getService(Tags.base_url).checkCoupon("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", coupon_num)
                 .enqueue(new Callback<CouponDataModel>() {
                     @Override
                     public void onResponse(Call<CouponDataModel> call, Response<CouponDataModel> response) {
@@ -218,16 +233,15 @@ binding.progBarcopun.setVisibility(View.VISIBLE);
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 if (response.body().getStatus() == 200) {
-                               //     Toast.makeText(SignUpAdvisorActivity.this, R.string.coupon_vaild, Toast.LENGTH_SHORT).show();
-UpdateData(response.body());
+                                    //     Toast.makeText(SignUpAdvisorActivity.this, R.string.coupon_vaild, Toast.LENGTH_SHORT).show();
+                                    UpdateData(response.body());
 
 
                                 } else if (response.body().getStatus() == 406) {
 
 
                                     Toast.makeText(CartActivity.this, R.string.expierd, Toast.LENGTH_SHORT).show();
-                                }
-                                else if (response.body().getStatus() == 404) {
+                                } else if (response.body().getStatus() == 404) {
 
 
                                     Toast.makeText(CartActivity.this, R.string.not_found, Toast.LENGTH_SHORT).show();
@@ -236,7 +250,7 @@ UpdateData(response.body());
                         } else {
                             binding.progBarcopun.setVisibility(View.GONE);
                             if (response.code() == 422) {
-                           //     Toast.makeText(SignUpAdvisorActivity.this, R.string.inv_coupon, Toast.LENGTH_SHORT).show();
+                                //     Toast.makeText(SignUpAdvisorActivity.this, R.string.inv_coupon, Toast.LENGTH_SHORT).show();
 
 
                             }
@@ -262,7 +276,7 @@ UpdateData(response.body());
                                     //Toast.makeText(SignUpAdvisorActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
                                 } else if (t.getMessage().toLowerCase().contains("socket") || t.getMessage().toLowerCase().contains("canceled")) {
                                 } else {
-                                   // Toast.makeText(SignUpAdvisorActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(SignUpAdvisorActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -275,11 +289,14 @@ UpdateData(response.body());
     }
 
     private void UpdateData(CouponDataModel body) {
-        if(body.getData().getType().equals("value")){
-            binding.tvtotal.setText(getResources().getString(R.string.total)+Math.round((Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total),""))-body.getData().getDiscount_val())));
-        }
-        else {
-            binding.tvtotal.setText(getResources().getString(R.string.total)+Math.round((Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total),""))-(body.getData().getDiscount_val()*Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total),""))/100))));
+        couponid = body.getData().getId() + "";
+
+        if (body.getData().getType().equals("value")) {
+            copoun=body.getData().getDiscount_val()+"";
+            binding.tvtotal.setText(getResources().getString(R.string.total) + Math.round((Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) - body.getData().getDiscount_val())));
+        } else {
+            copoun=(body.getData().getDiscount_val() * Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) / 100)+"";
+            binding.tvtotal.setText(getResources().getString(R.string.total) + Math.round((Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) - (body.getData().getDiscount_val() * Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) / 100))));
 
         }
     }
@@ -450,4 +467,90 @@ UpdateData(response.body());
                 });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            SelectedLocation location = (SelectedLocation) data.getSerializableExtra("location");
+            AddOrderModel addOrderModel = new AddOrderModel();
+            addOrderModel.setAddress(location.getAddress());
+            addOrderModel.setAddress_lat(location.getLat() + "");
+            addOrderModel.setAddress_long(location.getLng() + "");
+            addOrderModel.setCountry_code(country_coude);
+            addOrderModel.setCoupon_id(couponid);
+            addOrderModel.setName(userModel.getData().getName());
+            addOrderModel.setPhone(userModel.getData().getPhone());
+            addOrderModel.setNotes("");
+            addOrderModel.setPhone_code(userModel.getData().getPhone_code());
+            addOrderModel.setShipping("0");
+            addOrderModel.setPayment_method("when_recieving");
+            addOrderModel.setUser_id(userModel.getData().getId());
+            addOrderModel.setProduct_list(detialsList);
+            addOrderModel.setSubtotal(data2.getTotal_price() + "");
+            addOrderModel.setTotal_payments(data2.getTotal_price() + "");
+            addOrderModel.setCopoun(copoun);
+            Intent intent=new Intent(CartActivity.this, LocationDetialsActivity.class);
+            intent.putExtra("data",addOrderModel);
+            startActivity(intent);
+        }
+    }
+
+    private void createOrder(AddOrderModel addOrderModel) {
+        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+        //   Log.e("sllsks", user_id + lang + country_coude);
+        Api.getService(Tags.base_url)
+                .addOrder("Bearer " + userModel.getData().getToken(), addOrderModel)
+                .enqueue(new Callback<SingleOrderModel>() {
+                    @Override
+                    public void onResponse(Call<SingleOrderModel> call, Response<SingleOrderModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+                                getData();
+
+                            }
+                        } else {
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SingleOrderModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
+    }
 }

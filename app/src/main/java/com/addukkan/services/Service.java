@@ -1,6 +1,7 @@
 package com.addukkan.services;
 
 import com.addukkan.models.ALLProductDataModel;
+import com.addukkan.models.AddOrderModel;
 import com.addukkan.models.BrandDataModel;
 import com.addukkan.models.AddCartDataModel;
 import com.addukkan.models.CartDataModel;
@@ -21,6 +22,7 @@ import com.addukkan.models.ResponseModel;
 import com.addukkan.models.RoomDataModel;
 import com.addukkan.models.SettingModel;
 import com.addukkan.models.SingleMessageDataModel;
+import com.addukkan.models.SingleOrderModel;
 import com.addukkan.models.SliderDataModel;
 import com.addukkan.models.SpecialDataModel;
 import com.addukkan.models.StatusResponse;
@@ -323,4 +325,8 @@ public interface Service {
             @Field("user_id") String user_id,
             @Field(value = "code") String code
     );
+    @POST("api/create-order")
+    Call<SingleOrderModel> addOrder(
+            @Header("Authorization") String bearer_token,
+            @Body AddOrderModel addCartDataModel);
 }

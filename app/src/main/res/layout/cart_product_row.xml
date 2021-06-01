@@ -39,10 +39,12 @@
                     android:paddingStart="8dp"
                     android:paddingTop="5dp"
                     android:paddingEnd="8dp"
-                    android:maxWidth="100dp"
+                    android:maxWidth="145dp"
+                    android:singleLine="true"
+                    android:layout_marginEnd="15dp"
                     android:text='@{model.offer_type.equals("per")?model.offer_value+"%":model.offer_type.equals("value")?model.offer_value+"":((model.amount%model.offer_min!=0.0?((model.amount%model.offer_min)*model.offer_bonus):(model.amount*model.offer_bonus))+@string/bouns)}'
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:visibility='@{model.have_offer.equals("yes")?model.amount&lt;model.offer_min?View.GONE:View.VISIBLE:View.GONE,default=gone}'
                     app:layout_constraintEnd_toStartOf="@+id/flcheck"
                     app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +54,7 @@
 
                 <FrameLayout
                     android:id="@+id/flcheck"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     app:layout_constraintEnd_toEndOf="parent"

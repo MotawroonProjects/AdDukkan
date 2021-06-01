@@ -36,13 +36,15 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/small_rounded_primary"
                     android:gravity="center"
-                    android:maxWidth="100dp"
+                    android:maxWidth="145dp"
+                    android:layout_marginEnd="15dp"
                     android:paddingStart="8dp"
                     android:paddingTop="5dp"
                     android:paddingEnd="8dp"
+                    android:singleLine="true"
                     android:text='@{model.offer_type.equals("per")?model.offer_value+"%":model.offer_type.equals("value")?model.offer_value+"":(@string/buy+model.offer_min+@string/and_got+model.offer_bonus+@string/bouns)}'
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:visibility='@{model.have_offer.equals("yes")?View.VISIBLE:View.GONE,default=gone}'
                     app:layout_constraintEnd_toStartOf="@+id/flcheck"
                     app:layout_constraintHorizontal_bias="0"
@@ -52,7 +54,7 @@
 
                 <FrameLayout
                     android:id="@+id/flcheck"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +65,7 @@
                         android:id="@+id/checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_marginStart="15dp"
                         android:button="@drawable/checkbox_bg"
 
 

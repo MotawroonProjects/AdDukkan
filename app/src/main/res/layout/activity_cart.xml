@@ -84,19 +84,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
 
-            <TextView
-                android:id="@+id/tvNoData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/no_data_to_show"
-                android:textColor="@color/black"
-                android:textSize="17sp"
-                android:visibility="gone" />
 
 
         </FrameLayout>
         <FrameLayout
+            android:id="@+id/flcontain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
@@ -172,6 +164,7 @@ android:visibility="gone"
     </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 <FrameLayout
+    android:id="@+id/fltotal"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:background="@color/white"
@@ -186,18 +179,23 @@ android:orientation="horizontal"
         >
         <FrameLayout
             android:layout_width="0dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             android:layout_weight="1">
             <TextView
                 android:id="@+id/tvtotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:text='@{@string/total+model.total_price}'
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+
+                />
 
         </FrameLayout>
+
         <Button
             android:id="@+id/btBuy"
             android:layout_width="wrap_content"
@@ -211,6 +209,16 @@ android:orientation="horizontal"
             />
     </LinearLayout>
 </FrameLayout>
+    <TextView
+        android:id="@+id/tvNoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_data_to_show"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        android:visibility="gone" />
+
 </FrameLayout>
 
 

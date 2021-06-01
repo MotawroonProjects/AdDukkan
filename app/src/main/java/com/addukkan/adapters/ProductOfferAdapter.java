@@ -18,6 +18,7 @@ import com.addukkan.models.SingleProductModel;
 import com.addukkan.uis.activity_home.fragments.FragmentHome;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
+import com.addukkan.uis.activity_search.SearchActivity;
 
 import java.util.List;
 
@@ -81,6 +82,12 @@ public class ProductOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 productFilterActivity.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), 0);
 
             }
+            else if (context instanceof SearchActivity) {
+                SearchActivity productFilterActivity = (SearchActivity) context;
+
+                productFilterActivity.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), 0);
+
+            }
 
 
         });
@@ -94,6 +101,10 @@ public class ProductOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             } else if (context instanceof ProductFilterActivity) {
                 ProductFilterActivity productFilterActivity = (ProductFilterActivity) context;
+                productFilterActivity.additemtoCart(list.get(holder.getLayoutPosition()), ((MyHolder) holder).binding);
+
+            } else if (context instanceof SearchActivity) {
+                SearchActivity productFilterActivity = (SearchActivity) context;
                 productFilterActivity.additemtoCart(list.get(holder.getLayoutPosition()), ((MyHolder) holder).binding);
 
             }

@@ -34,27 +34,30 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
                     android:background="@drawable/small_rounded_primary"
                     android:gravity="center"
+                    android:maxWidth="145dp"
                     android:paddingStart="8dp"
                     android:paddingTop="5dp"
                     android:paddingEnd="8dp"
-                  android:maxWidth="100dp"
+                    android:singleLine="true"
                     android:text='@{model.offer_type.equals("per")?model.offer_value+"%":model.offer_type.equals("value")?model.offer_value+"":(@string/buy+model.offer_min+@string/and_got+model.offer_bonus+@string/bouns)}'
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:visibility='@{model.have_offer.equals("yes")?View.VISIBLE:View.GONE,default=gone}'
                     app:layout_constraintEnd_toStartOf="@+id/flcheck"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintHorizontal_bias="0"
                     tools:ignore="RtlCompat" />
 
                 <FrameLayout
                     android:id="@+id/flcheck"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlCompat">
@@ -63,7 +66,7 @@
                         android:id="@+id/checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_marginStart="15dp"
                         android:button="@drawable/checkbox_bg"
 
 
@@ -214,10 +217,10 @@
 
                 <ProgressBar
                     android:id="@+id/progBar"
-                    android:visibility="gone"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
 
             </FrameLayout>
 

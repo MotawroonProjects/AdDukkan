@@ -3,7 +3,7 @@ package com.addukkan.models;
 import java.io.Serializable;
 import java.util.List;
 
-public class CartDataModel extends ResponseModel implements Serializable {
+public class SingleOrderModel extends ResponseModel implements Serializable {
     private Data data;
 
     public Data getData() {
@@ -12,45 +12,45 @@ public class CartDataModel extends ResponseModel implements Serializable {
 
     public class Data implements Serializable{
         private int id;
-        public String prescription_id;
-        public int user_id;
-        public double total_price;
-        private List<Detials> details;
-
-        public int getId() {
-            return id;
-        }
-
-        public String getPrescription_id() {
-            return prescription_id;
-        }
-
-        public int getUser_id() {
-            return user_id;
-        }
-
-        public double getTotal_price() {
-            return total_price;
-        }
-
-        public List<Detials> getDetails() {
-            return details;
-        }
+        private int user_id;
+        private String name;
+        private String email;
+        private String phone;
+        private String phone_code;
+        private String country_code;
+        private String address;
+        private double address_lat;
+        private double address_long;
+        private String city;
+        private String notes;
+        private double subtotal;
+        private double shipping;
+        private double total_payments;
+        private String payment_method;
+        private String payment_status;
+        private String form_type;
+        private String coupon_id;
+        private String status;
+        private String start_shipping_date;
+        private String end_shipping_date;
+        private String created_at;
+        private String updated_at;
+        private List<Detials> order_details;
 
         public class Detials implements Serializable{
-            private int id;
-            private int cart_id;
-            private int product_id;
-            private int product_price_id;
-            private int vendor_id;
-            private double price;
-            private double amount;
-            private String have_offer;
-            private String offer_type;
-            private double offer_value;
-            private int offer_min;
-            private int offer_bonus;
-            private double old_price;
+            public int id;
+            public int cart_id;
+            public int product_id;
+            public int product_price_id;
+            public int vendor_id;
+            public double price;
+            public double amount;
+            public String have_offer;
+            public String offer_type;
+            public double offer_value;
+            public int offer_min;
+            public int offer_bonus;
+            public double old_price;
             private SingleProductModel product_data;
 
             public int getId() {

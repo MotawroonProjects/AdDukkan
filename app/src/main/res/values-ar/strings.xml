@@ -134,5 +134,18 @@
     <string name="expierd">انتهى</string>
     <string name="not_found">غير موجود</string>
     <string name="buy2">شراء</string>
+    <string name="location_information">معلومات الموقع</string>
+    <string name="confirm_location">تأكيد الموقع</string>
+    <string name="write_more_details">اكتب مزيد من التفاصيل</string>
+    <string name="location_detials">تفاصيل الموقع</string>
+    <string name="location">الموقع</string>
+    <string name="the_total_of_the_cart">اجمالي سلة المشتريات</string>
+    <string name="subtotal">المجموع الفرعى</string>
+    <string name="copoun2">الكوبون</string>
+    <string name="total_payments">اجمالي المدفوعات</string>
+    <string name="paiement_when_recieving">الدفع عند الاستلام</string>
+    <string name="electronic_payment">دفع الكترونى</string>
+    <string name="payment_type">طريقة الدفع</string>
+    <string name="the_request_has_been_confirmed_successfully">تم تأكيد الطلب بنجاح</string>
 
 </resources>

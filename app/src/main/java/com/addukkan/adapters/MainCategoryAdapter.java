@@ -66,6 +66,7 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
         ProductAdapter productAdapter = new ProductAdapter(list.get(position).getProduct_list(), context, fragment);
         myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+
         myHolder.binding.recView.setAdapter(productAdapter);
         myHolder.binding.imbanner.setOnClickListener(view -> {
         if(fragment instanceof FragmentHome){

@@ -135,5 +135,18 @@
     <string name="expierd">Expierd</string>
     <string name="not_found">Not Found</string>
     <string name="buy2">Buy</string>
+    <string name="location_information">Location information</string>
+    <string name="confirm_location">Confirm Location</string>
+    <string name="write_more_details">Write more details</string>
+    <string name="location_detials">Location Detials</string>
+    <string name="location">Location</string>
+    <string name="the_total_of_the_cart">The total of the cart</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="copoun2">Coupon</string>
+    <string name="total_payments">Total payments</string>
+    <string name="paiement_when_recieving">Paiement when recieving</string>
+    <string name="electronic_payment">Electronic payment</string>
+    <string name="payment_type">Payment Type</string>
+    <string name="the_request_has_been_confirmed_successfully">The request has been confirmed successfully</string>
 
 </resources>

@@ -38,6 +38,7 @@ import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_home.fragments.FragmentProfile;
 import com.addukkan.uis.activity_login.LoginActivity;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
+import com.addukkan.uis.activity_search.SearchActivity;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
@@ -101,6 +102,13 @@ public class HomeActivity extends AppCompatActivity {
 
         updateTokenFireBase();
         getSideMenu();
+        binding.flSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
         binding.flCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

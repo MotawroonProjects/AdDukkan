@@ -18,6 +18,7 @@ import com.addukkan.models.SingleProductModel;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
+import com.addukkan.uis.activity_search.SearchActivity;
 
 import java.util.List;
 
@@ -28,12 +29,13 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
     private LayoutInflater inflater;
     //private Fragment_Main fragment_main;
     private Fragment fragment;
+
     public ProductLisProductAdapter(List<SingleProductModel> list, Context context, Fragment fragment) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.fragment=fragment;
-      //  this.fragment_main=fragment_main;
+        this.fragment = fragment;
+        //  this.fragment_main=fragment_main;
 
 
     }
@@ -60,9 +62,9 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
         }
         //  Log.e("ssss",((list.get(position).getProduct_data().getHave_offer().equals("yes")?(list.get(position).getProduct_data().getOffer_type().equals("per")?(list.get(position).getProduct_data().getProduct_default_price().getPrice()-((list.get(position).getProduct_data().getProduct_default_price().getPrice()*list.get(position).getProduct_data().getOffer_value())/100)):list.get(position).getProduct_data().getProduct_default_price().getPrice()-list.get(position).getProduct_data().getOffer_value()):list.get(position).getProduct_data().getProduct_default_price().getPrice())+""));
         myHolder.itemView.setOnClickListener(view -> {
-           // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
+            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
 
-           // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
+            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
         });
         myHolder.binding.checkbox.setOnClickListener(v -> {
 
@@ -72,18 +74,25 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
 
                 fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), 0);
 
+            } else if (context instanceof SearchActivity) {
+
+                SearchActivity fragment_main = (SearchActivity) context;
+
+                fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), 0);
+
             }
-
-
 
 
         });
         myHolder.binding.imgIncrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(context instanceof ProductFilterActivity){
-                    ProductFilterActivity productFilterActivity=(ProductFilterActivity)context;
-                    productFilterActivity.additemtoCart(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding);
+                if (context instanceof ProductFilterActivity) {
+                    ProductFilterActivity productFilterActivity = (ProductFilterActivity) context;
+                    productFilterActivity.additemtoCart(list.get(holder.getLayoutPosition()), ((MyHolder) holder).binding);
+                } else if (context instanceof SearchActivity) {
+                    SearchActivity productFilterActivity = (SearchActivity) context;
+                    productFilterActivity.additemtoCart(list.get(holder.getLayoutPosition()), ((MyHolder) holder).binding);
                 }
             }
         });
@@ -104,8 +113,6 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
 
         }
     }
-
-
 
 
 }

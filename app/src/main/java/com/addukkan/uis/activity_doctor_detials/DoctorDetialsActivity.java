@@ -30,6 +30,7 @@ import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.FragmentMapTouchListener;
 import com.addukkan.uis.activity_chat.ChatActivity;
+import com.addukkan.uis.activity_login.LoginActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -90,7 +91,13 @@ public class DoctorDetialsActivity extends AppCompatActivity implements Listener
         binding.recView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
 
         binding.btnAsk.setOnClickListener(v -> {
-            createRoom();
+            if(userModel!=null){
+                createRoom();
+            }
+            else {
+              navigateToSignInActivity();
+            }
+
         });
         getDoctorById();
 
@@ -262,5 +269,9 @@ public class DoctorDetialsActivity extends AppCompatActivity implements Listener
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), zoom));
     }
-
+    public void navigateToSignInActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

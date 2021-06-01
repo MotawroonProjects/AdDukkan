@@ -12,6 +12,7 @@ public class FilterModel implements Serializable {
     private String product_order;
     private String price_order;
     private String rate_order;
+    private String seach_name;
 
     public List<Integer> getDepartments() {
         return departments;
@@ -75,5 +76,13 @@ public class FilterModel implements Serializable {
 
     public void setRate_order(String rate_order) {
         this.rate_order = rate_order;
+    }
+
+    public String getSeach_name() {
+        return seach_name;
+    }
+
+    public void setSeach_name(String seach_name) {
+        this.seach_name = seach_name;
     }
 }

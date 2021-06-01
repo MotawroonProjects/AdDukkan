@@ -1,8 +1,10 @@
-package com.addukkan.uis.activity_product_filter;
+package com.addukkan.uis.activity_search;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,11 +20,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.addukkan.R;
-
 import com.addukkan.adapters.ProductLisProductAdapter;
 import com.addukkan.adapters.ProductOfferAdapter;
 import com.addukkan.databinding.ActivityProductFilterBinding;
-import com.addukkan.databinding.FavouriteProductRowBinding;
 import com.addukkan.databinding.ListProductRowBinding;
 import com.addukkan.databinding.OfferProductRowBinding;
 import com.addukkan.interfaces.Listeners;
@@ -32,7 +32,6 @@ import com.addukkan.models.AddCartDataModel;
 import com.addukkan.models.AddCartProductItemModel;
 import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CartDataModel;
-import com.addukkan.models.FavouriteProductDataModel;
 import com.addukkan.models.FilterModel;
 import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.ResponseModel;
@@ -42,6 +41,7 @@ import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_filter.FilterActivity;
+import com.addukkan.uis.activity_filter_search.FilterSearchActivity;
 import com.addukkan.uis.activity_login.LoginActivity;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProductFilterActivity extends AppCompatActivity implements Listeners.BackListener {
+public class SearchActivity extends AppCompatActivity implements Listeners.BackListener {
     private ActivityProductFilterBinding binding;
     private String lang;
     private FilterModel filterModel;
@@ -67,7 +67,6 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
     private List<SingleProductModel> productModelList;
     private ProductOfferAdapter product2Adapter;
     private ProductLisProductAdapter productLisProductAdapter;
-    private int pos;
     private String country_coude;
 
     @Override
@@ -88,14 +87,12 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
     private void getDataFromIntent() {
         Intent intent = getIntent();
         if (intent != null) {
-            pos = intent.getIntExtra("pos", 0);
             sub_departments = (MainCategoryDataModel.Data) intent.getSerializableExtra("data");
 
         }
     }
 
     private void initView() {
-        binding.llSearch.setVisibility(View.GONE);
         filterModel = new FilterModel();
         departments = new ArrayList<>();
         brand_id = new ArrayList<>();
@@ -120,18 +117,17 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
         binding.imfilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProductFilterActivity.this, FilterActivity.class);
+                Intent intent = new Intent(SearchActivity.this, FilterSearchActivity.class);
                 intent.putExtra("data", sub_departments);
-                intent.putExtra("pos", pos);
                 startActivityForResult(intent, 100);
             }
         });
-        departments.add(sub_departments.getSub_departments().get(pos).getId());
         filterModel.setDepartments(departments);
         filterModel.setBrand_id(brand_id);
+        filterModel.setSeach_name("all");
         filterModel.setProduct_company_id(product_company_id);
         preferences = Preferences.getInstance();
-        binding.setTitle(sub_departments.getDepartment_trans_fk().getTitle());
+        binding.setTitle(getResources().getString(R.string.search2));
         settings = preferences.isLanguageSelected(this);
 
         userModel = preferences.getUserData(this);
@@ -157,10 +153,10 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
         binding.imlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.imlist.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.colorAccent));
-                binding.immenu.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.gray11));
+                binding.imlist.setColorFilter(ContextCompat.getColor(SearchActivity.this, R.color.colorAccent));
+                binding.immenu.setColorFilter(ContextCompat.getColor(SearchActivity.this, R.color.gray11));
 
-                binding.recView.setLayoutManager(new LinearLayoutManager(ProductFilterActivity.this));
+                binding.recView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
                 binding.recView.setAdapter(productLisProductAdapter);
 
             }
@@ -168,9 +164,9 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
         binding.immenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.immenu.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.colorAccent));
-                binding.imlist.setColorFilter(ContextCompat.getColor(ProductFilterActivity.this, R.color.gray11));
-                binding.recView.setLayoutManager(new GridLayoutManager(ProductFilterActivity.this, 2));
+                binding.immenu.setColorFilter(ContextCompat.getColor(SearchActivity.this, R.color.colorAccent));
+                binding.imlist.setColorFilter(ContextCompat.getColor(SearchActivity.this, R.color.gray11));
+                binding.recView.setLayoutManager(new GridLayoutManager(SearchActivity.this, 2));
                 binding.recView.setAdapter(product2Adapter);
             }
         });
@@ -197,6 +193,29 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
                     filterModel.setRate_order("all");
                 }
                 closeSheet();
+            }
+        });
+        binding.edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.toString().isEmpty()) {
+                    filterModel.setSeach_name("all");
+                } else {
+
+
+                    filterModel.setSeach_name(editable.toString());
+                }
+                filterData();
             }
         });
         filterData();

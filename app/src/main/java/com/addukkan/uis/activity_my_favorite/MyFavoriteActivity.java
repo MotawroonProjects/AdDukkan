@@ -124,12 +124,11 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         binding.flCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userModel!=null){
-                    Intent intent=new Intent(MyFavoriteActivity.this, CartActivity.class);
+                if (userModel != null) {
+                    Intent intent = new Intent(MyFavoriteActivity.this, CartActivity.class);
                     startActivity(intent);
-                }
-                else {
-                  //  navigateToSignInActivity();
+                } else {
+                    //  navigateToSignInActivity();
                 }
             }
         });
@@ -318,12 +317,12 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         addCartProductItemModel.setVendor_id(data.getProduct_data().getVendor_id() + "");
         addCartProductItemModelList.add(addCartProductItemModel);
         addCartDataModel.setCart_products(addCartProductItemModelList);
-        addTocart(addCartDataModel,binding);
+        addTocart(addCartDataModel, binding);
     }
 
     private void addTocart(AddCartDataModel addCartDataModel, FavouriteProductRowBinding binding) {
 
-binding.imgIncrease.setClickable(false);
+        binding.imgIncrease.setClickable(false);
 
         //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
@@ -331,12 +330,12 @@ binding.imgIncrease.setClickable(false);
                 .enqueue(new Callback<CartDataModel>() {
                     @Override
                     public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
-                      binding.progBar.setVisibility(View.GONE);
-                      binding.imgIncrease.setClickable(true);
+                        binding.progBar.setVisibility(View.GONE);
+                        binding.imgIncrease.setClickable(true);
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString())+1)+"");
-MyFavoriteActivity.this.binding.setCartCount(response.body().getData().getDetails().size()+"");
+                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) + 1) + "");
+                                MyFavoriteActivity.this.binding.setCartCount(response.body().getData().getDetails().size() + "");
 
                             }
                         } else {
