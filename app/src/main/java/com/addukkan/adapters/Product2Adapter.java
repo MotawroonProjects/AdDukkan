@@ -77,10 +77,19 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         //  Log.e("ssss",((list.get(position).getProduct_data().getHave_offer().equals("yes")?(list.get(position).getProduct_data().getOffer_type().equals("per")?(list.get(position).getProduct_data().getProduct_default_price().getPrice()-((list.get(position).getProduct_data().getProduct_default_price().getPrice()*list.get(position).getProduct_data().getOffer_value())/100)):list.get(position).getProduct_data().getProduct_default_price().getPrice()-list.get(position).getProduct_data().getOffer_value()):list.get(position).getProduct_data().getProduct_default_price().getPrice())+""));
         myHolder.itemView.setOnClickListener(view -> {
-           // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
+            if (fragment instanceof FragmentHome) {
 
-           // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
+                FragmentHome fragment_main = (FragmentHome) fragment;
+
+
+                fragment_main.showData(list.get(myHolder.getLayoutPosition()).getProduct_trans_fk().getProduct_id()+"");
+
+            }
+            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
+
+            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
         });
+
         myHolder.binding.imgIncrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

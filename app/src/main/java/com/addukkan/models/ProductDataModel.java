@@ -2,8 +2,9 @@ package com.addukkan.models;
 
 import java.io.Serializable;
 
-public class ProductDataModel implements Serializable {
+public class ProductDataModel extends ResponseModel implements Serializable {
     private SingleProductModel product_data;
+    private SingleProductModel data;
     private int id;
     private int product_id;
     private int department_id;
@@ -11,6 +12,10 @@ public class ProductDataModel implements Serializable {
 
     public SingleProductModel getProduct_data() {
         return product_data;
+    }
+
+    public SingleProductModel getData() {
+        return data;
     }
 
     public int getId() {

@@ -19,11 +19,13 @@ import com.addukkan.models.NotificationCountModel;
 import com.addukkan.models.NotificationDataModel;
 import com.addukkan.models.PlaceGeocodeData;
 import com.addukkan.models.PlaceMapDetailsData;
+import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.ResponseModel;
 import com.addukkan.models.RoomDataModel;
 import com.addukkan.models.SettingModel;
 import com.addukkan.models.SingleMessageDataModel;
 import com.addukkan.models.SingleOrderModel;
+import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.SliderDataModel;
 import com.addukkan.models.SpecialDataModel;
 import com.addukkan.models.StatusResponse;
@@ -182,10 +184,12 @@ public interface Service {
 
 
             ;
+
     @GET("api/count-unread")
     Call<NotificationCountModel> getNotificationCount(@Header("Authorization") String bearer_token,
                                                       @Query("user_id") int user_id
     );
+
     @GET("api/my-notification")
     Call<NotificationDataModel> getNotifications(@Header("Authorization") String bearer_token,
                                                  @Header("lang") String lang,
@@ -195,33 +199,39 @@ public interface Service {
     @FormUrlEncoded
     @POST("api/delete-notification")
     Call<ResponseModel> deleteNotification(@Header("Authorization") String bearer_token,
-                                            @Field("notification_id") int notification_id
+                                           @Field("notification_id") int notification_id
 
 
     );
+
     @GET("api/setting")
     Call<SettingModel> getSetting(
             @Header("lang") String lang
 
-            );
+    );
+
     @POST("api/search")
     Call<ALLProductDataModel> Filter(
             @Header("lang") String lang,
             @Body FilterModel filterModel);
+
     @GET("api/companies")
     Call<CompanyDataModel> getCompany(
             @Header("lang") String lang,
             @Query("search_key") String search_key);
+
     @GET("api/brands")
     Call<BrandDataModel> getBrands(
             @Header("lang") String lang,
             @Query("search_key") String search_key);
+
     @FormUrlEncoded
     @POST("api/contact-us")
     Call<StatusResponse> contactUs(@Field("name") String name,
                                    @Field("email") String email,
                                    @Field("phone") String phone,
                                    @Field("message") String message);
+
     @Multipart
     @POST("api/send-prescription")
     Call<ResponseModel> addRosheta(@Header("Authorization") String bearer_token,
@@ -231,10 +241,12 @@ public interface Service {
 
 
     );
+
     @POST("api/add-cart")
     Call<CartDataModel> createCart(
             @Header("Authorization") String bearer_token,
             @Body AddCartDataModel addCartDataModel);
+
     @GET("api/specializations")
     Call<SpecialDataModel> getSpecial(@Header("lang") String lang);
 
@@ -242,7 +254,7 @@ public interface Service {
     Call<DoctorsDataModel> getDoctorsFilter(@Header("lang") String lang,
                                             @Query("search_key") String search_key,
                                             @Query("specialization_id") String specialization_id
-                                            );
+    );
 
     @GET("api/one-doctor")
     Call<UserModel> getDoctorById(@Query("doctor_id") int doctor_id
@@ -255,6 +267,7 @@ public interface Service {
 
 
     );
+
     @GET("api/user-rooms")
     Call<RoomDataModel> getRoom(@Header("Authorization") String user_token,
                                 @Query("user_id") int user_id
@@ -299,6 +312,7 @@ public interface Service {
             @Header("lang") String lang,
             @Query("user_id") String user_id
     );
+
     @FormUrlEncoded
     @POST("api/change-item-amount")
     Call<CartDataModel> incrementDecrementCart(
@@ -309,7 +323,8 @@ public interface Service {
             @Field("cart_id") String cart_id,
             @Field("amount") String amount,
             @Field("operation") String operation
-            );
+    );
+
     @FormUrlEncoded
     @POST("api/delete-item-cart")
     Call<CartDataModel> deleteItemCart(
@@ -318,6 +333,7 @@ public interface Service {
             @Field("id") String id,
             @Field("cart_id") String cart_id
     );
+
     @FormUrlEncoded
     @POST("api/active-coupon")
     Call<CouponDataModel> checkCoupon(
@@ -326,20 +342,42 @@ public interface Service {
             @Field("user_id") String user_id,
             @Field(value = "code") String code
     );
+
     @POST("api/create-order")
     Call<SingleOrderModel> addOrder(
             @Header("Authorization") String bearer_token,
             @Body AddOrderModel addCartDataModel);
+
     @GET("api/user-orders")
     Call<ALLOrderDataModel> getMyOrder(
             @Header("Authorization") String Authorization,
             @Header("lang") String lang,
             @Query("user_id") String user_id
     );
+
     @GET("api/one-order")
     Call<SingleOrderModel> getSingleOrder(
             @Header("Authorization") String Authorization,
             @Header("lang") String lang,
             @Query("order_id") String order_id
+    );
+
+    @FormUrlEncoded
+    @POST("api/scan-prescription")
+    Call<ResponseModel> scanOrder(@Header("Authorization") String user_token,
+                                  @Field("user_id") String user_id,
+                                  @Field("code") String code,
+                                  @Field("country_code") String country_code
+
+
+                                  );
+    @GET("api/one-product")
+    Call<ProductDataModel> getSingleProduct(
+            @Header("lang") String lang,
+            @Query("id") String id,
+            @Query("user_id") String user_id,
+            @Query("country_code") String country_code
+
+
     );
 }

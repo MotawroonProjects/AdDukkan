@@ -65,7 +65,11 @@ import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_ask_doctor.AskDoctorActivity;
 import com.addukkan.uis.activity_home.HomeActivity;
+import com.addukkan.uis.activity_order.MyOrderActivity;
+import com.addukkan.uis.activity_order_detials.OrderDetialsActivity;
+import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
+import com.addukkan.uis.activity_qr_code.QrCodeActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -212,6 +216,21 @@ public class FragmentHome extends Fragment {
             }
 
         });
+        binding.imQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.flroshata.setVisibility(View.GONE);
+                if(userModel!=null){
+                   Intent intent=new Intent(activity, QrCodeActivity.class);
+                   startActivity(intent);
+                }
+                else {
+                    activity.navigateToSignInActivity();
+                }
+            }
+
+        });
+
         binding.flclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -594,6 +613,12 @@ public class FragmentHome extends Fragment {
 
     public void showDepart(int id) {
         activity.displayFragmentDukkan(id);
+    }
+
+    public void showData(String s) {
+        Intent intent = new Intent(activity, ProductDetialsActivity.class);
+        intent.putExtra("id", s);
+        startActivity(intent);
     }
 
     public class MyTask extends TimerTask {

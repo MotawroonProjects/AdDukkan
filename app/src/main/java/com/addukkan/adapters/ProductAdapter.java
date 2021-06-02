@@ -76,6 +76,14 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
 
         myHolder.itemView.setOnClickListener(view -> {
+            if (fragment instanceof FragmentHome) {
+
+                FragmentHome fragment_main = (FragmentHome) fragment;
+
+
+                fragment_main.showData(list.get(myHolder.getLayoutPosition()).getProduct_id()+"");
+
+            }
            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
 
            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");

@@ -149,5 +149,9 @@
     <string name="payment_type">Payment Type</string>
     <string name="the_request_has_been_confirmed_successfully">The request has been confirmed successfully</string>
     <string name="order_num">Order Num</string>
+    <string name="no_product">No Product Found</string>
+    <string name="no_image">No Images</string>
+    <string name="description">Description</string>
+    <string name="reviews">Reviews</string>
 
 </resources>

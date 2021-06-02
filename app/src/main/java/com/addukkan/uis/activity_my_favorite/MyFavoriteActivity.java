@@ -80,6 +80,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
 
 
     private void initView() {
+        binding.setCartCount("0");
         favouriteDataList = new ArrayList<>();
         Paper.init(this);
         lang = Paper.book().read("lang", Locale.getDefault().getLanguage());

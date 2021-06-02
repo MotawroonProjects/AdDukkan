@@ -414,6 +414,7 @@ android:visibility="gone"
 
 
                                 <ImageView
+                                    android:id="@+id/imQr"
                                     android:layout_width="45dp"
                                     android:layout_height="45dp"
                                     android:layout_gravity="center"
