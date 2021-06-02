@@ -36,6 +36,7 @@ import com.addukkan.uis.activity_language.LanguageActivity;
 import com.addukkan.uis.activity_login.LoginActivity;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
 import com.addukkan.uis.activity_notification.NotificationActivity;
+import com.addukkan.uis.activity_order.MyOrderActivity;
 import com.addukkan.uis.activity_rooms.RoomsActivity;
 import com.addukkan.uis.activity_sign_up.SignUpActivity;
 
@@ -105,7 +106,8 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
         if (userModel == null) {
             navigateToLoginActivity();
         } else {
-
+            Intent intent = new Intent(activity, MyOrderActivity.class);
+            startActivity(intent);
         }
     }
 

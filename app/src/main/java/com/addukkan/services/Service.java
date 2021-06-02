@@ -1,5 +1,6 @@
 package com.addukkan.services;
 
+import com.addukkan.models.ALLOrderDataModel;
 import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.AddOrderModel;
 import com.addukkan.models.BrandDataModel;
@@ -329,4 +330,16 @@ public interface Service {
     Call<SingleOrderModel> addOrder(
             @Header("Authorization") String bearer_token,
             @Body AddOrderModel addCartDataModel);
+    @GET("api/user-orders")
+    Call<ALLOrderDataModel> getMyOrder(
+            @Header("Authorization") String Authorization,
+            @Header("lang") String lang,
+            @Query("user_id") String user_id
+    );
+    @GET("api/one-order")
+    Call<SingleOrderModel> getSingleOrder(
+            @Header("Authorization") String Authorization,
+            @Header("lang") String lang,
+            @Query("order_id") String order_id
+    );
 }

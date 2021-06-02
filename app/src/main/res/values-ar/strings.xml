@@ -147,5 +147,6 @@
     <string name="electronic_payment">دفع الكترونى</string>
     <string name="payment_type">طريقة الدفع</string>
     <string name="the_request_has_been_confirmed_successfully">تم تأكيد الطلب بنجاح</string>
+    <string name="order_num">رقم الطلب</string>
 
 </resources>

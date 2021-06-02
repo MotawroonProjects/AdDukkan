@@ -1,4 +1,4 @@
-package com.addukkan.uis.activity_complete_order_detials;
+package com.addukkan.uis.activity_order_detials;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,13 +13,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.addukkan.R;
+import com.addukkan.adapters.Order2ProductAdapter;
 import com.addukkan.adapters.OrderProductAdapter;
-import com.addukkan.databinding.ActivityAddressInformationBinding;
 import com.addukkan.databinding.ActivityCompleteOrderDetailsBinding;
+import com.addukkan.databinding.ActivityOrderDetailsBinding;
 import com.addukkan.language.Language;
+import com.addukkan.models.SingleOrderModel;
 import com.addukkan.models.AddOrderModel;
 import com.addukkan.models.CartDataModel;
-import com.addukkan.models.LocationDetialsModel;
 import com.addukkan.models.SingleOrderModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
@@ -36,107 +37,83 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CompleteOrderDetialsActivity extends AppCompatActivity {
-    private ActivityCompleteOrderDetailsBinding binding;
+public class OrderDetialsActivity extends AppCompatActivity {
+    private ActivityOrderDetailsBinding binding;
     private Preferences preferences;
     private UserModel userModel;
     private String lang = "ar";
-    private AddOrderModel addorderModel;
-    private List<CartDataModel.Data.Detials> detialsList;
-    private OrderProductAdapter orderProductAdapter;
+    private List<SingleOrderModel.Data.Detials> detialsList;
+    private Order2ProductAdapter orderProductAdapter;
+    private String id;
 
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
         super.attachBaseContext(Language.updateResources(newBase, Paper.book().read("lang", "ar")));
     }
 
-    private void getDataFromIntent() {
-        Intent intent = getIntent();
-        addorderModel = (AddOrderModel) intent.getSerializableExtra("data");
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_complete_order_details);
-        getDataFromIntent();
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_order_details);
+      getDataFromIntent();
         initView();
 
     }
+    private void getDataFromIntent() {
+        Intent intent = getIntent();
+        id = intent.getStringExtra("id");
 
+    }
     private void initView() {
         detialsList = new ArrayList<>();
-        detialsList.addAll(addorderModel.getProduct_list());
-        binding.setTitle(addorderModel.getAddress());
-        binding.setModel(addorderModel);
+
         Paper.init(this);
         preferences = Preferences.getInstance();
         userModel = preferences.getUserData(this);
 
         lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
-        orderProductAdapter = new OrderProductAdapter(detialsList, this);
+        orderProductAdapter = new Order2ProductAdapter(detialsList, this);
         binding.recView.setLayoutManager(new LinearLayoutManager(this));
         binding.recView.setAdapter(orderProductAdapter);
         binding.llBack.setOnClickListener(view -> finish());
-        binding.radiocash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addorderModel.setPayment_method("when_recieving");
-                binding.radioonline.setChecked(false);
+        getData();
 
-            }
-        });
-        binding.radioonline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addorderModel.setPayment_method("online");
-                binding.radiocash.setChecked(false);
-
-            }
-        });
-        binding.btnComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createOrder(addorderModel);
-            }
-        });
-        binding.flData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
+    public void getData() {
 
-    private void createOrder(AddOrderModel addOrderModel) {
-        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-        dialog.show();
-        //   Log.e("sllsks", user_id + lang + country_coude);
+        String user_id = null;
+        if (userModel != null) {
+            user_id = userModel.getData().getId() + "";
+        }
+
+        binding.progBar.setVisibility(View.VISIBLE);
+        detialsList.clear();
+        orderProductAdapter.notifyDataSetChanged();
+        Log.e("Eerr",id);
         Api.getService(Tags.base_url)
-                .addOrder("Bearer " + userModel.getData().getToken(), addOrderModel)
+                .getSingleOrder("Bearer " + userModel.getData().getToken(), lang, id)
                 .enqueue(new Callback<SingleOrderModel>() {
                     @Override
                     public void onResponse(Call<SingleOrderModel> call, Response<SingleOrderModel> response) {
-                        dialog.dismiss();
+                        binding.progBar.setVisibility(View.GONE);
+
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                binding.flData.setVisibility(View.VISIBLE);
-                                binding.btnComplete.setVisibility(View.GONE);
-                                Handler h2 = new Handler();
 
-                                CompleteOrderDetialsActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    h2.postDelayed(this, 500);
-                                    finish();
+                                if (response.body().getData() != null ) {
+                                  updateData(response.body());
+                                } else {
+                                   // binding.tvNoData.setVisibility(View.VISIBLE);
                                 }
-                            });
+
+
+
+
                             }
                         } else {
+                            binding.progBar.setVisibility(View.GONE);
 
                             try {
                                 Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
@@ -155,7 +132,8 @@ public class CompleteOrderDetialsActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<SingleOrderModel> call, Throwable t) {
                         try {
-                            dialog.dismiss();
+                            binding.progBar.setVisibility(View.GONE);
+
                             if (t.getMessage() != null) {
                                 Log.e("error_not_code", t.getMessage() + "__");
 
@@ -171,5 +149,16 @@ public class CompleteOrderDetialsActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void updateData(SingleOrderModel body) {
+        Log.e("dldlld",body.getData().getAddress());
+        detialsList.clear();
+        binding.llData.setVisibility(View.VISIBLE);
+        detialsList.addAll(body.getData().getOrder_details());
+        orderProductAdapter.notifyDataSetChanged();
+        binding.setModel(body.getData());
+
+    }
+
 
 }

@@ -37,6 +37,106 @@ public class SingleOrderModel extends ResponseModel implements Serializable {
         private String updated_at;
         private List<Detials> order_details;
 
+        public int getId() {
+            return id;
+        }
+
+        public int getUser_id() {
+            return user_id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public String getPhone_code() {
+            return phone_code;
+        }
+
+        public String getCountry_code() {
+            return country_code;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public double getAddress_lat() {
+            return address_lat;
+        }
+
+        public double getAddress_long() {
+            return address_long;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getNotes() {
+            return notes;
+        }
+
+        public double getSubtotal() {
+            return subtotal;
+        }
+
+        public double getShipping() {
+            return shipping;
+        }
+
+        public double getTotal_payments() {
+            return total_payments;
+        }
+
+        public String getPayment_method() {
+            return payment_method;
+        }
+
+        public String getPayment_status() {
+            return payment_status;
+        }
+
+        public String getForm_type() {
+            return form_type;
+        }
+
+        public String getCoupon_id() {
+            return coupon_id;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getStart_shipping_date() {
+            return start_shipping_date;
+        }
+
+        public String getEnd_shipping_date() {
+            return end_shipping_date;
+        }
+
+        public String getCreated_at() {
+            return created_at;
+        }
+
+        public String getUpdated_at() {
+            return updated_at;
+        }
+
+        public List<Detials> getOrder_details() {
+            return order_details;
+        }
+
         public class Detials implements Serializable{
             public int id;
             public int cart_id;
