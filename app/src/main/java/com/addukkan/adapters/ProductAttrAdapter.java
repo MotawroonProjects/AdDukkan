@@ -14,6 +14,7 @@ import com.addukkan.databinding.AttrRowBinding;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,6 +30,13 @@ private int x=-1;
         this.context = context;
         this.list = list;
         level=size;
+    }
+
+    public ProductAttrAdapter(Context context) {
+        inflater = LayoutInflater.from(context);
+        this.context = context;
+        this.list=new ArrayList<>();
+
     }
 
     @NonNull
@@ -60,19 +68,19 @@ private int x=-1;
 
        if(context instanceof ProductDetialsActivity){
            ProductDetialsActivity productDetialsActivity=(ProductDetialsActivity)context;
-           productDetialsActivity.setAttr(list.get(position),level);
+           productDetialsActivity.setAttr(list.get(position),level,list.get(position).getAttribute_trans_fk().getTitle());
 
        }
 
 
        }
        else {
-           if(x==0){
+
            if(context instanceof ProductDetialsActivity){
 
                ProductDetialsActivity productDetialsActivity=(ProductDetialsActivity)context;
            productDetialsActivity.setAttr(level);
-       }}}
+       }}
    }
    else {
        myHolder.binding.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.color1));

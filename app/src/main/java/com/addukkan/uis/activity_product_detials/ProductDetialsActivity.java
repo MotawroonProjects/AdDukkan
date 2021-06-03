@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -49,7 +50,8 @@ public class ProductDetialsActivity extends AppCompatActivity {
     private AppLocalSettings settings;
     private String country_coude;
     private PagerAdapter pagerAdapter;
-    private List<RecyclerView> recyclerViewList;
+    private static List<RecyclerView> recyclerViewList;
+    private static List<TextView> textViewList;
 
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -74,6 +76,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
     private void initView() {
         recyclerViewList = new ArrayList<>();
+        textViewList=new ArrayList<>();
         detialsList = new ArrayList<>();
 
         Paper.init(this);
@@ -211,28 +214,52 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
     }
 
-    public void setAttr(SingleProductModel.Sub sub, int level) {
-        ProductAttrAdapter productAttrAdapter = new ProductAttrAdapter(this, sub.getSub(), recyclerViewList.size());
+    public void setAttr(SingleProductModel.Sub sub, int level,String title) {
+Log.e("sksksk",level+" "+recyclerViewList.size());
+        ProductAttrAdapter productAttrAdapter = new ProductAttrAdapter(this, sub.getSub(), level+1);
 
         if (recyclerViewList.size() <= level) {
+            Log.e("skskskwwuwu",level+" "+recyclerViewList.size());
+
             RecyclerView recyclerView = new RecyclerView(this);
+            TextView textView=new TextView(this);
+            textView.setText(title);
+            textView.setTextColor(getResources().getColor(R.color.black));
+            textView.setTextSize(14);
             recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+          binding.ll.addView(textView);
             binding.ll.addView(recyclerView);
+
             recyclerView.setAdapter(productAttrAdapter);
             recyclerViewList.add(recyclerView);
+            textViewList.add(textView);
         } else {
             Log.e("D;dldll",level+"");
             RecyclerView r = recyclerViewList.get(level);
             r.setAdapter(productAttrAdapter);
+            TextView textView=textViewList.get(level);
+            textView.setText(title);
         }
+        Log.e("dlkdkdk",level+" "+recyclerViewList.size());
 
     }
 
     public void setAttr(int level) {
-       // Log.e("Dldldl",level+""+recyclerViewList.size());
-        if(recyclerViewList.size()>level){
-            RecyclerView r = recyclerViewList.get(level);
-            r.setAdapter(null);
+        ProductAttrAdapter productAttrAdapter=new ProductAttrAdapter(this);
+
+        if(level!=0&&recyclerViewList.size()>level){
+            Log.e("Dldldlsss",level+""+recyclerViewList.size());
+
+            for(int i=level;i<recyclerViewList.size();i++){
+            RecyclerView r = recyclerViewList.get(i);
+            TextView textView=textViewList.get(i);
+           textView.setText("");
+            r.setAdapter(productAttrAdapter);
+
+            }
         }
+        //Log.e("Dldldl",level+""+recyclerViewList.size());
+
     }
+
 }

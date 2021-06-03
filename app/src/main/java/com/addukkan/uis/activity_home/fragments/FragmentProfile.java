@@ -154,7 +154,7 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     public void onAboutApp() {
         if (settingModel != null) {
             Intent intent = new Intent(activity, AboutUsActivity.class);
-            String url = settingModel.getData().getTerms();
+            String url = settingModel.getData().getAbout_us_link();
             intent.putExtra("url", url);
             intent.putExtra("type", "1");
             startActivity(intent);
@@ -177,7 +177,7 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     public void onTerms() {
         if (settingModel != null) {
             Intent intent = new Intent(activity, AboutUsActivity.class);
-            String url = settingModel.getData().getTerms();
+            String url = settingModel.getData().getTerms_link();
             intent.putExtra("url", url);
             intent.putExtra("type", "0");
             startActivity(intent);
@@ -222,8 +222,8 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
 
     @Override
     public void onWhatsApp() {
-        if (settingModel != null && settingModel.getData() != null && settingModel.getData().getWhatsapp() != null && !settingModel.getData().getWhatsapp().equals("#")) {
-            open("https://api.whatsapp.com/send?phone=" + settingModel.getData().getWhatsapp());
+        if (settingModel != null && settingModel.getData() != null && settingModel.getData().getWhatup() != null && !settingModel.getData().getWhatup().equals("#")) {
+            open("https://api.whatsapp.com/send?phone=" + settingModel.getData().getWhatup());
         } else {
             Toast.makeText(activity, R.string.not_avail_now, Toast.LENGTH_SHORT).show();
         }
