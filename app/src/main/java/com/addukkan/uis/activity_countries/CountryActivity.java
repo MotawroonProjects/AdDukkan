@@ -15,8 +15,10 @@ import com.addukkan.R;
 import com.addukkan.adapters.CountryAdapter;
 import com.addukkan.databinding.ActivityCountryBinding;
 import com.addukkan.language.Language;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CountryDataModel;
 import com.addukkan.models.CountryModel;
+import com.addukkan.models.SettingModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
@@ -37,7 +39,7 @@ public class CountryActivity extends AppCompatActivity {
     private CountryAdapter adapter;
     private UserModel userModel;
     private Preferences preferences;
-
+    private AppLocalSettings settings;
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -55,6 +57,8 @@ public class CountryActivity extends AppCompatActivity {
     private void initView() {
         preferences = Preferences.getInstance();
         userModel = preferences.getUserData(this);
+        settings = preferences.isLanguageSelected(this);
+
         Paper.init(this);
         lang = Paper.book().read("lang", "ar");
         countryModelList = new ArrayList<>();
@@ -173,4 +177,9 @@ public class CountryActivity extends AppCompatActivity {
     }
 
 
+    public void setcountry(CountryModel countryModel) {
+        settings.setCountry_code(countryModel.getCode());
+        preferences.setIsLanguageSelected(this,settings);
+        finish();
+    }
 }

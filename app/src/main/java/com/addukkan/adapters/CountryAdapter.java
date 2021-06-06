@@ -13,6 +13,7 @@ import com.addukkan.R;
 import com.addukkan.databinding.CountryRowBinding;
 import com.addukkan.databinding.DoctorRowBinding;
 import com.addukkan.models.CountryModel;
+import com.addukkan.uis.activity_countries.CountryActivity;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<CountryModel> list;
     private LayoutInflater inflater;
     private Context context;
-    private int i = 0;
-    private int old_pos = 0;
+    private int i = -1;
+   // private int old_pos = 0;
 
 
     public CountryAdapter(Context context,List<CountryModel> list) {
@@ -47,22 +48,33 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         myHolder.binding.setModel(countryModel);
 
         holder.itemView.setOnClickListener(view -> {
-            CountryModel model1 = list.get(old_pos);
-            model1.setSelected(false);
-            list.set(old_pos,model1);
-            notifyItemChanged(old_pos);
-
-            i = holder.getAdapterPosition();
-            CountryModel model2 = list.get(i);
-            model2.setSelected(true);
-            list.set(i,model2);
-            notifyItemChanged(i);
-            old_pos =i;
+//            CountryModel model1 = list.get(old_pos);
+//            model1.setSelected(false);
+//            list.set(old_pos,model1);
+//            notifyItemChanged(old_pos);
+//
+//            i = holder.getAdapterPosition();
+//            CountryModel model2 = list.get(i);
+//            model2.setSelected(true);
+//            list.set(i,model2);
+//            notifyItemChanged(i);
+//            old_pos =i;
+            i=position;
+            notifyDataSetChanged();
 
             //fragment_categories.setItemData(model2);
 
         });
-
+if(i==position){
+    ((MyHolder) holder).binding.rb.setChecked(true);
+    if(context instanceof CountryActivity){
+        CountryActivity countryActivity=(CountryActivity)context;
+        countryActivity.setcountry(list.get(position));
+    }
+}
+else {
+    ((MyHolder) holder).binding.rb.setChecked(false);
+}
 
     }
 
