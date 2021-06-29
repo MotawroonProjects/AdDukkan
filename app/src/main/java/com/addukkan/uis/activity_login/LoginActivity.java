@@ -264,6 +264,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==100&&resultCode==RESULT_OK){
+            setResult(RESULT_OK);
             finish();
         }
     }

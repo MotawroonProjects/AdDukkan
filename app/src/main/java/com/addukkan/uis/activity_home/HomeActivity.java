@@ -109,15 +109,13 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        binding.flCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (userModel != null) {
-                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                    startActivity(intent);
-                } else {
-                    navigateToSignInActivity();
-                }
+        binding.flCart.setOnClickListener(v -> {
+            if (userModel != null) {
+                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivityForResult(intent,100);
             }
         });
     }
@@ -249,6 +247,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.gray9));
 
     }
+
 
 
     private void updateNavUiDukkan() {
@@ -500,6 +499,15 @@ public class HomeActivity extends AppCompatActivity {
         List<Fragment> fragments = fragmentManager.getFragments();
         for (Fragment fragment : fragments) {
             fragment.onActivityResult(requestCode, resultCode, data);
+        }
+
+        if (requestCode==100&&resultCode==RESULT_OK){
+            userModel = preferences.getUserData(this);
+            if (fragmentProfile!=null&&fragmentProfile.isAdded()){
+                fragmentProfile.updateUserData();
+            }
+
+
         }
     }
 

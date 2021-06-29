@@ -24,12 +24,12 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<ProductDataModel> list;
+    private List<SingleProductModel> list;
     private Context context;
     private LayoutInflater inflater;
     private Fragment fragment;
     //private Fragment_Main fragment_main;
-    public ProductAdapter(List<ProductDataModel> list, Context context, Fragment fragment) {
+    public ProductAdapter(List<SingleProductModel> list, Context context, Fragment fragment) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -54,9 +54,9 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
-        myHolder.binding.setModel(list.get(position).getProduct_data());
+        myHolder.binding.setModel(list.get(position));
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        if (list.get(position).getProduct_data().getFavourite() != null) {
+        if (list.get(position).getFavourite() != null) {
             ((MyHolder) holder).binding.checkbox.setChecked(true);
         }
         myHolder.binding.checkbox.setOnClickListener(v -> {
@@ -66,7 +66,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 FragmentHome fragment_main = (FragmentHome) fragment;
 
 
-                    fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()).getProduct_data(), myHolder.getLayoutPosition(),2);
+                    fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(),2);
 
             }
 
@@ -81,7 +81,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 FragmentHome fragment_main = (FragmentHome) fragment;
 
 
-                fragment_main.showData(list.get(myHolder.getLayoutPosition()).getProduct_id()+"");
+                fragment_main.showData(list.get(myHolder.getLayoutPosition())+"");
 
             }
            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");

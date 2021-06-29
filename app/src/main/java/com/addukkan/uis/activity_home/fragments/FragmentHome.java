@@ -1005,7 +1005,7 @@ public class FragmentHome extends Fragment {
                 });
     }
 
-    public void additemtoCart2(ProductDataModel data, ProductRowBinding binding) {
+    public void additemtoCart2(SingleProductModel data, ProductRowBinding binding) {
        if(userModel!=null){
         binding.progBar.setVisibility(View.VISIBLE);
         AddCartDataModel addCartDataModel = new AddCartDataModel();
@@ -1014,30 +1014,31 @@ public class FragmentHome extends Fragment {
         addCartDataModel.setCountry_code(country_coude);
         addCartDataModel.setUser_id(userModel.getData().getId());
         double totalprice = 0;
-        if (data.getProduct_data().getHave_offer().equals("yes")) {
-            if (data.getProduct_data().getOffer_type().equals("value")) {
-                totalprice = data.getProduct_data().getProduct_default_price().getPrice() - data.getProduct_data().getOffer_value();
-            } else if (data.getProduct_data().getOffer_type().equals("per")) {
-                totalprice = (data.getProduct_data().getProduct_default_price().getPrice()) - ((data.getProduct_data().getProduct_default_price().getPrice() * data.getProduct_data().getOffer_value()) / 100);
+        if (data.getHave_offer().equals("yes")) {
+            if (data.getOffer_type().equals("value")) {
+                totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+            } else if (data.getOffer_type().equals("per")) {
+                totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.
+                        getOffer_value()) / 100);
             } else {
-                totalprice = data.getProduct_data().getProduct_default_price().getPrice();
+                totalprice = data.getProduct_default_price().getPrice();
 
             }
         } else {
-            totalprice = data.getProduct_data().getProduct_default_price().getPrice();
+            totalprice = data.getProduct_default_price().getPrice();
         }
         addCartDataModel.setTotal_price(totalprice);
         addCartProductItemModel.setAmount(1);
-        addCartProductItemModel.setHave_offer(data.getProduct_data().getHave_offer());
-        addCartProductItemModel.setOffer_bonus(data.getProduct_data().getOffer_bonus());
-        addCartProductItemModel.setOffer_min(data.getProduct_data().getOffer_min());
-        addCartProductItemModel.setOffer_type(data.getProduct_data().getOffer_type());
-        addCartProductItemModel.setOld_price(data.getProduct_data().getProduct_default_price().getPrice());
+        addCartProductItemModel.setHave_offer(data.getHave_offer());
+        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+        addCartProductItemModel.setOffer_min(data.getOffer_min());
+        addCartProductItemModel.setOffer_type(data.getOffer_type());
+        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
         addCartProductItemModel.setPrice(totalprice);
-           addCartProductItemModel.setOffer_value(data.getProduct_data().getOffer_value());
-           addCartProductItemModel.setProduct_id(data.getProduct_data().getId() + "");
-        addCartProductItemModel.setProduct_price_id(data.getProduct_data().getProduct_default_price().getId() + "");
-        addCartProductItemModel.setVendor_id(data.getProduct_data().getVendor_id() + "");
+           addCartProductItemModel.setOffer_value(data.getOffer_value());
+           addCartProductItemModel.setProduct_id(data.getId() + "");
+        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
         addCartProductItemModelList.add(addCartProductItemModel);
         addCartDataModel.setCart_products(addCartProductItemModelList);
         addTocart2(addCartDataModel,binding);}

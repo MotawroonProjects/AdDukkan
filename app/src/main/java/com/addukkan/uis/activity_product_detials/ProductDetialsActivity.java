@@ -1,5 +1,6 @@
 package com.addukkan.uis.activity_product_detials;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -17,15 +18,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.addukkan.R;
 import com.addukkan.adapters.PagerAdapter;
 import com.addukkan.adapters.ProductAttrAdapter;
+import com.addukkan.adapters.ProductChildParentAttrAdapter;
 import com.addukkan.adapters.SliderProductAdapter;
 import com.addukkan.databinding.ActivityProductDetialsBinding;
 import com.addukkan.language.Language;
 import com.addukkan.models.AppLocalSettings;
+import com.addukkan.models.AttrDataModel;
 import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
+import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_product_detials.fragmentchild.FragmentDescription;
 import com.addukkan.uis.activity_product_detials.fragmentchild.FragmentRate;
@@ -44,8 +48,10 @@ public class ProductDetialsActivity extends AppCompatActivity {
     private Preferences preferences;
     private UserModel userModel;
     private String lang = "ar";
-    private List<SingleProductModel.Sub> detialsList;
-    private ProductAttrAdapter productAttrAdapter;
+    private List<ProductDataModel.ParentAttributes> list;
+    private ProductAttrAdapter parentAdapter;
+    private ProductChildParentAttrAdapter childAdapter;
+    private List<ProductDataModel.Attribute> childList;
     private String id;
     private AppLocalSettings settings;
     private String country_coude;
@@ -77,8 +83,8 @@ public class ProductDetialsActivity extends AppCompatActivity {
     private void initView() {
         recyclerViewList = new ArrayList<>();
         textViewList=new ArrayList<>();
-        detialsList = new ArrayList<>();
-
+        list = new ArrayList<>();
+        childList = new ArrayList<>();
         Paper.init(this);
         preferences = Preferences.getInstance();
         userModel = preferences.getUserData(this);
@@ -92,9 +98,14 @@ public class ProductDetialsActivity extends AppCompatActivity {
         }
         lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
-        productAttrAdapter = new ProductAttrAdapter(this, detialsList, 0);
-        binding.recView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        binding.recView.setAdapter(productAttrAdapter);
+        parentAdapter = new ProductAttrAdapter(this, list);
+        binding.recViewParent.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        binding.recViewParent.setAdapter(parentAdapter);
+
+        childAdapter = new ProductChildParentAttrAdapter(this,childList);
+        binding.recViewChildren.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        binding.recViewChildren.setAdapter(childAdapter);
+
         binding.llBack.setOnClickListener(view -> finish());
         binding.tab1.setupWithViewPager(binding.pager1);
 
@@ -114,8 +125,8 @@ public class ProductDetialsActivity extends AppCompatActivity {
         }
 
         binding.progBar.setVisibility(View.VISIBLE);
-        detialsList.clear();
-        productAttrAdapter.notifyDataSetChanged();
+        list.clear();
+        parentAdapter.notifyDataSetChanged();
         Log.e("Eerr", id);
         Api.getService(Tags.base_url)
                 .getSingleProduct(lang, id, user_id, country_coude)
@@ -173,16 +184,26 @@ public class ProductDetialsActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateData(SingleProductModel body) {
-//        Log.e("dldlld",body.getData().getAddress());
+    private void updateData(ProductDataModel.Data body) {
         binding.tvOldprice.setPaintFlags(binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        detialsList.clear();
+        list.clear();
         binding.nested.setVisibility(View.VISIBLE);
-        detialsList.addAll(body.getProduct_attr());
-        productAttrAdapter.notifyDataSetChanged();
-        binding.setModel(body);
-        if (body.getProduct_images() != null && body.getProduct_images().size() > 0) {
-            SliderProductAdapter sliderProductAdapter = new SliderProductAdapter(body.getProduct_images(), this);
+        list.add(body.getParentAttributes());
+        parentAdapter.notifyDataSetChanged();
+
+        if (body.getAttributes()!=null){
+            childList.clear();
+            childList.addAll(body.getAttributes());
+            childAdapter.notifyDataSetChanged();
+        }
+
+
+        binding.setModel(body.getProduct());
+
+
+
+        if (body.getProduct().getProduct_images() != null && body.getProduct().getProduct_images().size() > 0) {
+            SliderProductAdapter sliderProductAdapter = new SliderProductAdapter(body.getProduct().getProduct_images(), this);
             binding.tab.setupWithViewPager(binding.pager);
             binding.pager.setAdapter(sliderProductAdapter);
             binding.flSlider.setVisibility(View.VISIBLE);
@@ -191,10 +212,74 @@ public class ProductDetialsActivity extends AppCompatActivity {
             binding.flSlider.setVisibility(View.GONE);
             binding.flNoSlider.setVisibility(View.VISIBLE);
         }
-        FragmentDescription fragmentDescription = (FragmentDescription) pagerAdapter.getItem(0);
-        fragmentDescription.setDesc(body.getProduct_trans_fk().getDescription());
+        //FragmentDescription fragmentDescription = (FragmentDescription) pagerAdapter.getItem(0);
+        //fragmentDescription.setDesc(body.getProduct().getProduct_trans_fk().getDescription());
     }
+    public void getFeatures(int attribute_id){
+        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
 
+        Api.getService(Tags.base_url)
+                .getFeature(lang, id,attribute_id+"")
+                .enqueue(new Callback<AttrDataModel>() {
+                    @Override
+                    public void onResponse(Call<AttrDataModel> call, Response<AttrDataModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+
+                                if (response.body().getData().getAttributes().size()>0) {
+                                    childList.clear();
+                                    childList.addAll(response.body().getData().getAttributes());
+                                    childAdapter.notifyDataSetChanged();
+                                } else {
+                                    childList.clear();
+                                    childAdapter.notifyDataSetChanged();
+
+                                    // binding.tvNoData.setVisibility(View.VISIBLE);
+                                }
+
+
+                            }
+                        } else {
+                            dialog.dismiss();
+
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AttrDataModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
     private List<Fragment> getFragments() {
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(FragmentDescription.newInstance());
@@ -214,52 +299,5 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
     }
 
-    public void setAttr(SingleProductModel.Sub sub, int level,String title) {
-Log.e("sksksk",level+" "+recyclerViewList.size());
-        ProductAttrAdapter productAttrAdapter = new ProductAttrAdapter(this, sub.getSub(), level+1);
-
-        if (recyclerViewList.size() <= level) {
-            Log.e("skskskwwuwu",level+" "+recyclerViewList.size());
-
-            RecyclerView recyclerView = new RecyclerView(this);
-            TextView textView=new TextView(this);
-            textView.setText(title);
-            textView.setTextColor(getResources().getColor(R.color.black));
-            textView.setTextSize(14);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-          binding.ll.addView(textView);
-            binding.ll.addView(recyclerView);
-
-            recyclerView.setAdapter(productAttrAdapter);
-            recyclerViewList.add(recyclerView);
-            textViewList.add(textView);
-        } else {
-            Log.e("D;dldll",level+"");
-            RecyclerView r = recyclerViewList.get(level);
-            r.setAdapter(productAttrAdapter);
-            TextView textView=textViewList.get(level);
-            textView.setText(title);
-        }
-        Log.e("dlkdkdk",level+" "+recyclerViewList.size());
-
-    }
-
-    public void setAttr(int level) {
-        ProductAttrAdapter productAttrAdapter=new ProductAttrAdapter(this);
-
-        if(level!=0&&recyclerViewList.size()>level){
-            Log.e("Dldldlsss",level+""+recyclerViewList.size());
-
-            for(int i=level;i<recyclerViewList.size();i++){
-            RecyclerView r = recyclerViewList.get(i);
-            TextView textView=textViewList.get(i);
-           textView.setText("");
-            r.setAdapter(productAttrAdapter);
-
-            }
-        }
-        //Log.e("Dldldl",level+""+recyclerViewList.size());
-
-    }
 
 }

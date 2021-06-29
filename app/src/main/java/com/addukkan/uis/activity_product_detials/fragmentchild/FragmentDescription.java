@@ -45,14 +45,14 @@ public class FragmentDescription extends Fragment {
     }
 
     private void initView() {
-       binding.setDesc(desc);
+       //binding.setDesc(desc);
 
     }
 
 
     public void setDesc(String desc) {
         this.desc = desc;
-        binding.setDesc(desc);
+        //binding.setDesc(desc);
     }
 
 

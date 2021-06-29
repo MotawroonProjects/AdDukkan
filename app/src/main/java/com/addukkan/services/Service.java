@@ -3,6 +3,7 @@ package com.addukkan.services;
 import com.addukkan.models.ALLOrderDataModel;
 import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.AddOrderModel;
+import com.addukkan.models.AttrDataModel;
 import com.addukkan.models.BrandDataModel;
 import com.addukkan.models.AddCartDataModel;
 import com.addukkan.models.CartDataModel;
@@ -370,13 +371,21 @@ public interface Service {
                                   @Field("country_code") String country_code
 
 
-                                  );
+    );
+
     @GET("api/one-product")
-    Call<ProductDataModel> getSingleProduct(
-            @Header("lang") String lang,
-            @Query("id") String id,
-            @Query("user_id") String user_id,
-            @Query("country_code") String country_code
+    Call<ProductDataModel> getSingleProduct(@Header("lang") String lang,
+                                            @Query("id") String id,
+                                            @Query("user_id") String user_id,
+                                            @Query("country_code") String country_code
+
+
+    );
+
+    @GET("api/one-product-attribute")
+    Call<AttrDataModel> getFeature(@Header("lang") String lang,
+                                   @Query("product_id") String product_id,
+                                   @Query("attribute_id") String attribute_id
 
 
     );

@@ -28,6 +28,7 @@ import com.addukkan.models.AddOrderModel;
 import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CartDataModel;
 import com.addukkan.models.CouponDataModel;
+import com.addukkan.models.ResponseModel;
 import com.addukkan.models.SelectedLocation;
 import com.addukkan.models.SingleOrderModel;
 import com.addukkan.models.UserModel;
@@ -37,6 +38,7 @@ import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_location_detials.LocationDetialsActivity;
 import com.addukkan.uis.activity_map.MapActivity;
+import com.addukkan.uis.activity_qr_code.QrCodeActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +64,9 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private String country_coude;
     private AppLocalSettings settings;
     private String couponid = null;
-private String copoun;
+    private String copoun;
+    private String bill_code = "";
+
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -73,7 +77,16 @@ private String copoun;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart);
+        getDataFromIntent();
         initView();
+    }
+
+    private void getDataFromIntent() {
+        Intent intent = getIntent();
+        if (intent.getData() != null) {
+            bill_code = intent.getData().getLastPathSegment();
+            Log.e("code", bill_code+"__");
+        }
     }
 
 
@@ -98,16 +111,13 @@ private String copoun;
         binding.recView.setLayoutManager(manager);
         cartProductAdapter = new CartProductAdapter(detialsList, this);
         binding.recView.setAdapter(cartProductAdapter);
-        binding.btcheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String copun = binding.edtCopun.getText().toString();
-                if (!copun.isEmpty()) {
-                    binding.edtCopun.setError(null);
-                    checkCoupon(copun);
-                } else {
-                    binding.edtCopun.setError(getResources().getString(R.string.field_required));
-                }
+        binding.btcheck.setOnClickListener(v -> {
+            String copun = binding.edtCopun.getText().toString();
+            if (!copun.isEmpty()) {
+                binding.edtCopun.setError(null);
+                checkCoupon(copun);
+            } else {
+                binding.edtCopun.setError(getResources().getString(R.string.field_required));
             }
         });
 //        binding.recView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -130,14 +140,18 @@ private String copoun;
 //                }
 //            }
 //        });*/
-        binding.btBuy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CartActivity.this, MapActivity.class);
-                startActivityForResult(intent, 100);
-            }
+
+        if (bill_code.isEmpty()) {
+            getData();
+        } else {
+            scanOrder(bill_code);
+        }
+
+        binding.btBuy.setOnClickListener(v -> {
+            Intent intent = new Intent(CartActivity.this, MapActivity.class);
+            startActivityForResult(intent, 100);
         });
-      //  getData();
+        //  getData();
     }
 
 
@@ -223,6 +237,7 @@ private String copoun;
                 });
     }
 
+
     private void checkCoupon(String coupon_num) {
         binding.progBarcopun.setVisibility(View.VISIBLE);
         Api.getService(Tags.base_url).checkCoupon("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", coupon_num)
@@ -292,15 +307,70 @@ private String copoun;
         couponid = body.getData().getId() + "";
 
         if (body.getData().getType().equals("value")) {
-            copoun=body.getData().getDiscount_val()+"";
+            copoun = body.getData().getDiscount_val() + "";
             binding.tvtotal.setText(getResources().getString(R.string.total) + Math.round((Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) - body.getData().getDiscount_val())));
         } else {
-            copoun=(body.getData().getDiscount_val() * Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) / 100)+"";
+            copoun = (body.getData().getDiscount_val() * Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) / 100) + "";
             binding.tvtotal.setText(getResources().getString(R.string.total) + Math.round((Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) - (body.getData().getDiscount_val() * Double.parseDouble(binding.tvtotal.getText().toString().replaceAll(getResources().getString(R.string.total), "")) / 100))));
 
         }
     }
 
+    private void scanOrder(String barcode) {
+
+
+        Api.getService(Tags.base_url)
+                .scanOrder("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", barcode, country_coude)
+                .enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+                                getData();
+
+                            } else if (response.body().getStatus() == 404) {
+                                Toast.makeText(CartActivity.this, getString(R.string.not_found), Toast.LENGTH_SHORT).show();
+
+                            } else if (response.body().getStatus() == 406) {
+                                Toast.makeText(CartActivity.this, getString(R.string.no_product), Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                // Toast.makeText(HomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                            }
+                        } else {
+                            if (response.code() == 500) {
+                                Toast.makeText(CartActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(CartActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+
+                            try {
+                                Log.e("error", response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                        try {
+                            if (t.getMessage() != null) {
+                                Log.e("msg_category_error", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(CartActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(CartActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
 
     @Override
     public void onBackPressed() {
@@ -489,8 +559,8 @@ private String copoun;
             addOrderModel.setSubtotal(data2.getTotal_price() + "");
             addOrderModel.setTotal_payments(data2.getTotal_price() + "");
             addOrderModel.setCopoun(copoun);
-            Intent intent=new Intent(CartActivity.this, LocationDetialsActivity.class);
-            intent.putExtra("data",addOrderModel);
+            Intent intent = new Intent(CartActivity.this, LocationDetialsActivity.class);
+            intent.putExtra("data", addOrderModel);
             startActivity(intent);
         }
     }

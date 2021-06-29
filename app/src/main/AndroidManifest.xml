@@ -162,7 +162,19 @@
             android:name=".uis.activity_cart.CartActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="dokan.sray.live"
+                    android:pathPrefix="/api/share/"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".uis.activity_splash.SplashActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

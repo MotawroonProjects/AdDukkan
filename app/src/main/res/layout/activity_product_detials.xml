@@ -10,10 +10,12 @@
         <variable
             name="lang"
             type="String" />
-<variable
-    name="model"
-    type="com.addukkan.models.SingleProductModel" />
-        <import type="android.view.View"/>
+
+        <variable
+            name="model"
+            type="com.addukkan.models.SingleProductModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -60,261 +62,258 @@
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
 
-<androidx.core.widget.NestedScrollView
-    android:id="@+id/nested"
-    android:layout_width="match_parent"
-
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-   >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        >
-        <FrameLayout
-            android:id="@+id/fl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <FrameLayout
-                android:id="@+id/flSlider"
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nested"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
 
-
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="7dp"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="20dp"
-                    app:tabBackground="@drawable/tab_indicator"
-                    app:tabGravity="fill"
-                    app:tabIndicatorHeight="0dp"
-                    app:tabMaxWidth="7dp"
-
-                    app:tabMode="scrollable" />
-
-            </FrameLayout>
-
-
-            <FrameLayout
-                android:id="@+id/flNoSlider"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/gray1"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:visibility="gone"
+                >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/ic_gallery"
-                        app:tint="@color/gray3" />
+                    <FrameLayout
+                        android:id="@+id/fl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <FrameLayout
+                            android:id="@+id/flSlider"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp">
+
+
+                            <androidx.viewpager.widget.ViewPager
+                                android:id="@+id/pager"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                            <com.google.android.material.tabs.TabLayout
+                                android:id="@+id/tab"
+                                android:layout_width="wrap_content"
+                                android:layout_height="7dp"
+                                android:layout_gravity="bottom|center"
+                                android:layout_marginBottom="20dp"
+                                app:tabBackground="@drawable/tab_indicator"
+                                app:tabGravity="fill"
+                                app:tabIndicatorHeight="0dp"
+                                app:tabMaxWidth="7dp"
+
+                                app:tabMode="scrollable" />
+
+                        </FrameLayout>
+
+
+                        <FrameLayout
+                            android:id="@+id/flNoSlider"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:background="@color/gray1"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:src="@drawable/ic_gallery"
+                                    app:tint="@color/gray3" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_marginTop="8dp"
+                                    android:text="@string/no_image"
+                                    android:textColor="@color/gray4"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+                        </FrameLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:background="@drawable/small_rounded_primary"
+                                android:gravity="center"
+                                android:maxWidth="145dp"
+                                android:paddingStart="8dp"
+                                android:paddingTop="5dp"
+                                android:paddingEnd="8dp"
+                                android:singleLine="true"
+                                android:text='@{model.offer_type.equals("per")?model.offer_value+"%":model.offer_type.equals("value")?model.offer_value+"":(@string/buy+model.offer_min+@string/and_got+model.offer_bonus+@string/bouns)}'
+                                android:textColor="@color/white"
+                                android:textSize="11sp"
+                                android:visibility='@{model.have_offer.equals("yes")?View.VISIBLE:View.GONE,default=gone}'
+                                app:layout_constraintEnd_toStartOf="@+id/flcheck"
+                                app:layout_constraintHorizontal_bias="0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:ignore="RtlCompat" />
+
+                            <FrameLayout
+                                android:id="@+id/flcheck"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:ignore="RtlCompat">
+
+                                <CheckBox
+                                    android:id="@+id/checkbox"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="15dp"
+                                    android:button="@drawable/checkbox_bg"
+
+
+                                    />
+
+
+                            </FrameLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </FrameLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/no_image"
-                        android:textColor="@color/gray4"
-                        android:textSize="15sp" />
-                </LinearLayout>
-            </FrameLayout>
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="start"
+                        android:maxLines="2"
+                        android:text="@{model.product_trans_fk.title}"
+                        android:textAlignment="viewStart"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
-                    android:background="@drawable/small_rounded_primary"
-                    android:gravity="center"
-                    android:maxWidth="145dp"
-                    android:paddingStart="8dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="8dp"
-                    android:singleLine="true"
-                    android:text='@{model.offer_type.equals("per")?model.offer_value+"%":model.offer_type.equals("value")?model.offer_value+"":(@string/buy+model.offer_min+@string/and_got+model.offer_bonus+@string/bouns)}'
-                    android:textColor="@color/white"
-                    android:textSize="11sp"
-                    android:visibility='@{model.have_offer.equals("yes")?View.VISIBLE:View.GONE,default=gone}'
-                    app:layout_constraintEnd_toStartOf="@+id/flcheck"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlCompat" />
-
-                <FrameLayout
-                    android:id="@+id/flcheck"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlCompat">
-
-                    <CheckBox
-                        android:id="@+id/checkbox"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:button="@drawable/checkbox_bg"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:maxLines="2"
+                            android:text='@{model.have_offer.equals("yes")&amp;&amp;!model.offer_type.equals("amount")?(model.offer_type.equals("value")?(model.product_default_price.price-model.offer_value)+"":(model.product_default_price.price-(model.product_default_price.price*model.offer_value/100))+""):model.product_default_price.price+""}'
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/tvOldprice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="3dp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:singleLine="true"
+                            android:text='@{model.product_default_price.price+""}'
+                            android:textColor="@color/gray6"
+                            android:textSize="13sp"
+                            android:visibility='@{model.have_offer.equals("yes")?model.offer_type.equals("amount")?View.INVISIBLE:View.VISIBLE:View.INVISIBLE,default=invisible}'
+
+                            />
 
 
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+
+                            android:gravity="center_vertical|end">
+
+                            <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                                android:id="@+id/simplarate"
+
+                                rate="@{model.rate}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|end"
+                                android:gravity="center_vertical|end"
+                                app:srb_drawBorderEnabled="true"
+                                app:srb_isIndicator="true"
+                                app:srb_numberOfStars="5"
+                                app:srb_starBackgroundColor="@color/white"
+                                app:srb_starBorderWidth="3"
+                                app:srb_starSize="13dp"
+                                app:srb_starsSeparation="10dp"
+                                app:srb_stepSize=".5" />
+
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recViewParent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recViewChildren"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
                         />
 
 
-                </FrameLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.tabs.TabLayout
 
-        </FrameLayout>
+                        android:id="@+id/tab1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        app:tabBackground="@color/white"
+                        app:tabGravity="fill"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="start"
-            android:maxLines="2"
-            android:text="@{model.product_trans_fk.title}"
-            android:textAlignment="viewStart"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+                        app:tabIndicatorColor="@color/colorPrimary"
+                        app:tabIndicatorHeight="1dp"
+                        app:tabMode="fixed"
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                        app:tabSelectedTextColor="@color/black"
+                        app:tabTextColor="@color/black" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text='@{model.have_offer.equals("yes")&amp;&amp;!model.offer_type.equals("amount")?(model.offer_type.equals("value")?(model.product_default_price.price-model.offer_value)+"":(model.product_default_price.price-(model.product_default_price.price*model.offer_value/100))+""):model.product_default_price.price+""}'
-                android:textColor="@color/black"
-                android:textSize="13sp" />
-            <TextView
-                android:id="@+id/tvOldprice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="3dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:singleLine="true"
-                android:text='@{model.product_default_price.price+""}'
-                android:textColor="@color/gray6"
-                android:textSize="13sp"
-                android:visibility='@{model.have_offer.equals("yes")?model.offer_type.equals("amount")?View.INVISIBLE:View.VISIBLE:View.INVISIBLE,default=invisible}'
+                    <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/pager1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
 
-                />
+                        />
 
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
 
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_vertical|end"
-
-                android:layout_weight="1">
-                <com.iarcuschin.simpleratingbar.SimpleRatingBar
-                    android:id="@+id/simplarate"
-
-                    rate="@{model.rate}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:gravity="center_vertical|end"
-                    app:srb_drawBorderEnabled="true"
-                    app:srb_isIndicator="true"
-                    app:srb_numberOfStars="5"
-                    app:srb_starBackgroundColor="@color/white"
-                    app:srb_starBorderWidth="3"
-                    app:srb_starSize="13dp"
-                    app:srb_starsSeparation="10dp"
-                    app:srb_stepSize=".5" />
-
-            </FrameLayout>
-        </LinearLayout>
-
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
-
-        </FrameLayout>
-        <LinearLayout
-            android:id="@+id/ll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
-        <com.google.android.material.tabs.TabLayout
-
-            android:id="@+id/tab1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:tabBackground="@color/white"
-            app:tabGravity="fill"
-
-            app:tabIndicatorColor="@color/colorPrimary"
-            app:tabIndicatorHeight="1dp"
-            app:tabMode="fixed"
-
-            app:tabSelectedTextColor="@color/black"
-            app:tabTextColor="@color/black" />
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-
-            />
-
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
             <ProgressBar
                 android:id="@+id/progBar"
                 android:layout_width="wrap_content"

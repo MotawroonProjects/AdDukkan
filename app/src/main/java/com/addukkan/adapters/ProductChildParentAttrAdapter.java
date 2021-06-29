@@ -1,9 +1,7 @@
 package com.addukkan.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,25 +12,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.addukkan.R;
 import com.addukkan.databinding.AttrRowBinding;
 import com.addukkan.models.ProductDataModel;
-import com.addukkan.models.SingleProductModel;
-import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes;
 
 
-public class ProductAttrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ProductChildParentAttrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LayoutInflater inflater;
     private Context context;
-    private List<ProductDataModel.ParentAttributes> list;
+    private List<ProductDataModel.Attribute> list;
 
-    public ProductAttrAdapter(Context context, List<ProductDataModel.ParentAttributes> list) {
+    public ProductChildParentAttrAdapter(Context context, List<ProductDataModel.Attribute> list) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.list = list;
     }
 
-    public ProductAttrAdapter(Context context) {
+    public ProductChildParentAttrAdapter(Context context) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.list = new ArrayList<>();
