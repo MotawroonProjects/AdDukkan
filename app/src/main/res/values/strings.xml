@@ -153,5 +153,8 @@
     <string name="no_image">No Images</string>
     <string name="description">Description</string>
     <string name="reviews">Reviews</string>
+    <string name="no_comments">No comments</string>
+    <string name="similar_products">Similar products:-</string>
+    <string name="admin">Admin</string>
 
 </resources>

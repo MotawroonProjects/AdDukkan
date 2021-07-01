@@ -8,19 +8,20 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import  com.addukkan.R;
-import  com.addukkan.databinding.RateRowBinding;
-import com.addukkan.models.UserRateModel;
+import com.addukkan.R;
+import com.addukkan.databinding.CommentRowBinding;
+import com.addukkan.databinding.RateRowBinding;
+import com.addukkan.models.ProductDataModel;
 
 import java.util.List;
 
-public class RateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<UserRateModel> list;
+    private List<ProductDataModel.Comment> list;
     private Context context;
     private LayoutInflater inflater;
 
-    public RateAdapter(List<UserRateModel> list, Context context) {
+    public CommentAdapter(List<ProductDataModel.Comment> list, Context context) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -33,7 +34,7 @@ public class RateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
 
-        RateRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.rate_row, parent, false);
+        CommentRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.comment_row, parent, false);
         return new MyHolder(binding);
 
 
@@ -43,7 +44,7 @@ public class RateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
-        //myHolder.binding.setModel(list.get(position));
+        myHolder.binding.setModel(list.get(position));
 
 
     }
@@ -54,9 +55,9 @@ public class RateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public static class MyHolder extends RecyclerView.ViewHolder {
-        public RateRowBinding binding;
+        public CommentRowBinding binding;
 
-        public MyHolder(@NonNull RateRowBinding binding) {
+        public MyHolder(@NonNull CommentRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 

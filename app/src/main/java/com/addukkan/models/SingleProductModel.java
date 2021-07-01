@@ -18,6 +18,7 @@ public class SingleProductModel implements Serializable {
     private int offer_value;
     private int offer_min;
     private int offer_bonus;
+    private double price;
     private ProductTransFk product_trans_fk;
     private ProductDefaultPrice product_default_price;
     private Favourite favourite;
@@ -26,8 +27,14 @@ public class SingleProductModel implements Serializable {
     private BrandFk brand_fk;
     private ProductCompanyFk product_company_fk;
     private List<ProductImage> product_images;
+    private int amount = 0;
+    private boolean isLoading = false;
     public int getId() {
         return id;
+    }
+
+    public double getPrice() {
+        return price;
     }
 
     public int getVendor_id() {
@@ -80,6 +87,22 @@ public class SingleProductModel implements Serializable {
 
     public int getOffer_bonus() {
         return offer_bonus;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
     }
 
     public ProductTransFk getProduct_trans_fk() {

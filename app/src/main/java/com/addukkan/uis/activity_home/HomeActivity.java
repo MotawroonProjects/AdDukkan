@@ -112,7 +112,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.flCart.setOnClickListener(v -> {
             if (userModel != null) {
                 Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,200);
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivityForResult(intent,100);
@@ -233,6 +233,14 @@ public class HomeActivity extends AppCompatActivity {
         updateNavUiProfile();
     }
 
+    public void updateFragmentHome(){
+        if (fragmentHome!=null&&fragmentHome.isAdded()){
+            fragmentHome.getMostSell();
+            fragmentHome.getRecentArrived();
+            fragmentHome.getMainCategorySubCategoryProduct();
+
+        }
+    }
     private void updateNavUiHome() {
         binding.iconHome.setSaturation(1.0f);
         binding.tvHome.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -506,6 +514,10 @@ public class HomeActivity extends AppCompatActivity {
             if (fragmentProfile!=null&&fragmentProfile.isAdded()){
                 fragmentProfile.updateUserData();
             }
+
+
+        }else if (requestCode==200&&resultCode==RESULT_OK){
+            updateFragmentHome();
 
 
         }

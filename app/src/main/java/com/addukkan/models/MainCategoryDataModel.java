@@ -27,7 +27,7 @@ public class MainCategoryDataModel implements Serializable {
         private String updated_at;
         private Departments department_trans_fk;
         private List<SubCategoryDataModel> sub_departments;
-        private List<SingleProductModel> product_list;
+        private List<ProductData> product_list;
 
         public int getId() {
             return id;
@@ -69,8 +69,12 @@ public class MainCategoryDataModel implements Serializable {
             return sub_departments;
         }
 
-        public List<SingleProductModel> getProduct_list() {
+        public List<ProductData> getProduct_list() {
             return product_list;
+        }
+
+        public void setProduct_list(List<ProductData> product_list) {
+            this.product_list = product_list;
         }
 
         public class Departments implements Serializable {
@@ -116,6 +120,18 @@ public class MainCategoryDataModel implements Serializable {
             }
         }
 
+    }
+
+    public static class ProductData implements Serializable{
+        private SingleProductModel product_data;
+
+        public SingleProductModel getProduct_data() {
+            return product_data;
+        }
+
+        public void setProduct_data(SingleProductModel product_data) {
+            this.product_data = product_data;
+        }
     }
 
 }

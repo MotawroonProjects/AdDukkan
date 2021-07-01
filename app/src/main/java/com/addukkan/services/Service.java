@@ -3,6 +3,7 @@ package com.addukkan.services;
 import com.addukkan.models.ALLOrderDataModel;
 import com.addukkan.models.ALLProductDataModel;
 import com.addukkan.models.AddOrderModel;
+import com.addukkan.models.AdminMessageDataModel;
 import com.addukkan.models.AttrDataModel;
 import com.addukkan.models.BrandDataModel;
 import com.addukkan.models.AddCartDataModel;
@@ -24,6 +25,7 @@ import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.ResponseModel;
 import com.addukkan.models.RoomDataModel;
 import com.addukkan.models.SettingModel;
+import com.addukkan.models.SingleAdminMessageDataModel;
 import com.addukkan.models.SingleMessageDataModel;
 import com.addukkan.models.SingleOrderModel;
 import com.addukkan.models.SingleProductModel;
@@ -284,6 +286,51 @@ public interface Service {
 
     );
 
+
+    @GET("api/admin-room-messages")
+    Call<AdminMessageDataModel> getAdminChatMessages(@Header("Authorization") String bearer_token,
+                                                     @Query(value = "pagination") String pagination,
+                                                     @Query(value = "per_page") int per_page,
+                                                     @Query(value = "page") int page,
+                                                     @Query(value = "user_id") int user_id
+
+    );
+
+
+    @FormUrlEncoded
+    @POST("api/send-admin-chat-message")
+    Call<SingleAdminMessageDataModel> sendAdminChatMessage(@Header("Authorization") String bearer_token,
+                                                           @Field("admin_room_id") int room_id,
+                                                           @Field("user_id") int from_user_id,
+                                                           @Field("admin_id") int to_admin_id,
+                                                           @Field("type") String type,
+                                                           @Field("message") String message
+
+
+    );
+
+    @Multipart
+    @POST("api/send-admin-chat-message")
+    Call<SingleAdminMessageDataModel> sendAdminChatAttachment(@Header("Authorization") String user_token,
+                                                              @Part("admin_room_id") RequestBody admin_room_id,
+                                                              @Part("from_user_id") RequestBody from_user_id,
+                                                              @Part("to_admin_id") RequestBody to_admin_id,
+                                                              @Part("type") RequestBody message_type,
+                                                              @Part MultipartBody.Part attachment
+    );
+
+
+    @Multipart
+    @POST("api/send-chat-message")
+    Call<SingleMessageDataModel> sendChatAttachment(@Header("Authorization") String user_token,
+                                                    @Part("user_room_id") RequestBody room_id,
+                                                    @Part("from_user_id") RequestBody from_user_id,
+                                                    @Part("to_user_id") RequestBody to_user_id,
+                                                    @Part("type") RequestBody message_type,
+                                                    @Part MultipartBody.Part attachment
+    );
+
+
     @FormUrlEncoded
     @POST("api/send-chat-message")
     Call<SingleMessageDataModel> sendChatMessage(@Header("Authorization") String bearer_token,
@@ -294,16 +341,6 @@ public interface Service {
                                                  @Field("message") String message
 
 
-    );
-
-    @Multipart
-    @POST("api/send-chat-message")
-    Call<SingleMessageDataModel> sendChatAttachment(@Header("Authorization") String user_token,
-                                                    @Part("user_room_id") RequestBody room_id,
-                                                    @Part("from_user_id") RequestBody from_user_id,
-                                                    @Part("to_user_id") RequestBody to_user_id,
-                                                    @Part("type") RequestBody message_type,
-                                                    @Part MultipartBody.Part attachment
     );
 
 

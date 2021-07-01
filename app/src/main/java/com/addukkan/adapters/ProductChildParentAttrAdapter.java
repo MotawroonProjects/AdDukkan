@@ -1,6 +1,7 @@
 package com.addukkan.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -29,12 +30,7 @@ public class ProductChildParentAttrAdapter extends RecyclerView.Adapter<Recycler
         this.list = list;
     }
 
-    public ProductChildParentAttrAdapter(Context context) {
-        inflater = LayoutInflater.from(context);
-        this.context = context;
-        this.list = new ArrayList<>();
 
-    }
 
     @NonNull
     @Override
@@ -50,9 +46,10 @@ public class ProductChildParentAttrAdapter extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setTitle(list.get(position).getAttribute_trans_fk().getTitle());
+
         if (list.get(position).getAttributes()!=null){
             myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
-            ChildAdapter adapter = new ChildAdapter(context,list.get(position).getAttributes());
+            ChildAdapter adapter = new ChildAdapter(context,list.get(position).getAttributes(),"child",position);
             myHolder.binding.recView.setAdapter(adapter);
         }
 

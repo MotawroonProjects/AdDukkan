@@ -24,16 +24,17 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<SingleProductModel> list;
+    private List<MainCategoryDataModel.ProductData> list;
     private Context context;
     private LayoutInflater inflater;
     private Fragment fragment;
-    //private Fragment_Main fragment_main;
-    public ProductAdapter(List<SingleProductModel> list, Context context, Fragment fragment) {
+    private int parent_pos;
+    public ProductAdapter(List<MainCategoryDataModel.ProductData> list, Context context, Fragment fragment,int parent_pos) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.fragment=fragment;
+        this.parent_pos = parent_pos;
       //  this.fragment_main=fragment_main;
 
 
@@ -54,19 +55,23 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
-        myHolder.binding.setModel(list.get(position));
+        SingleProductModel model = list.get(position).getProduct_data();
+
+        myHolder.binding.setModel(model);
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        if (list.get(position).getFavourite() != null) {
+        if (model.getFavourite() != null) {
             ((MyHolder) holder).binding.checkbox.setChecked(true);
         }
         myHolder.binding.checkbox.setOnClickListener(v -> {
+            SingleProductModel model2 = list.get(myHolder.getAdapterPosition()).getProduct_data();
 
             if (fragment instanceof FragmentHome) {
+
 
                 FragmentHome fragment_main = (FragmentHome) fragment;
 
 
-                    fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(),2);
+                    fragment_main.like_dislike(model2, myHolder.getAdapterPosition(),2);
 
             }
 
@@ -77,25 +82,32 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         myHolder.itemView.setOnClickListener(view -> {
             if (fragment instanceof FragmentHome) {
+                SingleProductModel model2 = list.get(myHolder.getAdapterPosition()).getProduct_data();
 
                 FragmentHome fragment_main = (FragmentHome) fragment;
 
 
-                fragment_main.showData(list.get(myHolder.getLayoutPosition())+"");
+                fragment_main.showData(model2.getId()+"");
 
             }
-           // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
-
-           // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
         });
-        myHolder.binding.imgIncrease.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(fragment instanceof FragmentHome){
+        myHolder.binding.imgIncrease.setOnClickListener(v -> {
+            SingleProductModel model2 = list.get(myHolder.getAdapterPosition()).getProduct_data();
+
+            if(fragment instanceof FragmentHome){
+
+                if (!model2.isLoading()){
+                    model2.setLoading(true);
+                    notifyItemChanged(myHolder.getAdapterPosition());
                     FragmentHome fragmentHome=(FragmentHome)fragment;
-                    fragmentHome.additemtoCart2(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding);
+                    fragmentHome.additemtoCart2(model2,myHolder.getAdapterPosition(),parent_pos);
 
                 }
+
+
+
+
+
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.addukkan.uis.activity_home.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +36,7 @@ import com.addukkan.remote.Api;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_home.HomeActivity;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
+import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -180,7 +183,7 @@ public class FragmentOffer extends Fragment {
                                 //  Log.e("dlldl",response.body().getStatus()+"");
                                 if (response.isSuccessful() && response.body().getStatus() == 200) {
 
-getOffer();
+                                    getOffer();
                                 } else {
 
 
@@ -328,8 +331,9 @@ getOffer();
                     }
                 });
     }
+
     public void additemtoCart(SingleProductModel data, OfferProductRowBinding binding) {
-        if(userModel!=null){
+        if (userModel != null) {
             binding.progBar.setVisibility(View.VISIBLE);
             AddCartDataModel addCartDataModel = new AddCartDataModel();
             List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
@@ -363,8 +367,8 @@ getOffer();
             addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
             addCartProductItemModelList.add(addCartProductItemModel);
             addCartDataModel.setCart_products(addCartProductItemModelList);
-            addTocart(addCartDataModel,binding);}
-        else {
+            addTocart(addCartDataModel, binding);
+        } else {
             activity.navigateToSignInActivity();
         }
     }
@@ -382,8 +386,8 @@ getOffer();
                         binding.imgIncrease.setClickable(true);
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString())+1)+"");
-                                activity.binding.setCartCount(response.body().getData().getDetails().size()+"");
+                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) + 1) + "");
+                                activity.binding.setCartCount(response.body().getData().getDetails().size() + "");
 
 
                             }
@@ -424,4 +428,19 @@ getOffer();
                 });
     }
 
+
+    public void setItemData(String id){
+        Intent intent = new Intent(activity, ProductDetialsActivity.class);
+        intent.putExtra("id", id);
+        startActivityForResult(intent,100);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable  Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==100&&resultCode== Activity.RESULT_OK){
+            getOffer();
+            activity.updateFragmentHome();
+        }
+    }
 }

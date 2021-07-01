@@ -15,7 +15,6 @@ import com.addukkan.R;
 import com.addukkan.databinding.AttrRowBinding;
 import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.SingleProductModel;
-import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +31,7 @@ public class ProductAttrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.list = list;
     }
 
-    public ProductAttrAdapter(Context context) {
-        inflater = LayoutInflater.from(context);
-        this.context = context;
-        this.list = new ArrayList<>();
 
-    }
 
     @NonNull
     @Override
@@ -52,12 +46,16 @@ public class ProductAttrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         MyHolder myHolder = (MyHolder) holder;
-        myHolder.binding.setTitle(list.get(position).getAttribute_trans_fk().getTitle());
+        ProductDataModel.ParentAttributes parentAttributes = list.get(position);
+
+        myHolder.binding.setTitle(parentAttributes.getAttribute_trans_fk().getTitle());
         if (list.get(position).getAttributes()!=null){
             myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
-            ChildAdapter adapter = new ChildAdapter(context,list.get(position).getAttributes());
+            ChildAdapter adapter = new ChildAdapter(context,parentAttributes.getAttributes(),"parent",position);
             myHolder.binding.recView.setAdapter(adapter);
         }
+
+
 
 
 

@@ -27,7 +27,6 @@ public class ProductOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<SingleProductModel> list;
     private Context context;
     private LayoutInflater inflater;
-    //private Fragment_Main fragment_main;
     private Fragment fragment;
 
     public ProductOfferAdapter(List<SingleProductModel> list, Context context, Fragment fragment) {
@@ -35,7 +34,6 @@ public class ProductOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.fragment = fragment;
-        //  this.fragment_main=fragment_main;
 
 
     }
@@ -57,16 +55,18 @@ public class ProductOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//Log.e("llll",list.get(position).getFavourite().getId()+"");
         if (list.get(position).getFavourite() != null) {
-            Log.e("llll","lkfkkk");
             ((MyHolder) holder).binding.checkbox.setChecked(true);
         }
-        //  Log.e("ssss",((list.get(position).getProduct_data().getHave_offer().equals("yes")?(list.get(position).getProduct_data().getOffer_type().equals("per")?(list.get(position).getProduct_data().getProduct_default_price().getPrice()-((list.get(position).getProduct_data().getProduct_default_price().getPrice()*list.get(position).getProduct_data().getOffer_value())/100)):list.get(position).getProduct_data().getProduct_default_price().getPrice()-list.get(position).getProduct_data().getOffer_value()):list.get(position).getProduct_data().getProduct_default_price().getPrice())+""));
         myHolder.itemView.setOnClickListener(view -> {
-            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
+            if (fragment instanceof FragmentOffer) {
 
-            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
+                FragmentOffer fragmentOffer = (FragmentOffer) fragment;
+
+                fragmentOffer.setItemData(list.get(myHolder.getAdapterPosition()).getId()+"");
+
+            }
+
         });
         myHolder.binding.checkbox.setOnClickListener(v -> {
 

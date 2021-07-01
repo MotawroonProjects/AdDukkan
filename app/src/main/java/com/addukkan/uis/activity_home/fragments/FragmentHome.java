@@ -2,29 +2,20 @@ package com.addukkan.uis.activity_home.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,9 +32,6 @@ import com.addukkan.adapters.CategoryAdapter;
 import com.addukkan.adapters.MainCategoryAdapter;
 import com.addukkan.adapters.Product2Adapter;
 import com.addukkan.adapters.SliderAdapter;
-import com.addukkan.databinding.DialogAlertBinding;
-import com.addukkan.databinding.DialogRoshtaBinding;
-import com.addukkan.databinding.FavouriteProductRowBinding;
 import com.addukkan.databinding.FragmentHomeBinding;
 import com.addukkan.databinding.ProductRowBinding;
 import com.addukkan.models.ALLProductDataModel;
@@ -52,9 +39,7 @@ import com.addukkan.models.AddCartDataModel;
 import com.addukkan.models.AddCartProductItemModel;
 import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CartDataModel;
-import com.addukkan.models.FavouriteProductDataModel;
 import com.addukkan.models.MainCategoryDataModel;
-import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.ResponseModel;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.SliderDataModel;
@@ -65,8 +50,6 @@ import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_ask_doctor.AskDoctorActivity;
 import com.addukkan.uis.activity_home.HomeActivity;
-import com.addukkan.uis.activity_order.MyOrderActivity;
-import com.addukkan.uis.activity_order_detials.OrderDetialsActivity;
 import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
 import com.addukkan.uis.activity_qr_code.QrCodeActivity;
@@ -83,7 +66,6 @@ import java.util.TimerTask;
 import io.paperdb.Paper;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,8 +79,8 @@ public class FragmentHome extends Fragment {
     private Preferences preferences;
     private UserModel userModel;
     private List<MainCategoryDataModel.Data> categoryDataModelDataList, getCategoryDataModelDataList;
-    private List<SingleProductModel> productModelList, productModelList2;
-    private Product2Adapter product2Adapter, product2Adapter2;
+    private List<SingleProductModel> recentArriveList, mostSellerList;
+    private Product2Adapter recentArriveAdapter, mostSellerAdapter;
     private CategoryAdapter categoryAdapter;
     private AppLocalSettings settings;
     private String lang = "";
@@ -126,8 +108,8 @@ public class FragmentHome extends Fragment {
     private void initView() {
         categoryDataModelDataList = new ArrayList<>();
         getCategoryDataModelDataList = new ArrayList<>();
-        productModelList = new ArrayList<>();
-        productModelList2 = new ArrayList<>();
+        recentArriveList = new ArrayList<>();
+        mostSellerList = new ArrayList<>();
         activity = (HomeActivity) getActivity();
         Paper.init(activity);
         lang = Paper.book().read("lang", "ar");
@@ -169,19 +151,19 @@ public class FragmentHome extends Fragment {
 
         binding.tab.setupWithViewPager(binding.pager);
 
-        categoryAdapter = new CategoryAdapter(categoryDataModelDataList, activity,this);
+        categoryAdapter = new CategoryAdapter(categoryDataModelDataList, activity, this);
         mainCategoryAdapter = new MainCategoryAdapter(getCategoryDataModelDataList, activity, this);
-        product2Adapter = new Product2Adapter(productModelList, activity, this, 1);
-        product2Adapter2 = new Product2Adapter(productModelList2, activity, this, 0);
+        recentArriveAdapter = new Product2Adapter(recentArriveList, activity, this, 1);
+        mostSellerAdapter = new Product2Adapter(mostSellerList, activity, this, 0);
 
         binding.recViewCategory.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
         binding.recViewCategory.setAdapter(categoryAdapter);
         binding.recView.setLayoutManager(new LinearLayoutManager(activity));
         binding.recView.setAdapter(mainCategoryAdapter);
         binding.recViewrecent.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
-        binding.recViewrecent.setAdapter(product2Adapter);
+        binding.recViewrecent.setAdapter(recentArriveAdapter);
         binding.recViewmostsell.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
-        binding.recViewmostsell.setAdapter(product2Adapter2);
+        binding.recViewmostsell.setAdapter(mostSellerAdapter);
         get_slider();
         getMainCategory();
         getMainCategorySubCategoryProduct();
@@ -201,17 +183,15 @@ public class FragmentHome extends Fragment {
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userModel!=null){
-                if(uri!=null){
-                    addRosheta();
-                }
-                else {
-                    Toast.makeText(activity,activity.getResources().getString(R.string.ch_image),Toast.LENGTH_LONG).show();
+                if (userModel != null) {
+                    if (uri != null) {
+                        addRosheta();
+                    } else {
+                        Toast.makeText(activity, activity.getResources().getString(R.string.ch_image), Toast.LENGTH_LONG).show();
 
-                }
-            }
-            else {
-                activity.navigateToSignInActivity();
+                    }
+                } else {
+                    activity.navigateToSignInActivity();
                 }
             }
 
@@ -220,11 +200,10 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View v) {
                 binding.flroshata.setVisibility(View.GONE);
-                if(userModel!=null){
-                   Intent intent=new Intent(activity, QrCodeActivity.class);
-                   startActivity(intent);
-                }
-                else {
+                if (userModel != null) {
+                    Intent intent = new Intent(activity, QrCodeActivity.class);
+                    startActivity(intent);
+                } else {
                     activity.navigateToSignInActivity();
                 }
             }
@@ -239,7 +218,7 @@ public class FragmentHome extends Fragment {
         });
     }
 
-    private void getMainCategory() {
+    public void getMainCategory() {
         Api.getService(Tags.base_url)
                 .get_category(lang)
                 .enqueue(new Callback<MainCategoryDataModel>() {
@@ -300,14 +279,13 @@ public class FragmentHome extends Fragment {
                 });
     }
 
-    private void getMainCategorySubCategoryProduct() {
+    public void getMainCategorySubCategoryProduct() {
         getCategoryDataModelDataList.clear();
         mainCategoryAdapter.notifyDataSetChanged();
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
         }
-        //Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
                 .get_categorySubProduct(lang, user_id, country_coude)
                 .enqueue(new Callback<MainCategoryDataModel>() {
@@ -369,9 +347,9 @@ public class FragmentHome extends Fragment {
                 });
     }
 
-    private void getRecentArrived() {
-        productModelList.clear();
-        product2Adapter.notifyDataSetChanged();
+    public void getRecentArrived() {
+        recentArriveList.clear();
+        recentArriveAdapter.notifyDataSetChanged();
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
@@ -387,18 +365,11 @@ public class FragmentHome extends Fragment {
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
-                                productModelList.clear();
-                                productModelList.addAll(response.body().getData());
+                                recentArriveList.clear();
+                                recentArriveList.addAll(response.body().getData());
+                                recentArriveAdapter.notifyDataSetChanged();
+                                Log.e("Ddd", "ttt");
 
-                                if (productModelList.size() > 0) {
-                                    product2Adapter.notifyDataSetChanged();
-
-//                                binding.tvNoDatadepart.setVisibility(View.GONE);
-                                    //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
-                                } else {
-//                                binding.tvNoDatadepart.setVisibility(View.VISIBLE);
-
-                                }
 
                             }
                         } else {
@@ -439,14 +410,13 @@ public class FragmentHome extends Fragment {
                 });
     }
 
-    private void getMostSell() {
-        productModelList2.clear();
-        product2Adapter2.notifyDataSetChanged();
+    public void getMostSell() {
+        mostSellerList.clear();
+        mostSellerAdapter.notifyDataSetChanged();
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
         }
-        // Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
                 .getMostSell(lang, user_id, country_coude, "off")
                 .enqueue(new Callback<ALLProductDataModel>() {
@@ -456,11 +426,11 @@ public class FragmentHome extends Fragment {
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
-                                productModelList2.clear();
-                                productModelList2.addAll(response.body().getData());
+                                mostSellerList.clear();
+                                mostSellerList.addAll(response.body().getData());
 
-                                if (productModelList2.size() > 0) {
-                                    product2Adapter2.notifyDataSetChanged();
+                                if (mostSellerList.size() > 0) {
+                                    mostSellerAdapter.notifyDataSetChanged();
 
 //                                binding.tvNoDatadepart.setVisibility(View.GONE);
                                     //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
@@ -567,50 +537,6 @@ public class FragmentHome extends Fragment {
 
     }
 
-//    public void CreateDialogAlert(Context context) {
-//
-//         dialogRoshtaBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_roshta, null, false);
-//
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setContentView(dialogRoshtaBinding.getRoot());
-//        // Grab the window of the dialog, and change the width
-//        dialog.getWindow().setBackgroundDrawable(
-//                new ColorDrawable(android.graphics.Color.TRANSPARENT));
-//        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-//        Window window = dialog.getWindow();
-//        lp.copyFrom(window.getAttributes());
-//
-//        Display display = activity.getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//
-//        window.setGravity(Gravity.CENTER);
-//        dialogRoshtaBinding.flclose.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//        dialogRoshtaBinding.btnSend.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(uri!=null){
-//
-//                }
-//                else {
-//                    Toast.makeText(activity,activity.getResources().getString(R.string.ch_image),Toast.LENGTH_LONG).show();
-//
-//                }
-//            }
-//        });
-//        dialogRoshtaBinding.flimage.setOnClickListener(view -> openSheet());
-//
-//        // This makes the dialog take up the full width
-//        window.setAttributes(lp);
-//        dialog.show();
-//    }
-
     public void showDepart(int id) {
         activity.displayFragmentDukkan(id);
     }
@@ -618,7 +544,7 @@ public class FragmentHome extends Fragment {
     public void showData(String s) {
         Intent intent = new Intent(activity, ProductDetialsActivity.class);
         intent.putExtra("id", s);
-        startActivity(intent);
+        startActivityForResult(intent, 100);
     }
 
     public class MyTask extends TimerTask {
@@ -653,7 +579,6 @@ public class FragmentHome extends Fragment {
     public void like_dislike(SingleProductModel productModel, int pos, int i) {
         if (userModel != null) {
             try {
-                Log.e("llll", "Bearer " + userModel.getData().getToken());
 
                 Api.getService(Tags.base_url)
                         .addFavoriteProduct("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", productModel.getId() + "")
@@ -711,7 +636,7 @@ public class FragmentHome extends Fragment {
     }
 
     private void update(int i) {
-       // Log.e("llll",i+"");
+        // Log.e("llll",i+"");
         if (i == 1) {
             getMainCategorySubCategoryProduct();
             getMostSell();
@@ -729,12 +654,14 @@ public class FragmentHome extends Fragment {
 
 
     }
-    public void filter(int layoutPosition,MainCategoryDataModel.Data sub_departments) {
-        Intent intent=new Intent(activity, ProductFilterActivity.class);
-        intent.putExtra("pos",layoutPosition);
-        intent.putExtra("data",sub_departments);
+
+    public void filter(int layoutPosition, MainCategoryDataModel.Data sub_departments) {
+        Intent intent = new Intent(activity, ProductFilterActivity.class);
+        intent.putExtra("pos", layoutPosition);
+        intent.putExtra("data", sub_departments);
         startActivity(intent);
     }
+
     public void openSheet() {
         binding.expandLayout.setExpanded(true, true);
     }
@@ -743,6 +670,7 @@ public class FragmentHome extends Fragment {
         binding.expandLayout.collapse(true);
 
     }
+
     public void checkReadPermission() {
         closeSheet();
         if (ActivityCompat.checkSelfPermission(activity, READ_PERM) != PackageManager.PERMISSION_GRANTED) {
@@ -819,6 +747,7 @@ public class FragmentHome extends Fragment {
             }
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -847,25 +776,32 @@ public class FragmentHome extends Fragment {
             }
 
 
+        } else if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+
+            getMostSell();
+
+
         }
     }
+
     private Uri getUriFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         return Uri.parse(MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmap, "", ""));
     }
+
     private void addRosheta() {
 
         ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.show();
-        RequestBody user_part = Common.getRequestBodyText(userModel.getData().getId()+"");
+        RequestBody user_part = Common.getRequestBodyText(userModel.getData().getId() + "");
 
         MultipartBody.Part image = Common.getMultiPartImage(activity, uri, "image");
 
 
         Api.getService(Tags.base_url)
-                .addRosheta("Bearer "+userModel.getData().getToken(),user_part, image)
+                .addRosheta("Bearer " + userModel.getData().getToken(), user_part, image)
                 .enqueue(new Callback<ResponseModel>() {
                     @Override
                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
@@ -873,7 +809,7 @@ public class FragmentHome extends Fragment {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
                                 binding.flroshata.setVisibility(View.GONE);
-                             Toast.makeText(activity,activity.getResources().getString(R.string.suc_and),Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity, activity.getResources().getString(R.string.suc_and), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             try {
@@ -909,49 +845,48 @@ public class FragmentHome extends Fragment {
                 });
 
     }
-    public void additemtoCart(SingleProductModel data, ProductRowBinding binding) {
-        if(userModel!=null){
-        binding.progBar.setVisibility(View.VISIBLE);
-        AddCartDataModel addCartDataModel = new AddCartDataModel();
-        List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
-        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
-        addCartDataModel.setCountry_code(country_coude);
-        addCartDataModel.setUser_id(userModel.getData().getId());
-        double totalprice = 0;
-        if (data.getHave_offer().equals("yes")) {
-            if (data.getOffer_type().equals("value")) {
-                totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
-            } else if (data.getOffer_type().equals("per")) {
-                totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
+
+    public void additemtoCart(SingleProductModel data, int adapterPosition, int type) {
+        if (userModel != null) {
+            AddCartDataModel addCartDataModel = new AddCartDataModel();
+            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+            addCartDataModel.setCountry_code(country_coude);
+            addCartDataModel.setUser_id(userModel.getData().getId());
+            double totalprice = 0;
+            if (data.getHave_offer().equals("yes")) {
+                if (data.getOffer_type().equals("value")) {
+                    totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+                } else if (data.getOffer_type().equals("per")) {
+                    totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
+                } else {
+                    totalprice = data.getProduct_default_price().getPrice();
+
+                }
             } else {
                 totalprice = data.getProduct_default_price().getPrice();
-
             }
+            addCartDataModel.setTotal_price(totalprice);
+            addCartProductItemModel.setAmount(1);
+            addCartProductItemModel.setHave_offer(data.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(data.getOffer_min());
+            addCartProductItemModel.setOffer_type(data.getOffer_type());
+            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+            addCartProductItemModel.setPrice(totalprice);
+            addCartProductItemModel.setProduct_id(data.getId() + "");
+            addCartProductItemModel.setOffer_value(data.getOffer_value());
+            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+            addTocart(addCartDataModel, data, adapterPosition, type);
         } else {
-            totalprice = data.getProduct_default_price().getPrice();
-        }
-        addCartDataModel.setTotal_price(totalprice);
-        addCartProductItemModel.setAmount(1);
-        addCartProductItemModel.setHave_offer(data.getHave_offer());
-        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
-        addCartProductItemModel.setOffer_min(data.getOffer_min());
-        addCartProductItemModel.setOffer_type(data.getOffer_type());
-        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
-        addCartProductItemModel.setPrice(totalprice);
-        addCartProductItemModel.setProduct_id(data.getId() + "");
-        addCartProductItemModel.setOffer_value(data.getOffer_value());
-        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
-        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
-        addCartProductItemModelList.add(addCartProductItemModel);
-        addCartDataModel.setCart_products(addCartProductItemModelList);
-        addTocart(addCartDataModel,binding);}
-        else {
             activity.navigateToSignInActivity();
         }
     }
 
-    private void addTocart(AddCartDataModel addCartDataModel, ProductRowBinding binding) {
-        binding.imgIncrease.setClickable(false);
+    private void addTocart(AddCartDataModel addCartDataModel, SingleProductModel data, int adapterPosition, int type) {
 
         //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
@@ -959,17 +894,29 @@ public class FragmentHome extends Fragment {
                 .enqueue(new Callback<CartDataModel>() {
                     @Override
                     public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
-                        binding.progBar.setVisibility(View.GONE);
-                        binding.imgIncrease.setClickable(true);
+                        data.setLoading(false);
+
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString())+1)+"");
-
-                                activity.binding.setCartCount(response.body().getData().getDetails().size()+"");
+                                data.setAmount(data.getAmount() + 1);
+                                if (type == 0) {
+                                    mostSellerList.set(adapterPosition, data);
+                                    mostSellerAdapter.notifyItemChanged(adapterPosition);
+                                } else {
+                                    recentArriveList.set(adapterPosition, data);
+                                    recentArriveAdapter.notifyItemChanged(adapterPosition);
+                                }
+                                activity.binding.setCartCount(response.body().getData().getDetails().size() + "");
 
                             }
                         } else {
-
+                            if (type == 0) {
+                                mostSellerList.set(adapterPosition, data);
+                                mostSellerAdapter.notifyItemChanged(adapterPosition);
+                            } else {
+                                recentArriveList.set(adapterPosition, data);
+                                recentArriveAdapter.notifyItemChanged(adapterPosition);
+                            }
                             try {
                                 Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
                             } catch (IOException e) {
@@ -987,8 +934,15 @@ public class FragmentHome extends Fragment {
                     @Override
                     public void onFailure(Call<CartDataModel> call, Throwable t) {
                         try {
-                            binding.imgIncrease.setClickable(true);
-                            binding.progBar.setVisibility(View.GONE);
+                            if (type == 0) {
+                                mostSellerList.set(adapterPosition, data);
+                                mostSellerAdapter.notifyItemChanged(adapterPosition);
+                            } else {
+                                recentArriveList.set(adapterPosition, data);
+                                recentArriveAdapter.notifyItemChanged(adapterPosition);
+                            }
+
+
                             if (t.getMessage() != null) {
                                 Log.e("error_not_code", t.getMessage() + "__");
 
@@ -1005,70 +959,84 @@ public class FragmentHome extends Fragment {
                 });
     }
 
-    public void additemtoCart2(SingleProductModel data, ProductRowBinding binding) {
-       if(userModel!=null){
-        binding.progBar.setVisibility(View.VISIBLE);
-        AddCartDataModel addCartDataModel = new AddCartDataModel();
-        List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
-        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
-        addCartDataModel.setCountry_code(country_coude);
-        addCartDataModel.setUser_id(userModel.getData().getId());
-        double totalprice = 0;
-        if (data.getHave_offer().equals("yes")) {
-            if (data.getOffer_type().equals("value")) {
-                totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
-            } else if (data.getOffer_type().equals("per")) {
-                totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.
-                        getOffer_value()) / 100);
+    public void additemtoCart2(SingleProductModel data, int child_pos, int parent_pos) {
+        if (userModel != null) {
+
+            AddCartDataModel addCartDataModel = new AddCartDataModel();
+            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+            addCartDataModel.setCountry_code(country_coude);
+            addCartDataModel.setUser_id(userModel.getData().getId());
+            double totalprice = 0;
+            if (data.getHave_offer().equals("yes")) {
+                if (data.getOffer_type().equals("value")) {
+                    totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+                } else if (data.getOffer_type().equals("per")) {
+                    totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.
+                            getOffer_value()) / 100);
+                } else {
+                    totalprice = data.getProduct_default_price().getPrice();
+
+                }
             } else {
                 totalprice = data.getProduct_default_price().getPrice();
-
             }
+            addCartDataModel.setTotal_price(totalprice);
+            addCartProductItemModel.setAmount(1);
+            addCartProductItemModel.setHave_offer(data.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(data.getOffer_min());
+            addCartProductItemModel.setOffer_type(data.getOffer_type());
+            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+            addCartProductItemModel.setPrice(totalprice);
+            addCartProductItemModel.setOffer_value(data.getOffer_value());
+            addCartProductItemModel.setProduct_id(data.getId() + "");
+            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+            addTocart2(addCartDataModel,data,child_pos,parent_pos);
         } else {
-            totalprice = data.getProduct_default_price().getPrice();
+            activity.navigateToSignInActivity();
         }
-        addCartDataModel.setTotal_price(totalprice);
-        addCartProductItemModel.setAmount(1);
-        addCartProductItemModel.setHave_offer(data.getHave_offer());
-        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
-        addCartProductItemModel.setOffer_min(data.getOffer_min());
-        addCartProductItemModel.setOffer_type(data.getOffer_type());
-        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
-        addCartProductItemModel.setPrice(totalprice);
-           addCartProductItemModel.setOffer_value(data.getOffer_value());
-           addCartProductItemModel.setProduct_id(data.getId() + "");
-        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
-        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
-        addCartProductItemModelList.add(addCartProductItemModel);
-        addCartDataModel.setCart_products(addCartProductItemModelList);
-        addTocart2(addCartDataModel,binding);}
-       else {
-           activity.navigateToSignInActivity();
-       }
+
+
     }
 
-    private void addTocart2(AddCartDataModel addCartDataModel, ProductRowBinding binding) {
+    private void addTocart2(AddCartDataModel addCartDataModel, SingleProductModel model,int child_pos ,int parent_pos) {
 
-        binding.imgIncrease.setClickable(false);
-
-        //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
                 .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
                 .enqueue(new Callback<CartDataModel>() {
                     @Override
                     public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
-                       Log.e("dlldll",response.code()+"");
-                        binding.progBar.setVisibility(View.GONE);
-                        binding.imgIncrease.setClickable(true);
+                        model.setLoading(false);
+
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString())+1)+"");
-                                activity.binding.setCartCount(response.body().getData().getDetails().size()+"");
+                                model.setAmount(model.getAmount()+1);
+                                MainCategoryDataModel.Data data = getCategoryDataModelDataList.get(parent_pos);
+                                List<MainCategoryDataModel.ProductData> product_list = data.getProduct_list();
+                                MainCategoryDataModel.ProductData productData = product_list.get(child_pos);
+                                productData.setProduct_data(model);
+                                product_list.set(child_pos,productData);
+                                data.setProduct_list(product_list);
+                                mainCategoryAdapter.notifyItemChanged(parent_pos);
+
+
+
+                                activity.binding.setCartCount(response.body().getData().getDetails().size() + "");
 
 
                             }
                         } else {
-
+                            MainCategoryDataModel.Data data = getCategoryDataModelDataList.get(parent_pos);
+                            List<MainCategoryDataModel.ProductData> product_list = data.getProduct_list();
+                            MainCategoryDataModel.ProductData productData = product_list.get(child_pos);
+                            productData.setProduct_data(model);
+                            product_list.set(child_pos,productData);
+                            data.setProduct_list(product_list);
+                            mainCategoryAdapter.notifyItemChanged(parent_pos);
                             try {
                                 Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
                             } catch (IOException e) {
@@ -1086,8 +1054,13 @@ public class FragmentHome extends Fragment {
                     @Override
                     public void onFailure(Call<CartDataModel> call, Throwable t) {
                         try {
-                            binding.imgIncrease.setClickable(true);
-                            binding.progBar.setVisibility(View.GONE);
+                            MainCategoryDataModel.Data data = getCategoryDataModelDataList.get(parent_pos);
+                            List<MainCategoryDataModel.ProductData> product_list = data.getProduct_list();
+                            MainCategoryDataModel.ProductData productData = product_list.get(child_pos);
+                            productData.setProduct_data(model);
+                            product_list.set(child_pos,productData);
+                            data.setProduct_list(product_list);
+                            mainCategoryAdapter.notifyItemChanged(parent_pos);
                             if (t.getMessage() != null) {
                                 Log.e("error_not_code", t.getMessage() + "__");
 

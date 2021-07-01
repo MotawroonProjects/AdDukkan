@@ -64,7 +64,7 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         SubCategoryAdapter subCategoryAdapter = new SubCategoryAdapter(list.get(position).getSub_departments(), context, fragment,list.get(position));
         myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context, 4));
         myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
-        ProductAdapter productAdapter = new ProductAdapter(list.get(position).getProduct_list(), context, fragment);
+        ProductAdapter productAdapter = new ProductAdapter(list.get(position).getProduct_list(), context, fragment,position);
         myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
 
         myHolder.binding.recView.setAdapter(productAdapter);

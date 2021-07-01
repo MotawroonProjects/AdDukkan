@@ -148,9 +148,12 @@
     <string name="payment_type">طريقة الدفع</string>
     <string name="the_request_has_been_confirmed_successfully">تم تأكيد الطلب بنجاح</string>
     <string name="order_num">رقم الطلب</string>
-    <string name="no_product">No Product Found</string>
-    <string name="no_image">No Images</string>
-    <string name="description">Description</string>
-    <string name="reviews">Reviews</string>
+    <string name="no_product">لا يوجد منتج</string>
+    <string name="no_image">لا يوجد صور</string>
+    <string name="description">الوصف</string>
+    <string name="reviews">المراجعات</string>
+    <string name="no_comments">لا تعليقات</string>
+    <string name="similar_products">منتجات مشابهة:-</string>
+    <string name="admin">Admin</string>
 
 </resources>

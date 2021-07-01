@@ -150,6 +150,14 @@ public class ProductDataModel extends ResponseModel implements Serializable {
         public AttributeTransFk getAttribute_trans_fk() {
             return attribute_trans_fk;
         }
+
+        public void setIs_default(String is_default) {
+            this.is_default = is_default;
+        }
+
+        public void setAttributes(List<Attribute> attributes) {
+            this.attributes = attributes;
+        }
     }
     public static class AttributeTransFk implements Serializable
     {

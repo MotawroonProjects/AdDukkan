@@ -2,7 +2,6 @@ package com.addukkan.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,28 +13,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.addukkan.R;
 import com.addukkan.databinding.ProductRowBinding;
-import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.uis.activity_home.fragments.FragmentHome;
+import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 
 import java.util.List;
 
-public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class Product3Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<SingleProductModel> list;
     private Context context;
     private LayoutInflater inflater;
-    private Fragment fragment;
-    private int i;
-
-    //private Fragment_Main fragment_main;
-    public Product2Adapter(List<SingleProductModel> list, Context context,Fragment fragment,int i) {
+    private ProductDetialsActivity activity;
+    public Product3Adapter(List<SingleProductModel> list, Context context) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.fragment=fragment;
-        this.i=i;
-      //  this.fragment_main=fragment_main;
+        activity = (ProductDetialsActivity) context;
 
 
     }
@@ -61,45 +55,15 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((MyHolder) holder).binding.checkbox.setChecked(true);
         }
         myHolder.binding.checkbox.setOnClickListener(v -> {
-
-                if (fragment instanceof FragmentHome) {
-
-                    FragmentHome fragment_main = (FragmentHome) fragment;
-
-                        fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), i);
-
-                }
-
-
-
+            activity.like_dislike(list.get(myHolder.getAdapterPosition()), myHolder.getLayoutPosition(),2);
 
         });
+
         myHolder.itemView.setOnClickListener(view -> {
-            if (fragment instanceof FragmentHome) {
+            activity.showData(list.get(myHolder.getAdapterPosition())+"");
 
-                FragmentHome fragment_main = (FragmentHome) fragment;
-
-
-                fragment_main.showData(list.get(myHolder.getLayoutPosition()).getProduct_trans_fk().getProduct_id()+"");
-
-            }
         });
-
-        myHolder.binding.imgIncrease.setOnClickListener(v -> {
-            SingleProductModel model = list.get(myHolder.getAdapterPosition());
-
-            if(fragment instanceof FragmentHome){
-
-                if (!model.isLoading()){
-                    model.setLoading(true);
-                    notifyItemChanged(myHolder.getAdapterPosition());
-                    FragmentHome fragmentHome=(FragmentHome)fragment;
-                    fragmentHome.additemtoCart(model,myHolder.getAdapterPosition(),i);
-                }
-
-
-            }
-        });
+        myHolder.binding.imgIncrease.setOnClickListener(v -> activity.additemtoCart2(list.get(holder.getAdapterPosition()),((MyHolder) holder).binding));
     }
 
     @Override

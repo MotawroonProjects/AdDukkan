@@ -66,6 +66,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private String couponid = null;
     private String copoun;
     private String bill_code = "";
+    private boolean isDataChanged = false;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -192,10 +193,13 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                     cartProductAdapter.notifyDataSetChanged();
 
                                     binding.tvNoData.setVisibility(View.GONE);
+                                    binding.fltotal.setVisibility(View.VISIBLE);
+                                    binding.flcontain.setVisibility(View.VISIBLE);
                                     //Log.e(",dkdfkfkkfk", categoryDataModelDataList.get(0).getTitle());
                                 } else {
                                     binding.tvNoData.setVisibility(View.VISIBLE);
-
+                                    binding.fltotal.setVisibility(View.GONE);
+                                    binding.flcontain.setVisibility(View.GONE);
                                 }
 
                             }
@@ -379,6 +383,9 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
     @Override
     public void back() {
+        if (isDataChanged){
+            setResult(RESULT_OK);
+        }
         finish();
     }
 
@@ -398,6 +405,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
                                 detialsList.clear();
+                                isDataChanged = true;
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
                                 }
@@ -477,14 +485,21 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
                                 detialsList.clear();
+                                isDataChanged= true;
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
                                 }
                                 cartProductAdapter.notifyDataSetChanged();
                                 if (detialsList.size() == 0) {
                                     binding.tvNoData.setVisibility(View.VISIBLE);
+                                    binding.fltotal.setVisibility(View.GONE);
+                                    binding.flcontain.setVisibility(View.GONE);
                                 } else {
                                     binding.tvNoData.setVisibility(View.GONE);
+                                    binding.fltotal.setVisibility(View.VISIBLE);
+                                    binding.flcontain.setVisibility(View.VISIBLE);
+
+
                                 }
 
 //                                if(increment.equals("increment")) {
@@ -623,4 +638,6 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         super.onResume();
         getData();
     }
+
+
 }

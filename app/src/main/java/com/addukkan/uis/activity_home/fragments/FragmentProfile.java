@@ -29,6 +29,7 @@ import com.addukkan.remote.Api;
 import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_about_us.AboutUsActivity;
+import com.addukkan.uis.activity_admin_chat.ChatAdminActivity;
 import com.addukkan.uis.activity_contact_us.ContactUsActivity;
 import com.addukkan.uis.activity_countries.CountryActivity;
 import com.addukkan.uis.activity_home.HomeActivity;
@@ -81,6 +82,8 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
             Intent intent = new Intent(activity, SignUpActivity.class);
             startActivityForResult(intent, 100);
         });
+
+
         binding.setNotcount("0");
 
         if (userModel != null) {
@@ -169,7 +172,8 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
         if (userModel == null) {
             navigateToLoginActivity();
         } else {
-
+            Intent intent = new Intent(activity, ChatAdminActivity.class);
+            startActivity(intent);
         }
     }
 

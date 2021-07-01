@@ -78,6 +78,8 @@ public class RoomsActivity extends AppCompatActivity {
         binding.recView.setLayoutManager(new LinearLayoutManager(this));
         binding.recView.setAdapter(adapter);
         binding.llBack.setOnClickListener(v -> finish());
+        binding.swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        binding.swipeRefresh.setOnRefreshListener(this::getRoom);
     }
 
     private void getRoom() {
@@ -90,6 +92,7 @@ public class RoomsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<RoomDataModel> call, Response<RoomDataModel> response) {
                         binding.progBar.setVisibility(View.GONE);
+                        binding.swipeRefresh.setRefreshing(false);
                         if (response.isSuccessful()) {
 
                             if (response.body() != null && response.body().getStatus() == 200) {
@@ -104,6 +107,9 @@ public class RoomsActivity extends AppCompatActivity {
                                     }
                                 }
                             } else {
+
+                                binding.swipeRefresh.setRefreshing(false);
+
                                 //    Toast.makeText(CountryActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
 
                             }
@@ -111,6 +117,7 @@ public class RoomsActivity extends AppCompatActivity {
 
                         } else {
                             binding.progBar.setVisibility(View.GONE);
+                            binding.swipeRefresh.setRefreshing(false);
 
                             switch (response.code()) {
                                 case 500:
