@@ -637,7 +637,7 @@ public class FragmentHome extends Fragment {
 
 
     private void update(int i) {
-        // Log.e("llll",i+"");
+
         Log.e("fff", "fff");
         getMainCategorySubCategoryProduct();
         getRecentArrived();

@@ -151,6 +151,9 @@ public class ProductDetialsActivity extends AppCompatActivity {
         });
 
 
+        binding.checkbox.setOnClickListener(v -> {
+            like_dislikeMain(singleProductModel);
+        });
 
         getData();
 
@@ -275,9 +278,9 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
 
         if (body.getOthers()!=null&&body.getOthers().size()>0){
-            Product3Adapter rateAdapter = new Product3Adapter(body.getOthers(), this);
+            Product3Adapter adapter = new Product3Adapter(body.getOthers(), this);
             binding.recViewProducts.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-            binding.recViewProducts.setAdapter(rateAdapter);
+            binding.recViewProducts.setAdapter(adapter);
             binding.tvNoProductData.setVisibility(View.GONE);
         }else {
             binding.tvNoProductData.setVisibility(View.VISIBLE);
@@ -469,6 +472,59 @@ public class ProductDetialsActivity extends AppCompatActivity {
                             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                                 if (response.isSuccessful() && response.body().getStatus() == 200) {
 
+                                } else {
+
+
+                                    if (response.code() == 500) {
+                                        //      Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+
+                                    } else {
+                                        //       Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                                        try {
+
+                                            Log.e("error", response.code() + "_" + response.errorBody().string());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                                try {
+
+                                    if (t.getMessage() != null) {
+                                        Log.e("error", t.getMessage());
+                                        if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                            //            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            //          Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public void like_dislikeMain(SingleProductModel productModel) {
+        if (userModel != null) {
+            try {
+
+                Api.getService(Tags.base_url)
+                        .addFavoriteProduct("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", productModel.getId() + "")
+                        .enqueue(new Callback<ResponseModel>() {
+                            @Override
+                            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                                if (response.isSuccessful() && response.body().getStatus() == 200) {
+                                    getData();
                                 } else {
 
 
