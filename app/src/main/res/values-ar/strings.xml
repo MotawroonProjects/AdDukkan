@@ -154,6 +154,8 @@
     <string name="reviews">المراجعات</string>
     <string name="no_comments">لا تعليقات</string>
     <string name="similar_products">منتجات مشابهة:-</string>
-    <string name="admin">Admin</string>
+    <string name="admin">الإدارة</string>
+    <string name="voice_uploaded">تم إرفاق صوت</string>
+    <string name="image_uploaded">تم إرفاق صورة</string>
 
 </resources>

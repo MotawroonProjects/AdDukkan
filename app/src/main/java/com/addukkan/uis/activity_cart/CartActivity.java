@@ -86,7 +86,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         Intent intent = getIntent();
         if (intent.getData() != null) {
             bill_code = intent.getData().getLastPathSegment();
-            Log.e("code", bill_code+"__");
+            Log.e("code", bill_code + "__");
         }
     }
 
@@ -121,26 +121,6 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                 binding.edtCopun.setError(getResources().getString(R.string.field_required));
             }
         });
-//        binding.recView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (dy > 0) {
-//                    int total = binding.recView.getAdapter().getItemCount();
-//
-//                    int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
-//
-//
-//                    if (total > 6 && (total - lastVisibleItem) == 2 && !isLoading) {
-//                        isLoading = true;
-//                        int page = current_page + 1;
-//                        productModelList.add(null);
-//                        adapter.notifyDataSetChanged();
-//                        loadMore(page);
-//                    }
-//                }
-//            }
-//        });*/
 
         if (bill_code.isEmpty()) {
             getData();
@@ -152,7 +132,6 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             Intent intent = new Intent(CartActivity.this, MapActivity.class);
             startActivityForResult(intent, 100);
         });
-        //  getData();
     }
 
 
@@ -240,7 +219,6 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                     }
                 });
     }
-
 
     private void checkCoupon(String coupon_num) {
         binding.progBarcopun.setVisibility(View.VISIBLE);
@@ -383,25 +361,21 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
     @Override
     public void back() {
-        if (isDataChanged){
+        if (isDataChanged) {
             setResult(RESULT_OK);
         }
         finish();
     }
 
 
-    private void addTocart(CartDataModel.Data.Detials addCartDataModel, CartProductRowBinding binding, String increment) {
+    private void addTocart(CartDataModel.Data.Detials addCartDataModel, String increment, int pos) {
 
-        binding.imgIncrease.setClickable(false);
-        binding.imgDecrease.setClickable(false);
+
         Api.getService(Tags.base_url)
                 .incrementDecrementCart("Bearer " + userModel.getData().getToken(), country_coude, userModel.getData().getId() + "", addCartDataModel.getId() + "", addCartDataModel.getCart_id() + "", 1 + "", increment)
                 .enqueue(new Callback<CartDataModel>() {
                     @Override
                     public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
-                        binding.progBar.setVisibility(View.GONE);
-                        binding.imgIncrease.setClickable(true);
-                        binding.imgDecrease.setClickable(true);
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
                                 detialsList.clear();
@@ -416,19 +390,6 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                     CartActivity.this.binding.tvNoData.setVisibility(View.GONE);
                                 }
 
-//                                if(increment.equals("increment")) {
-//                                    binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) + 1) + "");
-//                                }
-//                                else {
-//                                    binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) - 1) + "");
-//
-//                                }
-//                                binding.tvtotal.setText((Integer.parseInt(binding.tvCounter.getText().toString())*addCartDataModel.getPrice())+"");
-//if(addCartDataModel.getHave_offer().equals("yes")){
-//    if(addCartDataModel.getOffer_type().equals("amount")){
-//
-//    }
-//}
                             }
                         } else {
 
@@ -449,9 +410,6 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                     @Override
                     public void onFailure(Call<CartDataModel> call, Throwable t) {
                         try {
-                            binding.imgIncrease.setClickable(true);
-                            binding.imgDecrease.setClickable(true);
-                            binding.progBar.setVisibility(View.GONE);
                             if (t.getMessage() != null) {
                                 Log.e("error_not_code", t.getMessage() + "__");
 
@@ -468,9 +426,8 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                 });
     }
 
-    public void additemtoCart(CartDataModel.Data.Detials detials, CartProductRowBinding binding, String increment) {
-        binding.progBar.setVisibility(View.VISIBLE);
-        addTocart(detials, binding, increment);
+    public void additemtoCart(CartDataModel.Data.Detials detials, int pos, String increment) {
+        addTocart(detials, increment, pos);
     }
 
     public void deleteItemFromcart(CartDataModel.Data.Detials addCartDataModel) {
@@ -485,7 +442,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
                                 detialsList.clear();
-                                isDataChanged= true;
+                                isDataChanged = true;
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
                                 }

@@ -144,7 +144,7 @@ public class SingleOrderModel extends ResponseModel implements Serializable {
             public int product_price_id;
             public int vendor_id;
             public double price;
-            public double amount;
+            public int amount;
             public String have_offer;
             public String offer_type;
             public double offer_value;
@@ -177,7 +177,7 @@ public class SingleOrderModel extends ResponseModel implements Serializable {
                 return price;
             }
 
-            public double getAmount() {
+            public int getAmount() {
                 return amount;
             }
 

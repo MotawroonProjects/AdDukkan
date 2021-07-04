@@ -59,6 +59,9 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (list.get(position).getFavourite() != null) {
             ((MyHolder) holder).binding.checkbox.setChecked(true);
+        }else {
+            ((MyHolder) holder).binding.checkbox.setChecked(false);
+
         }
         myHolder.binding.checkbox.setOnClickListener(v -> {
 

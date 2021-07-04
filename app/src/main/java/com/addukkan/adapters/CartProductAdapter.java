@@ -55,22 +55,13 @@ public class CartProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
-
-
-//Log.e("eeee",list.get(position).getOffer_value()+""+(list.get(position).getAmount()%list.get(position).getOffer_min()));
-         // Log.e("ssss",((list.get(position).getHave_offer().equals("yes")?(list.get(position).getOffer_type().equals("per")?(list.get(position).getProduct_default_price().getPrice()-((list.get(position).getProduct_default_price().getPrice()*list.get(position).getOffer_value())/100)):list.get(position).getProduct_default_price().getPrice()-list.get(position).getOffer_value()):list.get(position).getProduct_default_price().getPrice())+""));
-        myHolder.itemView.setOnClickListener(view -> {
-           // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
-
-           // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
-        });
         myHolder.binding.imgIncrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(context instanceof  CartActivity){
-                    Log.e("D;dldlld","ldldldl");
                     CartActivity cartActivity=(CartActivity) context;
-                    cartActivity.additemtoCart(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding,"increment");
+
+                    cartActivity.additemtoCart(list.get(holder.getLayoutPosition()),holder.getAdapterPosition(),"increment");
                 }
             }
         });
@@ -79,7 +70,11 @@ public class CartProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             public void onClick(View v) {
                 if(context instanceof  CartActivity){
                     CartActivity cartActivity=(CartActivity) context;
-                    cartActivity.additemtoCart(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding,"decrement");
+                    CartDataModel.Data.Detials detials = list.get(holder.getLayoutPosition());
+                    if (detials.getAmount()>1){
+                        cartActivity.additemtoCart(list.get(holder.getAdapterPosition()),holder.getAdapterPosition(),"decrement");
+
+                    }
                 }
             }
         });

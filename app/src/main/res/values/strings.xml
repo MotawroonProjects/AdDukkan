@@ -156,5 +156,7 @@
     <string name="no_comments">No comments</string>
     <string name="similar_products">Similar products:-</string>
     <string name="admin">Admin</string>
+    <string name="voice_uploaded">Voice uploaded</string>
+    <string name="image_uploaded">Image uploaded</string>
 
 </resources>

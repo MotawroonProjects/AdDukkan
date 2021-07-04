@@ -52,6 +52,7 @@ import com.addukkan.uis.activity_ask_doctor.AskDoctorActivity;
 import com.addukkan.uis.activity_home.HomeActivity;
 import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
+import com.addukkan.uis.activity_products.ProductsActivity;
 import com.addukkan.uis.activity_qr_code.QrCodeActivity;
 import com.squareup.picasso.Picasso;
 
@@ -136,12 +137,7 @@ public class FragmentHome extends Fragment {
                 binding.flroshata.setVisibility(View.VISIBLE);
             }
         });
-        binding.flimage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openSheet();
-            }
-        });
+        binding.flimage.setOnClickListener(v -> openSheet());
         binding.progBarCategory.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
@@ -180,43 +176,48 @@ public class FragmentHome extends Fragment {
         });
         binding.btnCancel.setOnClickListener(view -> closeSheet());
 
-        binding.btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (userModel != null) {
-                    if (uri != null) {
-                        addRosheta();
-                    } else {
-                        Toast.makeText(activity, activity.getResources().getString(R.string.ch_image), Toast.LENGTH_LONG).show();
-
-                    }
+        binding.btnSend.setOnClickListener(v -> {
+            if (userModel != null) {
+                if (uri != null) {
+                    addRosheta();
                 } else {
-                    activity.navigateToSignInActivity();
-                }
-            }
+                    Toast.makeText(activity, activity.getResources().getString(R.string.ch_image), Toast.LENGTH_LONG).show();
 
+                }
+            } else {
+                activity.navigateToSignInActivity();
+            }
         });
-        binding.imQr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.flroshata.setVisibility(View.GONE);
-                if (userModel != null) {
-                    Intent intent = new Intent(activity, QrCodeActivity.class);
-                    startActivity(intent);
-                } else {
-                    activity.navigateToSignInActivity();
-                }
+        binding.imQr.setOnClickListener(v -> {
+            binding.flroshata.setVisibility(View.GONE);
+            if (userModel != null) {
+                Intent intent = new Intent(activity, QrCodeActivity.class);
+                startActivity(intent);
+            } else {
+                activity.navigateToSignInActivity();
             }
-
         });
 
-        binding.flclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.flroshata.setVisibility(View.GONE);
-            }
+        binding.flclose.setOnClickListener(v -> binding.flroshata.setVisibility(View.GONE));
+
+
+        binding.tvMostSeller.setOnClickListener(v -> {
+            navigateToProductActivity("mostSeller",100);
+        });
+
+        binding.tvRecentArrive.setOnClickListener(v -> {
+            navigateToProductActivity("recentArrive",100);
         });
     }
+
+    private void navigateToProductActivity(String type,int req) {
+        Intent intent = new Intent(activity, ProductsActivity.class);
+        intent.putExtra("type", type);
+        startActivityForResult(intent,req);
+
+    }
+
+
 
     public void getMainCategory() {
         Api.getService(Tags.base_url)
@@ -280,8 +281,7 @@ public class FragmentHome extends Fragment {
     }
 
     public void getMainCategorySubCategoryProduct() {
-        getCategoryDataModelDataList.clear();
-        mainCategoryAdapter.notifyDataSetChanged();
+
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
@@ -348,8 +348,7 @@ public class FragmentHome extends Fragment {
     }
 
     public void getRecentArrived() {
-        recentArriveList.clear();
-        recentArriveAdapter.notifyDataSetChanged();
+
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
@@ -411,8 +410,6 @@ public class FragmentHome extends Fragment {
     }
 
     public void getMostSell() {
-        mostSellerList.clear();
-        mostSellerAdapter.notifyDataSetChanged();
         String user_id = null;
         if (userModel != null) {
             user_id = userModel.getData().getId() + "";
@@ -541,41 +538,15 @@ public class FragmentHome extends Fragment {
         activity.displayFragmentDukkan(id);
     }
 
+    public void displayFragmentDepartment(int id){
+        activity.displayFragmentDukkan(id);
+
+    }
     public void showData(String s) {
         Intent intent = new Intent(activity, ProductDetialsActivity.class);
         intent.putExtra("id", s);
         startActivityForResult(intent, 100);
     }
-
-    public class MyTask extends TimerTask {
-        @Override
-        public void run() {
-            activity.runOnUiThread(() -> {
-                int current_page = binding.pager.getCurrentItem();
-                if (current_page < sliderAdapter.getCount() - 1) {
-                    binding.pager.setCurrentItem(binding.pager.getCurrentItem() + 1);
-                } else {
-                    binding.pager.setCurrentItem(0);
-
-                }
-            });
-
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (timer != null) {
-            timer.purge();
-            timer.cancel();
-        }
-        if (timerTask != null) {
-            timerTask.cancel();
-        }
-
-    }
-
     public void like_dislike(SingleProductModel productModel, int pos, int i) {
         if (userModel != null) {
             try {
@@ -635,22 +606,44 @@ public class FragmentHome extends Fragment {
         }
     }
 
-    private void update(int i) {
-        // Log.e("llll",i+"");
-        if (i == 1) {
-            getMainCategorySubCategoryProduct();
-            getMostSell();
+    public class MyTask extends TimerTask {
+        @Override
+        public void run() {
+            activity.runOnUiThread(() -> {
+                int current_page = binding.pager.getCurrentItem();
+                if (current_page < sliderAdapter.getCount() - 1) {
+                    binding.pager.setCurrentItem(binding.pager.getCurrentItem() + 1);
+                } else {
+                    binding.pager.setCurrentItem(0);
 
-        } else if (i == 0) {
-            getMainCategorySubCategoryProduct();
-            getRecentArrived();
-
-
-        } else {
-            getRecentArrived();
-            getMostSell();
+                }
+            });
 
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (timer != null) {
+            timer.purge();
+            timer.cancel();
+        }
+        if (timerTask != null) {
+            timerTask.cancel();
+        }
+
+    }
+
+
+    private void update(int i) {
+        // Log.e("llll",i+"");
+        Log.e("fff", "fff");
+        getMainCategorySubCategoryProduct();
+        getRecentArrived();
+        getMostSell();
+
+
 
 
     }
@@ -779,7 +772,8 @@ public class FragmentHome extends Fragment {
         } else if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
 
             getMostSell();
-
+            getRecentArrived();
+            getMainCategorySubCategoryProduct();
 
         }
     }

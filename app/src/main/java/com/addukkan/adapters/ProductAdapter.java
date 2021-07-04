@@ -60,7 +60,10 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         myHolder.binding.setModel(model);
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (model.getFavourite() != null) {
-            ((MyHolder) holder).binding.checkbox.setChecked(true);
+           myHolder.binding.checkbox.setChecked(true);
+        }else {
+            myHolder.binding.checkbox.setChecked(false);
+
         }
         myHolder.binding.checkbox.setOnClickListener(v -> {
             SingleProductModel model2 = list.get(myHolder.getAdapterPosition()).getProduct_data();

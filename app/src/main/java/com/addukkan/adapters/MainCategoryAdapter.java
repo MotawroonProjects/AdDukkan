@@ -74,6 +74,13 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             fragmentHome.showDepart(list.get(position).getId());
         }
         });
+
+        myHolder.binding.tvShowAll.setOnClickListener(v -> {
+            if(fragment instanceof FragmentHome){
+                FragmentHome fragmentHome=(FragmentHome)fragment;
+                fragmentHome.displayFragmentDepartment(list.get(position).getId());
+            }
+        });
     }
 
     @Override

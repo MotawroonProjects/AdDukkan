@@ -29,6 +29,7 @@ public class SingleProductModel implements Serializable {
     private List<ProductImage> product_images;
     private int amount = 0;
     private boolean isLoading = false;
+    private boolean isSelected = false;
     public int getId() {
         return id;
     }
@@ -135,6 +136,14 @@ public class SingleProductModel implements Serializable {
 
     public List<ProductImage> getProduct_images() {
         return product_images;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public class ProductTransFk implements Serializable {

@@ -43,7 +43,7 @@
             android:textSize="14sp"
             android:gravity="center"
             android:layout_gravity="center_vertical"
-            android:text="@{String.valueOf(model.price)}"
+            android:text="@{String.valueOf(model.product_data.price)}"
 
             />
 

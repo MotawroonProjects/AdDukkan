@@ -52,6 +52,7 @@ public class CartDataModel extends ResponseModel implements Serializable {
             private int offer_bonus;
             private double old_price;
             private SingleProductModel product_data;
+            private boolean isLoading = false;
 
             public int getId() {
                 return id;
@@ -107,6 +108,14 @@ public class CartDataModel extends ResponseModel implements Serializable {
 
             public SingleProductModel getProduct_data() {
                 return product_data;
+            }
+
+            public boolean isLoading() {
+                return isLoading;
+            }
+
+            public void setLoading(boolean loading) {
+                isLoading = loading;
             }
         }
     }

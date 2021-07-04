@@ -431,10 +431,11 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+
     public void navigateToSignInActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     private void getSideMenu() {
@@ -557,7 +558,6 @@ public class HomeActivity extends AppCompatActivity {
             user_id = userModel.getData().getId() + "";
         }
 
-        //binding.progBar.setVisibility(View.VISIBLE);
 
         Api.getService(Tags.base_url)
                 .getMyCart("Bearer " + userModel.getData().getToken(), lang, user_id)
@@ -570,7 +570,10 @@ public class HomeActivity extends AppCompatActivity {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
-                                    binding.setCartCount(response.body().getData().getDetails().size() + "");
+                                    updateCartCount(response.body().getData().getDetails().size());
+                                }else {
+                                    updateCartCount(0);
+
                                 }
 
 
