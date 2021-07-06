@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.addukkan.R;
 import com.addukkan.databinding.ProductRowBinding;
 import com.addukkan.models.SingleProductModel;
+import com.addukkan.models.UserModel;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_home.fragments.FragmentHome;
 import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 
@@ -25,11 +27,14 @@ public class Product3Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private LayoutInflater inflater;
     private ProductDetialsActivity activity;
+    private UserModel userModel;
+    private Preferences preferences;
     public Product3Adapter(List<SingleProductModel> list, Context context) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
         activity = (ProductDetialsActivity) context;
+        preferences = Preferences.getInstance();
 
 
     }
@@ -57,7 +62,14 @@ public class Product3Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((MyHolder) holder).binding.checkbox.setChecked(false);
         }
         myHolder.binding.checkbox.setOnClickListener(v -> {
-            activity.like_dislike(list.get(myHolder.getAdapterPosition()), myHolder.getLayoutPosition(),2);
+            userModel = preferences.getUserData(context);
+            boolean checked = myHolder.binding.checkbox.isChecked();
+            if (userModel==null){
+                myHolder.binding.checkbox.setChecked(!checked);
+            }else {
+                activity.like_dislike(list.get(myHolder.getAdapterPosition()), myHolder.getLayoutPosition(),2);
+
+            }
 
         });
 

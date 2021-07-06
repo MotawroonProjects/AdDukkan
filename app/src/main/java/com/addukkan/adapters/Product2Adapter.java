@@ -16,6 +16,8 @@ import com.addukkan.R;
 import com.addukkan.databinding.ProductRowBinding;
 import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.SingleProductModel;
+import com.addukkan.models.UserModel;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_home.fragments.FragmentHome;
 
 import java.util.List;
@@ -27,15 +29,19 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private LayoutInflater inflater;
     private Fragment fragment;
     private int i;
+    private UserModel userModel;
+    private Preferences preferences;
 
     //private Fragment_Main fragment_main;
-    public Product2Adapter(List<SingleProductModel> list, Context context,Fragment fragment,int i) {
+    public Product2Adapter(List<SingleProductModel> list, Context context, Fragment fragment, int i) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.fragment=fragment;
-        this.i=i;
-      //  this.fragment_main=fragment_main;
+        this.fragment = fragment;
+        this.i = i;
+        preferences = Preferences.getInstance();
+
+        //  this.fragment_main=fragment_main;
 
 
     }
@@ -59,21 +65,25 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (list.get(position).getFavourite() != null) {
             ((MyHolder) holder).binding.checkbox.setChecked(true);
-        }else {
+        } else {
             ((MyHolder) holder).binding.checkbox.setChecked(false);
 
         }
         myHolder.binding.checkbox.setOnClickListener(v -> {
+            userModel = preferences.getUserData(context);
+            boolean checked = myHolder.binding.checkbox.isChecked();
 
-                if (fragment instanceof FragmentHome) {
-
+            if (fragment instanceof FragmentHome) {
+                if (userModel==null){
+                    myHolder.binding.checkbox.setChecked(!checked);
+                }else {
                     FragmentHome fragment_main = (FragmentHome) fragment;
 
-                        fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), i);
+                    fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), i);
 
                 }
 
-
+            }
 
 
         });
@@ -83,7 +93,7 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 FragmentHome fragment_main = (FragmentHome) fragment;
 
 
-                fragment_main.showData(list.get(myHolder.getLayoutPosition()).getProduct_trans_fk().getProduct_id()+"");
+                fragment_main.showData(list.get(myHolder.getLayoutPosition()).getProduct_trans_fk().getProduct_id() + "");
 
             }
         });
@@ -91,13 +101,13 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         myHolder.binding.imgIncrease.setOnClickListener(v -> {
             SingleProductModel model = list.get(myHolder.getAdapterPosition());
 
-            if(fragment instanceof FragmentHome){
+            if (fragment instanceof FragmentHome) {
 
-                if (!model.isLoading()){
+                if (!model.isLoading()) {
                     model.setLoading(true);
                     notifyItemChanged(myHolder.getAdapterPosition());
-                    FragmentHome fragmentHome=(FragmentHome)fragment;
-                    fragmentHome.additemtoCart(model,myHolder.getAdapterPosition(),i);
+                    FragmentHome fragmentHome = (FragmentHome) fragment;
+                    fragmentHome.additemtoCart(model, myHolder.getAdapterPosition(), i);
                 }
 
 
@@ -119,8 +129,6 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }
     }
-
-
 
 
 }
