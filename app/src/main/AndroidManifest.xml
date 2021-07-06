@@ -86,7 +86,7 @@
             android:name=".uis.activity_chat.ChatActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".uis.activity_about_us.AboutUsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
