@@ -114,6 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
             binding.setModel(signUpModel);
             binding.tvPhonCode.setText(userModel.getData().getPhone_code());
             binding.btnSignUp.setText(getString(R.string.update));
+            binding.tvLogin.setVisibility(View.INVISIBLE);
         }
 
 

@@ -39,7 +39,13 @@ import com.addukkan.uis.activity_home.fragments.FragmentProfile;
 import com.addukkan.uis.activity_login.LoginActivity;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
 import com.addukkan.uis.activity_search.SearchActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.installations.InstallationTokenResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -321,48 +327,51 @@ public class HomeActivity extends AppCompatActivity {
     private void updateTokenFireBase() {
         if (userModel != null) {
             try {
-                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        String token = task.getResult().getToken();
-                        Api.getService(Tags.base_url)
-                                .updateFirebaseToken("Bearer " + userModel.getData().getToken(), userModel.getData().getId(), token, "android")
-                                .enqueue(new Callback<ResponseModel>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                                        if (response.isSuccessful() && response.body() != null && response.body().getStatus() == 200) {
-                                            userModel.getData().setFirebase_token(token);
-                                            preferences.create_update_userdata(HomeActivity.this, userModel);
+                FirebaseInstanceId.getInstance()
+                        .getInstanceId()
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()){
+                                String token = task.getResult().getToken();
+                                Api.getService(Tags.base_url)
+                                        .updateFirebaseToken("Bearer " + userModel.getData().getToken(), userModel.getData().getId(), token, "android")
+                                        .enqueue(new Callback<ResponseModel>() {
+                                            @Override
+                                            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                                                if (response.isSuccessful() && response.body() != null ) {
+                                                    userModel.getData().setFirebase_token(token);
+                                                    preferences.create_update_userdata(HomeActivity.this, userModel);
+                                                    Log.e("data", "success");
 
-                                        } else {
-                                            try {
-
-                                                Log.e("errorToken", response.code() + "_" + response.errorBody().string());
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseModel> call, Throwable t) {
-                                        try {
-
-                                            if (t.getMessage() != null) {
-                                                Log.e("errorToken2", t.getMessage());
-                                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                                    //Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    // Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    try {
+
+                                                        Log.e("errorToken", response.code() + "_" + response.errorBody().string());
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
                                             }
 
-                                        } catch (Exception e) {
-                                        }
-                                    }
-                                });
-                    }
-                });
+                                            @Override
+                                            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                                                try {
 
+                                                    if (t.getMessage() != null) {
+                                                        Log.e("errorToken2", t.getMessage());
+                                                        if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                                            //Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            // Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+
+                                                } catch (Exception e) {
+                                                }
+                                            }
+                                        });
+
+                            }
+                        });
 
             } catch (Exception e) {
 
@@ -375,6 +384,8 @@ public class HomeActivity extends AppCompatActivity {
         if (userModel == null) {
             return;
         }
+
+        Log.e("ddd", userModel.getData().getFirebase_token());
         ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
@@ -390,10 +401,9 @@ public class HomeActivity extends AppCompatActivity {
                                 if (response.body().getStatus() == 200) {
                                     userModel = null;
                                     preferences.clear(HomeActivity.this);
-                                    if (fragmentProfile != null && fragmentProfile.isAdded()) {
-                                        fragmentProfile.updateUserData();
-                                    }
-                                } else {
+                                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                 }
                             }
 

@@ -20,6 +20,8 @@ import com.addukkan.tags.Tags;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -82,6 +84,11 @@ public class ServiceAdminUploadAttachment extends Service {
                             EventBus.getDefault().post(model);
                         } else {
 
+                            try {
+                                Log.e("error", response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             if (response.code() == 500) {
 
                                 Toast.makeText(ServiceAdminUploadAttachment.this, "Server Error", Toast.LENGTH_SHORT).show();

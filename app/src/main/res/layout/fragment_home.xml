@@ -374,7 +374,10 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@color/trans_black"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -507,14 +510,17 @@
 
                 <FrameLayout
                     android:id="@+id/flclose"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/circle_gray"
                     android:padding="5dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/flContainer"
                     app:layout_constraintBottom_toTopOf="@id/flContainer"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+
                     >
 
                     <ImageView

@@ -23,11 +23,14 @@ import androidx.core.app.NotificationCompat;
 import com.addukkan.R;
 import com.addukkan.models.ChatRoomModel;
 import com.addukkan.models.MessageModel;
+import com.addukkan.models.ResponseModel;
 import com.addukkan.models.RoomModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
+import com.addukkan.remote.Api;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_chat.ChatActivity;
+import com.addukkan.uis.activity_home.HomeActivity;
 import com.addukkan.uis.activity_notification.NotificationActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -35,7 +38,12 @@ import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FireBaseMessaging extends FirebaseMessagingService {
 
@@ -116,8 +124,50 @@ public class FireBaseMessaging extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
+        updateToken(s);
 
+    }
 
+    private void updateToken(String token) {
+        UserModel userModel = getUserData();
+        Api.getService(Tags.base_url)
+                .updateFirebaseToken("Bearer " + userModel.getData().getToken(), userModel.getData().getId(), token, "android")
+                .enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().getStatus() == 200) {
+                            Log.e("data", "success");
+
+                            userModel.getData().setFirebase_token(token);
+                            preferences.create_update_userdata(FireBaseMessaging.this, userModel);
+
+                        } else {
+                            try {
+
+                                Log.e("errorToken", response.code() + "_" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                        try {
+
+                            if (t.getMessage() != null) {
+                                Log.e("errorToken2", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+                    }
+                });
     }
 
     @SuppressLint("NewApi")

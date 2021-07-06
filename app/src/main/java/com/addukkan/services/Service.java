@@ -313,8 +313,8 @@ public interface Service {
     @POST("api/send-admin-chat-message")
     Call<SingleAdminMessageDataModel> sendAdminChatAttachment(@Header("Authorization") String user_token,
                                                               @Part("admin_room_id") RequestBody admin_room_id,
-                                                              @Part("from_user_id") RequestBody from_user_id,
-                                                              @Part("to_admin_id") RequestBody to_admin_id,
+                                                              @Part("user_id") RequestBody from_user_id,
+                                                              @Part("admin_id") RequestBody to_admin_id,
                                                               @Part("type") RequestBody message_type,
                                                               @Part MultipartBody.Part attachment
     );

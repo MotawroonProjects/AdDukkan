@@ -202,6 +202,11 @@
             android:name=".uis.activity_chat.ServiceUploadAttachment"
             android:enabled="true"
             android:stopWithTask="false" />
+
+        <service
+            android:name=".uis.activity_admin_chat.ServiceAdminUploadAttachment"
+            android:enabled="true"
+            android:stopWithTask="false" />
         <service
             android:name=".notifications.FireBaseMessaging"
             android:enabled="true"
