@@ -65,9 +65,10 @@ public class ProductDetialsActivity extends AppCompatActivity {
     private String country_coude;
     private List<ProductDataModel.Attribute> data = new ArrayList<>();
     private SingleProductModel singleProductModel;
-    private double price = 0.0,oldPrice=0.0;
+    private double price = 0.0, oldPrice = 0.0;
     private int counter = 0;
     private boolean isDataChanged = false;
+
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
         super.attachBaseContext(Language.updateResources(newBase, Paper.book().read("lang", "ar")));
@@ -113,12 +114,12 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view ->
                 {
-                    if (isDataChanged){
+                    if (isDataChanged) {
                         setResult(RESULT_OK);
                     }
                     finish();
                 }
-                );
+        );
         binding.tab1.addTab(binding.tab1.newTab().setText(getString(R.string.description)));
         binding.tab1.addTab(binding.tab1.newTab().setText(getString(R.string.reviews)));
 
@@ -126,10 +127,10 @@ public class ProductDetialsActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int pos = tab.getPosition();
-                if (pos==0){
+                if (pos == 0) {
                     binding.flComments.setVisibility(View.GONE);
                     binding.tvDetails.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     binding.flComments.setVisibility(View.VISIBLE);
                     binding.tvDetails.setVisibility(View.GONE);
                 }
@@ -147,17 +148,21 @@ public class ProductDetialsActivity extends AppCompatActivity {
         });
 
         binding.imageIncrease.setOnClickListener(v -> {
-           addItemToCart();
+            addItemToCart();
         });
 
 
         binding.checkbox.setOnClickListener(v -> {
-            like_dislikeMain(singleProductModel);
+            boolean checked = binding.checkbox.isChecked();
+            if (userModel!=null){
+                like_dislikeMain(singleProductModel);
+
+            }else {
+                binding.checkbox.setChecked(!checked);
+            }
         });
 
         getData();
-
-
 
 
     }
@@ -266,27 +271,26 @@ public class ProductDetialsActivity extends AppCompatActivity {
             binding.flNoSlider.setVisibility(View.VISIBLE);
         }
 
-        if (body.getComments()!=null&&body.getComments().size()>0){
+        if (body.getComments() != null && body.getComments().size() > 0) {
             CommentAdapter rateAdapter = new CommentAdapter(body.getComments(), this);
-            binding.recViewComments.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            binding.recViewComments.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             binding.recViewComments.setAdapter(rateAdapter);
             binding.tvNoData.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.tvNoData.setVisibility(View.VISIBLE);
 
         }
 
 
-        if (body.getOthers()!=null&&body.getOthers().size()>0){
+        if (body.getOthers() != null && body.getOthers().size() > 0) {
             Product3Adapter adapter = new Product3Adapter(body.getOthers(), this);
-            binding.recViewProducts.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            binding.recViewProducts.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             binding.recViewProducts.setAdapter(adapter);
             binding.tvNoProductData.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.tvNoProductData.setVisibility(View.VISIBLE);
 
         }
-
 
 
     }
@@ -296,7 +300,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
         if (type.equals("child")) {
             data = getAttributeList(parent_pos);
 
-            if (old_pos!=-1){
+            if (old_pos != -1) {
                 ProductDataModel.Attribute attributeOld1 = data.get(parent_pos);
                 List<ProductDataModel.Attribute> attributeOld2 = attributeOld1.getAttributes();
 
@@ -306,8 +310,6 @@ public class ProductDetialsActivity extends AppCompatActivity {
                 attributeOld1.setAttributes(attributeOld2);
                 data.set(parent_pos, attributeOld1);
             }
-
-
 
 
             ProductDataModel.Attribute attribute1 = data.get(parent_pos);
@@ -336,7 +338,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
                                 if (response.body().getData().getAttributes().size() > 0) {
                                     childList.clear();
-                                    if (type.equals("child")){
+                                    if (type.equals("child")) {
                                         childList.addAll(data);
                                     }
 
@@ -344,7 +346,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
                                     //childList.addAll(response.body().getData().getAttributes());
                                 } else {
                                     childList.clear();
-                                    if (type.equals("child")){
+                                    if (type.equals("child")) {
                                         childList.addAll(data);
                                     }
 
@@ -397,16 +399,16 @@ public class ProductDetialsActivity extends AppCompatActivity {
     private void checkDefaultValue(List<ProductDataModel.Attribute> attributes) {
         List<ProductDataModel.Attribute> childData = new ArrayList<>();
 
-        for (int index = 0;index<attributes.size();index++){
+        for (int index = 0; index < attributes.size(); index++) {
             ProductDataModel.Attribute attribute = attributes.get(index);
             boolean hasDefault = false;
-            for (ProductDataModel.Attribute attribute1 :attribute.getAttributes()){
-                if (attribute1.getIs_default().equals("yes")){
+            for (ProductDataModel.Attribute attribute1 : attribute.getAttributes()) {
+                if (attribute1.getIs_default().equals("yes")) {
                     hasDefault = true;
                 }
             }
 
-            if (!hasDefault){
+            if (!hasDefault) {
                 List<ProductDataModel.Attribute> attributes1 = attribute.getAttributes();
                 ProductDataModel.Attribute attribute1 = attributes1.get(0);
                 attribute1.setIs_default("yes");
@@ -428,28 +430,26 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
         oldPrice = 0.0;
         price = 0.0;
-        for (ProductDataModel.Attribute attr :attribute.getAttributes()){
-            if (attr.getIs_default().equals("yes")){
+        for (ProductDataModel.Attribute attr : attribute.getAttributes()) {
+            if (attr.getIs_default().equals("yes")) {
                 oldPrice = attr.getPrice();
                 price = oldPrice;
             }
         }
 
-        if (singleProductModel.getHave_offer().equals("yes"))
-        {
-            if (singleProductModel.getOffer_type().equals("per"))
-            {
-                price = oldPrice-(oldPrice*(singleProductModel.getOffer_value()/100.0));
-            }else if (singleProductModel.getOffer_type().equals("value")){
+        if (singleProductModel.getHave_offer().equals("yes")) {
+            if (singleProductModel.getOffer_type().equals("per")) {
+                price = oldPrice - (oldPrice * (singleProductModel.getOffer_value() / 100.0));
+            } else if (singleProductModel.getOffer_type().equals("value")) {
                 price = oldPrice - singleProductModel.getOffer_value();
-            }else {
+            } else {
                 price = oldPrice;
             }
         }
 
 
-        binding.tvOldprice.setText(oldPrice+"");
-        binding.tvPrice.setText(price+"");
+        binding.tvOldprice.setText(oldPrice + "");
+        binding.tvPrice.setText(price + "");
     }
 
 
@@ -570,11 +570,11 @@ public class ProductDetialsActivity extends AppCompatActivity {
     public void showData(String id) {
         Intent intent = new Intent(this, ProductDetialsActivity.class);
         intent.putExtra("id", id);
-        startActivityForResult(intent,100);
+        startActivityForResult(intent, 100);
     }
 
-    private void addItemToCart(){
-        if(userModel!=null){
+    private void addItemToCart() {
+        if (userModel != null) {
 
             AddCartDataModel addCartDataModel = new AddCartDataModel();
             List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
@@ -582,7 +582,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
             addCartDataModel.setCountry_code(country_coude);
             addCartDataModel.setUser_id(userModel.getData().getId());
             double totalPrice = price;
-            Log.e("ttt", totalPrice+"__"+price);
+            Log.e("ttt", totalPrice + "__" + price);
             addCartDataModel.setTotal_price(totalPrice);
             addCartProductItemModel.setAmount(1);
             addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
@@ -606,7 +606,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
     private void addToCart(AddCartDataModel addCartDataModel) {
 
-        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         dialog.show();
@@ -622,11 +622,11 @@ public class ProductDetialsActivity extends AppCompatActivity {
                             if (response.body() != null && response.body().getStatus() == 200) {
                                 counter++;
 
-                                binding.tvCounter.setText(counter+"");
+                                binding.tvCounter.setText(counter + "");
                                 isDataChanged = true;
-                                double total = price*counter;
-                                Log.e("price", price+"__"+total);
-                                binding.tvTotal.setText(total+"");
+                                double total = price * counter;
+                                Log.e("price", price + "__" + total);
+                                binding.tvTotal.setText(total + "");
                             }
                         } else {
                             dialog.dismiss();
@@ -666,7 +666,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
     }
 
     public void additemtoCart2(SingleProductModel data, ProductRowBinding binding) {
-        if(userModel!=null){
+        if (userModel != null) {
 
             AddCartDataModel addCartDataModel = new AddCartDataModel();
             List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
@@ -701,7 +701,8 @@ public class ProductDetialsActivity extends AppCompatActivity {
             addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
             addCartProductItemModelList.add(addCartProductItemModel);
             addCartDataModel.setCart_products(addCartProductItemModelList);
-            addTocart2(addCartDataModel,binding);}
+            addTocart2(addCartDataModel, binding);
+        }
 
     }
 
@@ -716,7 +717,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
                         binding.imgIncrease.setClickable(true);
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString())+1)+"");
+                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) + 1) + "");
 
                                 isDataChanged = true;
 
@@ -759,16 +760,16 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable  Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==100&&resultCode==RESULT_OK){
+        if (requestCode == 100 && resultCode == RESULT_OK) {
             isDataChanged = true;
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (isDataChanged){
+        if (isDataChanged) {
             setResult(RESULT_OK);
         }
         finish();
