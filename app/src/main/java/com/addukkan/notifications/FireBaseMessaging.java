@@ -59,7 +59,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         for (String key : map.keySet()) {
             Log.e("Key=", key + "_value=" + map.get(key));
         }
-        String notification_type = map.get("notification_type");
+        String notification_type = map.get("noti_type");
 
 
         if (notification_type.equals("chat")) {
@@ -74,7 +74,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
                     String to_user_id = map.get("to_user_id");
 
                     String date = map.get("notification_date");
-                    String type = map.get("type");
+                    String type = map.get("data_chat_type");
                     String message = map.get("message");
                     String from = map.get("from_user_data");
                     String to = map.get("to_user_data");
@@ -173,7 +173,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void createNewNotificationVersion(Map<String, String> map) {
-        String notification_type = map.get("notification_type");
+        String notification_type = map.get("noti_type");
 
         String sound_Path = "";
         if (sound_Path.isEmpty()) {
@@ -221,7 +221,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
             }
             intent = new Intent(this, ChatActivity.class);
             intent.putExtra("data", roomModel);
-            String type = map.get("type");
+            String type = map.get("data_chat_type");
             title = from_user.getName();
             if (type.equals("voice")) {
                 body = getString(R.string.voice_uploaded);
@@ -299,7 +299,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
             }
             intent = new Intent(this, ChatActivity.class);
             intent.putExtra("data", roomModel);
-            String type = map.get("type");
+            String type = map.get("data_chat_type");
             title = from_user.getName();
             if (type.equals("voice")) {
                 body = getString(R.string.voice_uploaded);
