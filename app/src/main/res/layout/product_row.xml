@@ -108,6 +108,7 @@
                 android:maxLines="1"
                 android:text="@{model.product_trans_fk.description}"
                 android:textColor="@color/gray11"
+                android:visibility="gone"
                 android:textSize="14sp" />
 
             <com.iarcuschin.simpleratingbar.SimpleRatingBar

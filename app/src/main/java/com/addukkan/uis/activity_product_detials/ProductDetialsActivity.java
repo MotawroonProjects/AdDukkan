@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -238,6 +239,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
         singleProductModel = body.getProduct();
         binding.tvOldprice.setPaintFlags(binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        binding.tvDetails.setText(Html.fromHtml(body.getProduct().getProduct_trans_fk().getDescription()+""));
 
         oldPrice = singleProductModel.getProduct_default_price().getPrice();
         price = singleProductModel.getPrice();

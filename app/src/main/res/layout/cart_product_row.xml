@@ -197,9 +197,9 @@
                                 android:id="@+id/imgIncrease"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_marginEnd="15dp"
+                                android:layout_marginEnd="5dp"
                                 android:background="@drawable/add_bg"
-                                android:padding="2dp"
+                                android:padding="6dp"
                                 android:src="@drawable/add"
                                 tools:ignore="RtlCompat" />
 
@@ -212,13 +212,13 @@
                                 android:gravity="center"
                                 android:text='@{model.amount+""}'
                                 android:textColor="@color/black"
-                                android:textSize="18sp" />
+                                android:textSize="16sp" />
 
                             <ImageView
                                 android:id="@+id/imgDecrease"
                                 android:layout_width="28dp"
                                 android:layout_height="28dp"
-                                android:layout_marginStart="15dp"
+                                android:layout_marginStart="5dp"
                                 android:background="@drawable/add_bg"
                                 android:padding="6dp"
                                 android:src="@drawable/ic_minus"

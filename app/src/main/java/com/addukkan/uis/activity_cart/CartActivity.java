@@ -382,6 +382,8 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                 isDataChanged = true;
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
+                                    binding.tvtotal.setText(response.body().getData().total_price+"");
+
                                 }
                                 cartProductAdapter.notifyDataSetChanged();
                                 if (detialsList.size() == 0) {
@@ -445,6 +447,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                 isDataChanged = true;
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
+                                    binding.tvtotal.setText(response.body().getData().total_price+"");
                                 }
                                 cartProductAdapter.notifyDataSetChanged();
                                 if (detialsList.size() == 0) {

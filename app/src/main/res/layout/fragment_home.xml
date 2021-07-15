@@ -254,7 +254,7 @@
                         android:clickable="false"
                         android:longClickable="false"
                         android:padding="3dp"
-                        android:rotation='@{lang.equals("en")?180:0}'
+                        android:rotation='@{lang.equals("en")?0:180}'
                         android:src="@drawable/ic_left_arrow"
                         app:tint="@color/colorAccent" />
                 </LinearLayout>
@@ -374,18 +374,16 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@color/trans_black"
-            android:visibility="gone"
             android:clickable="true"
             android:focusable="true"
-            >
+            android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
                 android:layout_gravity="center"
-                >
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp">
 
 
                 <FrameLayout
@@ -425,11 +423,10 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
                             android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginTop="8dp"
-                            >
+                            android:layout_marginEnd="8dp"
+                            android:orientation="horizontal">
 
                             <FrameLayout
                                 android:layout_width="0dp"
@@ -513,13 +510,13 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/circle_gray"
-                    android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/flContainer"
-                    app:layout_constraintBottom_toTopOf="@id/flContainer"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_gray"
+                    android:padding="5dp"
+                    app:layout_constraintBottom_toTopOf="@id/flContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/flContainer"
 
                     >
 
