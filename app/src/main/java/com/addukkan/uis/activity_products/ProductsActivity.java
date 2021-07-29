@@ -318,14 +318,29 @@ public class ProductsActivity extends AppCompatActivity implements Listeners.Bac
     }
 
     public void addToCart(SingleProductModel data, int pos) {
-        if (userModel != null) {
 
-            AddCartDataModel addCartDataModel = new AddCartDataModel();
-            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+                 AddCartDataModel addCartDataModel;
+
+        if(userModel!=null){
+            addCartDataModel = new AddCartDataModel();
+        }
+        else {
+            addCartDataModel=preferences.getCartData(this);
+            if(addCartDataModel==null){
+                addCartDataModel=new AddCartDataModel();
+            }
+        }
+        List<AddCartProductItemModel> addCartProductItemModelList;
+        if(addCartDataModel!=null){
+             addCartProductItemModelList=addCartDataModel.getCart_products();
+         }
+         else {
+          addCartProductItemModelList  = new ArrayList<>();
+         }
             AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
             addCartDataModel.setCountry_code(country_coude);
-            addCartDataModel.setUser_id(userModel.getData().getId());
-            double totalprice = 0;
+ if(userModel!=null){
+            addCartDataModel.setUser_id(userModel.getData().getId());}double totalprice = 0;
             if (data.getHave_offer().equals("yes")) {
                 if (data.getOffer_type().equals("value")) {
                     totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
@@ -351,12 +366,25 @@ public class ProductsActivity extends AppCompatActivity implements Listeners.Bac
             addCartProductItemModel.setProduct_id(data.getId() + "");
             addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
             addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+            addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
+            addCartProductItemModel.setImage(data.getMain_image());
+            addCartProductItemModel.setRate(data.getRate());
+            addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
             addCartProductItemModelList.add(addCartProductItemModel);
             addCartDataModel.setCart_products(addCartProductItemModelList);
-            uploadData(addCartDataModel,data,pos);
-        } else {
-            navigateToSignInActivity();
-        }
+            if (userModel != null) {
+                uploadData(addCartDataModel,data,pos);
+            } else {
+
+                 data.setLoading(false);
+
+                data.setAmount(data.getAmount() + 1);
+            preferences.create_update_cart(this, addCartDataModel);
+            list.set(pos, data);
+            adapter.notifyItemChanged(pos);
+            }
+
+
 
 
     }

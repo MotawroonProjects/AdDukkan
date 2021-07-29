@@ -426,11 +426,29 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
     public void additemtoCart(SingleProductModel data, ListProductRowBinding binding) {
         if (userModel != null) {
             binding.progBar.setVisibility(View.VISIBLE);
-            AddCartDataModel addCartDataModel = new AddCartDataModel();
-            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+                 AddCartDataModel addCartDataModel;
+
+        if(userModel!=null){
+            addCartDataModel = new AddCartDataModel();
+        }
+        else {
+            addCartDataModel=preferences.getCartData(this);
+            if(addCartDataModel==null){
+                addCartDataModel=new AddCartDataModel();
+            }
+        }
+        List<AddCartProductItemModel> addCartProductItemModelList;
+        if(addCartDataModel!=null){
+             addCartProductItemModelList=addCartDataModel.getCart_products();
+         }
+         else {
+          addCartProductItemModelList  = new ArrayList<>();
+         }
             AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
             addCartDataModel.setCountry_code(country_coude);
-            addCartDataModel.setUser_id(userModel.getData().getId());
+            if (userModel != null) {
+                addCartDataModel.setUser_id(userModel.getData().getId());
+            }
             double totalprice = 0;
             if (data.getHave_offer().equals("yes")) {
                 if (data.getOffer_type().equals("value")) {
@@ -519,50 +537,77 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
                 });
     }
 
-    public void additemtoCart(SingleProductModel data, OfferProductRowBinding binding) {
-        if (userModel != null) {
-            binding.progBar.setVisibility(View.VISIBLE);
-            AddCartDataModel addCartDataModel = new AddCartDataModel();
-            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
-            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
-            addCartDataModel.setCountry_code(country_coude);
-            addCartDataModel.setUser_id(userModel.getData().getId());
-            double totalprice = 0;
-            if (data.getHave_offer().equals("yes")) {
-                if (data.getOffer_type().equals("value")) {
-                    totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
-                } else if (data.getOffer_type().equals("per")) {
-                    totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
-                } else {
-                    totalprice = data.getProduct_default_price().getPrice();
+    public void additemtoCart(SingleProductModel data, int adapterPosition, int type) {
+             AddCartDataModel addCartDataModel;
 
-                }
+        if(userModel!=null){
+            addCartDataModel = new AddCartDataModel();
+        }
+        else {
+            addCartDataModel=preferences.getCartData(this);
+            if(addCartDataModel==null){
+                addCartDataModel=new AddCartDataModel();
+            }
+        }
+        List<AddCartProductItemModel> addCartProductItemModelList;
+        if(addCartDataModel!=null){
+             addCartProductItemModelList=addCartDataModel.getCart_products();
+         }
+         else {
+          addCartProductItemModelList  = new ArrayList<>();
+         }
+        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+        addCartDataModel.setCountry_code(country_coude);
+        if (userModel != null) {
+            addCartDataModel.setUser_id(userModel.getData().getId());
+        }
+        double totalprice = 0;
+        if (data.getHave_offer().equals("yes")) {
+            if (data.getOffer_type().equals("value")) {
+                totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+            } else if (data.getOffer_type().equals("per")) {
+                totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
             } else {
                 totalprice = data.getProduct_default_price().getPrice();
+
             }
-            addCartDataModel.setTotal_price(totalprice);
-            addCartProductItemModel.setAmount(1);
-            addCartProductItemModel.setHave_offer(data.getHave_offer());
-            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
-            addCartProductItemModel.setOffer_min(data.getOffer_min());
-            addCartProductItemModel.setOffer_type(data.getOffer_type());
-            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
-            addCartProductItemModel.setPrice(totalprice);
-            addCartProductItemModel.setProduct_id(data.getId() + "");
-            addCartProductItemModel.setOffer_value(data.getOffer_value());
-            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
-            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
-            addCartProductItemModelList.add(addCartProductItemModel);
-            addCartDataModel.setCart_products(addCartProductItemModelList);
-            addTocart(addCartDataModel, binding);
         } else {
-            navigateToSignInActivity();
+            totalprice = data.getProduct_default_price().getPrice();
         }
+        addCartDataModel.setTotal_price(totalprice);
+        addCartProductItemModel.setAmount(1);
+        addCartProductItemModel.setHave_offer(data.getHave_offer());
+        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+        addCartProductItemModel.setOffer_min(data.getOffer_min());
+        addCartProductItemModel.setOffer_type(data.getOffer_type());
+        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+        addCartProductItemModel.setPrice(totalprice);
+        addCartProductItemModel.setProduct_id(data.getId() + "");
+        addCartProductItemModel.setOffer_value(data.getOffer_value());
+        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+        addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
+        addCartProductItemModel.setImage(data.getMain_image());
+        addCartProductItemModel.setRate(data.getRate());
+        addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
+        addCartProductItemModelList.add(addCartProductItemModel);
+        addCartDataModel.setCart_products(addCartProductItemModelList);
+        if (userModel != null) {
+            addTocart(addCartDataModel, data, adapterPosition, type);
+        } else {
+
+            data.setLoading(false);
+
+            data.setAmount(data.getAmount() + 1);
+
+            preferences.create_update_cart(this, addCartDataModel);
+            productModelList.set(adapterPosition, data);
+            product2Adapter.notifyItemChanged(adapterPosition);
+        }
+
     }
 
-    private void addTocart(AddCartDataModel addCartDataModel, OfferProductRowBinding binding) {
-
-        binding.imgIncrease.setClickable(false);
+    private void addTocart(AddCartDataModel addCartDataModel, SingleProductModel data, int adapterPosition, int type) {
 
         //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
@@ -570,16 +615,21 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
                 .enqueue(new Callback<CartDataModel>() {
                     @Override
                     public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
-                        binding.progBar.setVisibility(View.GONE);
-                        binding.imgIncrease.setClickable(true);
+                        data.setLoading(false);
+
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) + 1) + "");
+                                data.setAmount(data.getAmount() + 1);
 
+                                productModelList.set(adapterPosition, data);
+                                product2Adapter.notifyItemChanged(adapterPosition);
+
+                                //binding.setCartCount(response.body().getData().getDetails().size() + "");
 
                             }
                         } else {
-
+                            productModelList.set(adapterPosition, data);
+                            product2Adapter.notifyItemChanged(adapterPosition);
                             try {
                                 Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
                             } catch (IOException e) {
@@ -597,8 +647,9 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
                     @Override
                     public void onFailure(Call<CartDataModel> call, Throwable t) {
                         try {
-                            binding.imgIncrease.setClickable(true);
-                            binding.progBar.setVisibility(View.GONE);
+                            productModelList.set(adapterPosition, data);
+                            product2Adapter.notifyItemChanged(adapterPosition);
+
                             if (t.getMessage() != null) {
                                 Log.e("error_not_code", t.getMessage() + "__");
 

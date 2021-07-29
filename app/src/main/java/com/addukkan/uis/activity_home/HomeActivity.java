@@ -116,13 +116,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         binding.flCart.setOnClickListener(v -> {
-            if (userModel != null) {
+            //if (userModel != null) {
                 Intent intent = new Intent(HomeActivity.this, CartActivity.class);
                 startActivityForResult(intent,200);
-            } else {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivityForResult(intent,100);
-            }
+//            } else {
+//                Intent intent = new Intent(this, LoginActivity.class);
+//                startActivityForResult(intent,100);
+//            }
         });
     }
 
@@ -631,6 +631,11 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         if (userModel != null) {
             getData();
+        }
+        else {
+            if(preferences.getCartData(this)!=null){
+                binding.setCartCount(preferences.getCartData(this).getCart_products().size()+"");
+            }
         }
     }
 }

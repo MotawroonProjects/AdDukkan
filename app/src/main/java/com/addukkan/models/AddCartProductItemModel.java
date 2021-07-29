@@ -7,13 +7,17 @@ public class AddCartProductItemModel implements Serializable {
     private String product_price_id;
     private String vendor_id;
     private double price;
-    private int amount;
+    private double amount;
     private String have_offer;
     private String offer_type;
     private double offer_value;
-    private double offer_min;
-    private double offer_bonus;
+    private int offer_min;
+    private int offer_bonus;
     private double old_price;
+    private String name;
+    private String image;
+    private String desc;
+    private double rate;
 
     public String getProduct_id() {
         return product_id;
@@ -47,11 +51,11 @@ public class AddCartProductItemModel implements Serializable {
         this.price = price;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -79,19 +83,19 @@ public class AddCartProductItemModel implements Serializable {
         this.offer_value = offer_value;
     }
 
-    public double getOffer_min() {
+    public int getOffer_min() {
         return offer_min;
     }
 
-    public void setOffer_min(double offer_min) {
+    public void setOffer_min(int offer_min) {
         this.offer_min = offer_min;
     }
 
-    public double getOffer_bonus() {
+    public int getOffer_bonus() {
         return offer_bonus;
     }
 
-    public void setOffer_bonus(double offer_bonus) {
+    public void setOffer_bonus(int offer_bonus) {
         this.offer_bonus = offer_bonus;
     }
 
@@ -101,5 +105,37 @@ public class AddCartProductItemModel implements Serializable {
 
     public void setOld_price(double old_price) {
         this.old_price = old_price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
     }
 }

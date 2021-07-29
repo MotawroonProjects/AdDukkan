@@ -121,6 +121,11 @@ public class FragmentHome extends Fragment {
 
         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
+            if (preferences.getCartData(activity) != null) {
+                AddCartDataModel addCartDataModel=preferences.getCartData(activity);
+                addCartDataModel.setUser_id(userModel.getData().getId());
+                addTocart(addCartDataModel);
+            }
         } else {
             country_coude = settings.getCountry_code();
         }
@@ -202,21 +207,20 @@ public class FragmentHome extends Fragment {
 
 
         binding.tvMostSeller.setOnClickListener(v -> {
-            navigateToProductActivity("mostSeller",100);
+            navigateToProductActivity("mostSeller", 100);
         });
 
         binding.tvRecentArrive.setOnClickListener(v -> {
-            navigateToProductActivity("recentArrive",100);
+            navigateToProductActivity("recentArrive", 100);
         });
     }
 
-    private void navigateToProductActivity(String type,int req) {
+    private void navigateToProductActivity(String type, int req) {
         Intent intent = new Intent(activity, ProductsActivity.class);
         intent.putExtra("type", type);
-        startActivityForResult(intent,req);
+        startActivityForResult(intent, req);
 
     }
-
 
 
     public void getMainCategory() {
@@ -538,15 +542,17 @@ public class FragmentHome extends Fragment {
         activity.displayFragmentDukkan(id);
     }
 
-    public void displayFragmentDepartment(int id){
+    public void displayFragmentDepartment(int id) {
         activity.displayFragmentDukkan(id);
 
     }
+
     public void showData(String s) {
         Intent intent = new Intent(activity, ProductDetialsActivity.class);
         intent.putExtra("id", s);
         startActivityForResult(intent, 100);
     }
+
     public void like_dislike(SingleProductModel productModel, int pos, int i) {
         if (userModel != null) {
             try {
@@ -642,8 +648,6 @@ public class FragmentHome extends Fragment {
         getMainCategorySubCategoryProduct();
         getRecentArrived();
         getMostSell();
-
-
 
 
     }
@@ -841,43 +845,76 @@ public class FragmentHome extends Fragment {
     }
 
     public void additemtoCart(SingleProductModel data, int adapterPosition, int type) {
-        if (userModel != null) {
-            AddCartDataModel addCartDataModel = new AddCartDataModel();
-            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
-            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
-            addCartDataModel.setCountry_code(country_coude);
-            addCartDataModel.setUser_id(userModel.getData().getId());
-            double totalprice = 0;
-            if (data.getHave_offer().equals("yes")) {
-                if (data.getOffer_type().equals("value")) {
-                    totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
-                } else if (data.getOffer_type().equals("per")) {
-                    totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
-                } else {
-                    totalprice = data.getProduct_default_price().getPrice();
+        AddCartDataModel addCartDataModel;
 
-                }
+        if(userModel!=null){
+            addCartDataModel = new AddCartDataModel();
+        }
+        else {
+            addCartDataModel=preferences.getCartData(activity);
+            if(addCartDataModel==null){
+                addCartDataModel=new AddCartDataModel();
+            }
+        }
+        List<AddCartProductItemModel> addCartProductItemModelList;
+        if(addCartDataModel!=null){
+             addCartProductItemModelList=addCartDataModel.getCart_products();
+         }
+         else {
+          addCartProductItemModelList  = new ArrayList<>();
+         }
+
+        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+        addCartDataModel.setCountry_code(country_coude);
+        if (userModel != null) {
+            addCartDataModel.setUser_id(userModel.getData().getId());
+        }
+        double totalprice = 0;
+        if (data.getHave_offer().equals("yes")) {
+            if (data.getOffer_type().equals("value")) {
+                totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+            } else if (data.getOffer_type().equals("per")) {
+                totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.getOffer_value()) / 100);
             } else {
                 totalprice = data.getProduct_default_price().getPrice();
+
             }
-            addCartDataModel.setTotal_price(totalprice);
-            addCartProductItemModel.setAmount(1);
-            addCartProductItemModel.setHave_offer(data.getHave_offer());
-            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
-            addCartProductItemModel.setOffer_min(data.getOffer_min());
-            addCartProductItemModel.setOffer_type(data.getOffer_type());
-            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
-            addCartProductItemModel.setPrice(totalprice);
-            addCartProductItemModel.setProduct_id(data.getId() + "");
-            addCartProductItemModel.setOffer_value(data.getOffer_value());
-            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
-            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
-            addCartProductItemModelList.add(addCartProductItemModel);
-            addCartDataModel.setCart_products(addCartProductItemModelList);
+        } else {
+            totalprice = data.getProduct_default_price().getPrice();
+        }
+        addCartDataModel.setTotal_price(totalprice);
+        addCartProductItemModel.setAmount(1);
+        addCartProductItemModel.setHave_offer(data.getHave_offer());
+        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+        addCartProductItemModel.setOffer_min(data.getOffer_min());
+        addCartProductItemModel.setOffer_type(data.getOffer_type());
+        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+        addCartProductItemModel.setPrice(totalprice);
+        addCartProductItemModel.setProduct_id(data.getId() + "");
+        addCartProductItemModel.setOffer_value(data.getOffer_value());
+        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+        addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
+        addCartProductItemModel.setImage(data.getMain_image());
+        addCartProductItemModel.setRate(data.getRate());
+        addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
+        addCartProductItemModelList.add(addCartProductItemModel);
+        addCartDataModel.setCart_products(addCartProductItemModelList);
+        if (userModel != null) {
             addTocart(addCartDataModel, data, adapterPosition, type);
         } else {
-            activity.navigateToSignInActivity();
-        }
+            data.setLoading(false);
+            data.setAmount(data.getAmount() + 1);
+            activity.binding.setCartCount(addCartDataModel.getCart_products().size()+ "");
+            preferences.create_update_cart(activity, addCartDataModel);
+            if (type == 0) {
+                mostSellerList.set(adapterPosition, data);
+                mostSellerAdapter.notifyItemChanged(adapterPosition);
+            } else {
+                recentArriveList.set(adapterPosition, data);
+                recentArriveAdapter.notifyItemChanged(adapterPosition);
+            }}
+
     }
 
     private void addTocart(AddCartDataModel addCartDataModel, SingleProductModel data, int adapterPosition, int type) {
@@ -953,51 +990,166 @@ public class FragmentHome extends Fragment {
                 });
     }
 
+    private void addTocart(AddCartDataModel addCartDataModel) {
+
+        //   Log.e("sllsks", user_id + lang + country_coude);
+        ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.upload_cart));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
+                .enqueue(new Callback<CartDataModel>() {
+                    @Override
+                    public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
+                        //   data.setLoading(false);
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+//                                data.setAmount(data.getAmount() + 1);
+//                                if (type == 0) {
+//                                    mostSellerList.set(adapterPosition, data);
+//                                    mostSellerAdapter.notifyItemChanged(adapterPosition);
+//                                } else {
+//                                    recentArriveList.set(adapterPosition, data);
+//                                    recentArriveAdapter.notifyItemChanged(adapterPosition);
+//                                }
+                                activity.binding.setCartCount(response.body().getData().getDetails().size() + "");
+
+                            }
+                        } else {
+//                            if (type == 0) {
+//                                mostSellerList.set(adapterPosition, data);
+//                                mostSellerAdapter.notifyItemChanged(adapterPosition);
+//                            } else {
+//                                recentArriveList.set(adapterPosition, data);
+//                                recentArriveAdapter.notifyItemChanged(adapterPosition);
+//                            }
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CartDataModel> call, Throwable t) {
+
+                        try {
+                            dialog.dismiss();
+                            //                            if (type == 0) {
+
+//                            if (type == 0) {
+//                                mostSellerList.set(adapterPosition, data);
+//                                mostSellerAdapter.notifyItemChanged(adapterPosition);
+//                            } else {
+//                                recentArriveList.set(adapterPosition, data);
+//                                recentArriveAdapter.notifyItemChanged(adapterPosition);
+//                            }
+
+
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
+
     public void additemtoCart2(SingleProductModel data, int child_pos, int parent_pos) {
+
+
+        AddCartDataModel addCartDataModel;
+
+        if(userModel!=null){
+            addCartDataModel = new AddCartDataModel();
+        }
+        else {
+            addCartDataModel=preferences.getCartData(activity);
+            if(addCartDataModel==null){
+                addCartDataModel=new AddCartDataModel();
+            }
+        }
+        List<AddCartProductItemModel> addCartProductItemModelList;
+        if(addCartDataModel!=null){
+            addCartProductItemModelList=addCartDataModel.getCart_products();
+        }
+        else {
+            addCartProductItemModelList  = new ArrayList<>();
+        }
+        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+        addCartDataModel.setCountry_code(country_coude);
         if (userModel != null) {
-
-            AddCartDataModel addCartDataModel = new AddCartDataModel();
-            List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
-            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
-            addCartDataModel.setCountry_code(country_coude);
             addCartDataModel.setUser_id(userModel.getData().getId());
-            double totalprice = 0;
-            if (data.getHave_offer().equals("yes")) {
-                if (data.getOffer_type().equals("value")) {
-                    totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
-                } else if (data.getOffer_type().equals("per")) {
-                    totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.
-                            getOffer_value()) / 100);
-                } else {
-                    totalprice = data.getProduct_default_price().getPrice();
-
-                }
+        }
+        double totalprice = 0;
+        if (data.getHave_offer().equals("yes")) {
+            if (data.getOffer_type().equals("value")) {
+                totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+            } else if (data.getOffer_type().equals("per")) {
+                totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.
+                        getOffer_value()) / 100);
             } else {
                 totalprice = data.getProduct_default_price().getPrice();
+
             }
-            addCartDataModel.setTotal_price(totalprice);
-            addCartProductItemModel.setAmount(1);
-            addCartProductItemModel.setHave_offer(data.getHave_offer());
-            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
-            addCartProductItemModel.setOffer_min(data.getOffer_min());
-            addCartProductItemModel.setOffer_type(data.getOffer_type());
-            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
-            addCartProductItemModel.setPrice(totalprice);
-            addCartProductItemModel.setOffer_value(data.getOffer_value());
-            addCartProductItemModel.setProduct_id(data.getId() + "");
-            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
-            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
-            addCartProductItemModelList.add(addCartProductItemModel);
-            addCartDataModel.setCart_products(addCartProductItemModelList);
-            addTocart2(addCartDataModel,data,child_pos,parent_pos);
         } else {
-            activity.navigateToSignInActivity();
+            totalprice = data.getProduct_default_price().getPrice();
+        }
+        addCartDataModel.setTotal_price(totalprice);
+        addCartProductItemModel.setAmount(1);
+        addCartProductItemModel.setHave_offer(data.getHave_offer());
+        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+        addCartProductItemModel.setOffer_min(data.getOffer_min());
+        addCartProductItemModel.setOffer_type(data.getOffer_type());
+        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+        addCartProductItemModel.setPrice(totalprice);
+        addCartProductItemModel.setOffer_value(data.getOffer_value());
+        addCartProductItemModel.setProduct_id(data.getId() + "");
+        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+        addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
+        addCartProductItemModel.setImage(data.getMain_image());
+        addCartProductItemModel.setRate(data.getRate());
+        addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
+        addCartProductItemModelList.add(addCartProductItemModel);
+        addCartDataModel.setCart_products(addCartProductItemModelList);
+        if (userModel != null) {
+            addTocart2(addCartDataModel, data, child_pos, parent_pos);
+        } else {
+
+             data.setLoading(false);
+            data.setAmount(data.getAmount() + 1);
+            preferences.create_update_cart(activity, addCartDataModel);
+            MainCategoryDataModel.Data data1 = getCategoryDataModelDataList.get(parent_pos);
+            List<MainCategoryDataModel.ProductData> product_list = data1.getProduct_list();
+            MainCategoryDataModel.ProductData productData = product_list.get(child_pos);
+            productData.setProduct_data(data);
+            product_list.set(child_pos, productData);
+            data1.setProduct_list(product_list);
+            activity.binding.setCartCount(addCartDataModel.getCart_products().size()+"");
+            mainCategoryAdapter.notifyItemChanged(parent_pos);
         }
 
 
     }
 
-    private void addTocart2(AddCartDataModel addCartDataModel, SingleProductModel model,int child_pos ,int parent_pos) {
+    private void addTocart2(AddCartDataModel addCartDataModel, SingleProductModel model, int child_pos, int parent_pos) {
 
         Api.getService(Tags.base_url)
                 .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
@@ -1008,15 +1160,14 @@ public class FragmentHome extends Fragment {
 
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                model.setAmount(model.getAmount()+1);
+                                model.setAmount(model.getAmount() + 1);
                                 MainCategoryDataModel.Data data = getCategoryDataModelDataList.get(parent_pos);
                                 List<MainCategoryDataModel.ProductData> product_list = data.getProduct_list();
                                 MainCategoryDataModel.ProductData productData = product_list.get(child_pos);
                                 productData.setProduct_data(model);
-                                product_list.set(child_pos,productData);
+                                product_list.set(child_pos, productData);
                                 data.setProduct_list(product_list);
                                 mainCategoryAdapter.notifyItemChanged(parent_pos);
-
 
 
                                 activity.binding.setCartCount(response.body().getData().getDetails().size() + "");
@@ -1028,7 +1179,7 @@ public class FragmentHome extends Fragment {
                             List<MainCategoryDataModel.ProductData> product_list = data.getProduct_list();
                             MainCategoryDataModel.ProductData productData = product_list.get(child_pos);
                             productData.setProduct_data(model);
-                            product_list.set(child_pos,productData);
+                            product_list.set(child_pos, productData);
                             data.setProduct_list(product_list);
                             mainCategoryAdapter.notifyItemChanged(parent_pos);
                             try {
@@ -1052,7 +1203,7 @@ public class FragmentHome extends Fragment {
                             List<MainCategoryDataModel.ProductData> product_list = data.getProduct_list();
                             MainCategoryDataModel.ProductData productData = product_list.get(child_pos);
                             productData.setProduct_data(model);
-                            product_list.set(child_pos,productData);
+                            product_list.set(child_pos, productData);
                             data.setProduct_list(product_list);
                             mainCategoryAdapter.notifyItemChanged(parent_pos);
                             if (t.getMessage() != null) {

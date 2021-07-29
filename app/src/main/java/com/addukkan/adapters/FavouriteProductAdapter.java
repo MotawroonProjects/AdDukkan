@@ -89,7 +89,7 @@ public class FavouriteProductAdapter extends RecyclerView.Adapter<RecyclerView.V
             public void onClick(View v) {
                 if(context instanceof  MyFavoriteActivity){
                     MyFavoriteActivity myFavoriteActivity=(MyFavoriteActivity)context;
-                    myFavoriteActivity.additemtoCart(list.get(holder.getLayoutPosition()),((MyHolder) holder).binding);
+                    myFavoriteActivity.additemtoCart(list.get(position), myHolder.getAdapterPosition(), 0);
                 }
             }
         });

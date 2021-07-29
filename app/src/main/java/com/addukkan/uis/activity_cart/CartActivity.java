@@ -18,12 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.addukkan.R;
 import com.addukkan.adapters.CartProductAdapter;
+import com.addukkan.adapters.CartProductOfflineAdapter;
 import com.addukkan.databinding.ActivityCartBinding;
 import com.addukkan.databinding.CartProductRowBinding;
 import com.addukkan.databinding.ProductRowBinding;
 import com.addukkan.interfaces.Listeners;
 import com.addukkan.language.Language;
 import com.addukkan.models.AddCartDataModel;
+import com.addukkan.models.AddCartProductItemModel;
 import com.addukkan.models.AddOrderModel;
 import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CartDataModel;
@@ -37,6 +39,7 @@ import com.addukkan.remote.Api;
 import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_location_detials.LocationDetialsActivity;
+import com.addukkan.uis.activity_login.LoginActivity;
 import com.addukkan.uis.activity_map.MapActivity;
 import com.addukkan.uis.activity_qr_code.QrCodeActivity;
 
@@ -61,12 +64,16 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private List<CartDataModel.Data.Detials> detialsList;
     private CartDataModel.Data data2;
     private CartProductAdapter cartProductAdapter;
+    private CartProductOfflineAdapter cartProductOfflineAdapter;
     private String country_coude;
     private AppLocalSettings settings;
     private String couponid = null;
     private String copoun;
     private String bill_code = "";
     private boolean isDataChanged = false;
+    private AddCartDataModel createOrderModel;
+    private List<AddCartProductItemModel> itemCartModelList;
+    private double total;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -93,6 +100,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
     private void initView() {
         detialsList = new ArrayList<>();
+        itemCartModelList = new ArrayList<>();
         Paper.init(this);
         lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
         binding.setBackListener(this);
@@ -101,6 +109,8 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
         preferences = Preferences.getInstance();
         settings = preferences.isLanguageSelected(this);
+        createOrderModel = preferences.getCartData(this);
+
         userModel = preferences.getUserData(this);
         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
@@ -110,8 +120,15 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
         manager = new GridLayoutManager(this, 1);
         binding.recView.setLayoutManager(manager);
-        cartProductAdapter = new CartProductAdapter(detialsList, this);
-        binding.recView.setAdapter(cartProductAdapter);
+        if (userModel != null) {
+            cartProductAdapter = new CartProductAdapter(detialsList, this);
+            binding.recView.setAdapter(cartProductAdapter);
+        } else {
+            cartProductOfflineAdapter = new CartProductOfflineAdapter(itemCartModelList, this);
+            binding.recView.setAdapter(cartProductOfflineAdapter);
+            binding.flcontain.setVisibility(View.GONE);
+
+        }
         binding.btcheck.setOnClickListener(v -> {
             String copun = binding.edtCopun.getText().toString();
             if (!copun.isEmpty()) {
@@ -121,16 +138,35 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                 binding.edtCopun.setError(getResources().getString(R.string.field_required));
             }
         });
-
-        if (bill_code.isEmpty()) {
-            getData();
+        if (userModel != null) {
+            if (bill_code.isEmpty()) {
+                getData();
+            } else {
+                scanOrder(bill_code);
+            }
         } else {
-            scanOrder(bill_code);
+            if (createOrderModel != null) {
+                itemCartModelList.addAll(createOrderModel.getCart_products());
+                cartProductOfflineAdapter.notifyDataSetChanged();
+                if (itemCartModelList.size() > 0) {
+                    binding.tvNoData.setVisibility(View.GONE);
+                    binding.fltotal.setVisibility(View.VISIBLE);
+                    binding.progBar.setVisibility(View.GONE);
+                } else {
+                    binding.tvNoData.setVisibility(View.VISIBLE);
+                    binding.fltotal.setVisibility(View.GONE);
+                    binding.progBar.setVisibility(View.GONE);
+                }
+                calculateTotal();
+            }
         }
-
         binding.btBuy.setOnClickListener(v -> {
-            Intent intent = new Intent(CartActivity.this, MapActivity.class);
-            startActivityForResult(intent, 100);
+            if (userModel != null) {
+                Intent intent = new Intent(CartActivity.this, MapActivity.class);
+                startActivityForResult(intent, 100);
+            } else {
+                navigateToSignInActivity();
+            }
         });
     }
 
@@ -161,6 +197,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
                                     binding.setModel(response.body().getData());
+                                    binding.setTotal(response.body().getData().getTotal_price()+"");
                                     data2 = response.body().getData();
                                 } else {
                                     binding.flcontain.setVisibility(View.GONE);
@@ -382,7 +419,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                 isDataChanged = true;
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
-                                    binding.tvtotal.setText(response.body().getData().total_price+"");
+                                    binding.tvtotal.setText(response.body().getData().total_price + "");
 
                                 }
                                 cartProductAdapter.notifyDataSetChanged();
@@ -447,7 +484,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                 isDataChanged = true;
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
-                                    binding.tvtotal.setText(response.body().getData().total_price+"");
+                                    binding.tvtotal.setText(response.body().getData().total_price + "");
                                 }
                                 cartProductAdapter.notifyDataSetChanged();
                                 if (detialsList.size() == 0) {
@@ -596,8 +633,67 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     @Override
     protected void onResume() {
         super.onResume();
-        getData();
+        if (userModel != null) {
+            getData();
+        } else {
+            createOrderModel = preferences.getCartData(this);
+            if (createOrderModel != null) {
+                itemCartModelList.addAll(createOrderModel.getCart_products());
+                cartProductOfflineAdapter.notifyDataSetChanged();
+                if (itemCartModelList.size() > 0) {
+                    binding.tvNoData.setVisibility(View.GONE);
+                    binding.fltotal.setVisibility(View.VISIBLE);
+                    binding.progBar.setVisibility(View.GONE);
+                } else {
+                    binding.tvNoData.setVisibility(View.VISIBLE);
+                    binding.fltotal.setVisibility(View.GONE);
+                    binding.progBar.setVisibility(View.GONE);
+                }
+                calculateTotal();
+
+            }
+        }
     }
 
 
+    public void increase_decrease(AddCartProductItemModel model, int adapterPosition) {
+        itemCartModelList.set(adapterPosition, model);
+        cartProductOfflineAdapter.notifyItemChanged(adapterPosition);
+
+        createOrderModel.setCart_products(itemCartModelList);
+        preferences.create_update_cart(this, createOrderModel);
+        calculateTotal();
+    }
+
+    private void calculateTotal() {
+        total = 0;
+        for (AddCartProductItemModel model : itemCartModelList) {
+
+            total += model.getAmount() * model.getPrice();
+
+        }
+        binding.setTotal(total + "");
+     //   binding.tvtotal.setText(String.valueOf(total));
+    }
+
+    public void deleteItem(AddCartProductItemModel model2, int adapterPosition) {
+        itemCartModelList.remove(adapterPosition);
+        cartProductOfflineAdapter.notifyItemRemoved(adapterPosition);
+        createOrderModel.setCart_products(itemCartModelList);
+        preferences.create_update_cart(this, createOrderModel);
+        isDataChanged = true;
+        calculateTotal();
+        if (itemCartModelList.size() == 0) {
+            binding.tvNoData.setVisibility(View.VISIBLE);
+            binding.fltotal.setVisibility(View.GONE);
+            binding.flcontain.setVisibility(View.GONE);
+            preferences.clearCart(this);
+        }
+    }
+
+    public void navigateToSignInActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finishAffinity();
+    }
 }

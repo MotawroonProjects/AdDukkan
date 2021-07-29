@@ -114,7 +114,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
 //                    if (total > 6 && (total - lastVisibleItem) == 2 && !isLoading) {
 //                        isLoading = true;
 //                        int page = current_page + 1;
-//                        productModelList.add(null);
+//                        favouriteDataList.add(null);
 //                        adapter.notifyDataSetChanged();
 //                        loadMore(page);
 //                    }
@@ -284,10 +284,25 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         }
     }
 
-    public void additemtoCart(FavouriteProductDataModel.Data data, FavouriteProductRowBinding binding) {
-        binding.progBar.setVisibility(View.VISIBLE);
-        AddCartDataModel addCartDataModel = new AddCartDataModel();
-        List<AddCartProductItemModel> addCartProductItemModelList = new ArrayList<>();
+    public void additemtoCart(FavouriteProductDataModel.Data data, int adapterPosition, int type) {
+             AddCartDataModel addCartDataModel;
+
+        if(userModel!=null){
+            addCartDataModel = new AddCartDataModel();
+        }
+        else {
+            addCartDataModel=preferences.getCartData(this);
+            if(addCartDataModel==null){
+                addCartDataModel=new AddCartDataModel();
+            }
+        }
+        List<AddCartProductItemModel> addCartProductItemModelList;
+        if(addCartDataModel!=null){
+             addCartProductItemModelList=addCartDataModel.getCart_products();
+         }
+         else {
+          addCartProductItemModelList  = new ArrayList<>();
+         }
         AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
         addCartDataModel.setCountry_code(country_coude);
         addCartDataModel.setUser_id(userModel.getData().getId());
@@ -316,14 +331,27 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         addCartProductItemModel.setProduct_id(data.getProduct_id() + "");
         addCartProductItemModel.setProduct_price_id(data.getProduct_data().getProduct_default_price().getId() + "");
         addCartProductItemModel.setVendor_id(data.getProduct_data().getVendor_id() + "");
+        addCartProductItemModel.setName(data.getProduct_data().getProduct_trans_fk().getTitle());
+        addCartProductItemModel.setImage(data.getProduct_data().getMain_image());
+        addCartProductItemModel.setRate(data.getProduct_data().getRate());
+        addCartProductItemModel.setDesc(data.getProduct_data().getProduct_trans_fk().getDescription());
         addCartProductItemModelList.add(addCartProductItemModel);
         addCartDataModel.setCart_products(addCartProductItemModelList);
-        addTocart(addCartDataModel, binding);
+        if (userModel != null) {
+            addTocart(addCartDataModel, data, adapterPosition, type);
+        } else {
+
+            data.getProduct_data().setLoading(false);
+            data.getProduct_data().setAmount(data.getProduct_data().getAmount() + 1);
+
+
+            preferences.create_update_cart(this, addCartDataModel);
+            favouriteDataList.set(adapterPosition, data);
+            favouriteProduct_adapter.notifyItemChanged(adapterPosition);
+        }
     }
 
-    private void addTocart(AddCartDataModel addCartDataModel, FavouriteProductRowBinding binding) {
-
-        binding.imgIncrease.setClickable(false);
+    private void addTocart(AddCartDataModel addCartDataModel, FavouriteProductDataModel.Data data, int adapterPosition, int type) {
 
         //   Log.e("sllsks", user_id + lang + country_coude);
         Api.getService(Tags.base_url)
@@ -331,16 +359,21 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
                 .enqueue(new Callback<CartDataModel>() {
                     @Override
                     public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
-                        binding.progBar.setVisibility(View.GONE);
-                        binding.imgIncrease.setClickable(true);
+                        data.getProduct_data().setLoading(false);
+
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
-                                binding.tvCounter.setText((Integer.parseInt(binding.tvCounter.getText().toString()) + 1) + "");
-                                MyFavoriteActivity.this.binding.setCartCount(response.body().getData().getDetails().size() + "");
+                                data.getProduct_data().setAmount(data.getProduct_data().getAmount() + 1);
+
+                                favouriteDataList.set(adapterPosition, data);
+                                favouriteProduct_adapter.notifyItemChanged(adapterPosition);
+                                binding.setCartCount(response.body().getData().getDetails().size() + "");
+                                //binding.set(response.body().getData().getDetails().size() + "");
 
                             }
                         } else {
-
+                            favouriteDataList.set(adapterPosition, data);
+                            favouriteProduct_adapter.notifyItemChanged(adapterPosition);
                             try {
                                 Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
                             } catch (IOException e) {
@@ -358,8 +391,9 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
                     @Override
                     public void onFailure(Call<CartDataModel> call, Throwable t) {
                         try {
-                            binding.imgIncrease.setClickable(true);
-                            binding.progBar.setVisibility(View.GONE);
+                            favouriteDataList.set(adapterPosition, data);
+                            favouriteProduct_adapter.notifyItemChanged(adapterPosition);
+
                             if (t.getMessage() != null) {
                                 Log.e("error_not_code", t.getMessage() + "__");
 

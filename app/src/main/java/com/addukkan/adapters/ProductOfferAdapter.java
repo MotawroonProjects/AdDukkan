@@ -92,20 +92,24 @@ public class ProductOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         });
         myHolder.binding.imgIncrease.setOnClickListener(v -> {
+            SingleProductModel model = list.get(myHolder.getAdapterPosition());
+            if (!model.isLoading()) {
+                model.setLoading(true);
+                notifyItemChanged(myHolder.getAdapterPosition());}
 
             if (fragment instanceof FragmentOffer) {
 
                 FragmentOffer fragment_main = (FragmentOffer) fragment;
 
-                fragment_main.additemtoCart(list.get(holder.getLayoutPosition()), ((MyHolder) holder).binding);
+                fragment_main.additemtoCart(model, myHolder.getAdapterPosition(), 0);
 
             } else if (context instanceof ProductFilterActivity) {
                 ProductFilterActivity productFilterActivity = (ProductFilterActivity) context;
-                productFilterActivity.additemtoCart(list.get(holder.getLayoutPosition()), ((MyHolder) holder).binding);
+                productFilterActivity.additemtoCart(model, myHolder.getAdapterPosition(), 0);
 
             } else if (context instanceof SearchActivity) {
                 SearchActivity productFilterActivity = (SearchActivity) context;
-                productFilterActivity.additemtoCart(list.get(holder.getLayoutPosition()), ((MyHolder) holder).binding);
+                productFilterActivity.additemtoCart(model, myHolder.getAdapterPosition(), 0);
 
             }
 

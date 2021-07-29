@@ -66,14 +66,14 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         });
 if(i==position){
-    ((MyHolder) holder).binding.rb.setChecked(true);
+    ((MyHolder) holder).binding.rb.setSelected(true);
     if(context instanceof CountryActivity){
         CountryActivity countryActivity=(CountryActivity)context;
         countryActivity.setcountry(list.get(position));
     }
 }
 else {
-    ((MyHolder) holder).binding.rb.setChecked(false);
+    ((MyHolder) holder).binding.rb.setSelected(false);
 }
 
     }

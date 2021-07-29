@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
+import com.addukkan.models.AddCartDataModel;
 import com.addukkan.models.AppLocalSettings;
+import com.addukkan.models.CartDataModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.tags.Tags;
 import com.google.gson.Gson;
@@ -132,7 +134,31 @@ public class Preferences {
         edit2.apply();
         create_update_session(context, Tags.session_logout);
     }
+    public void create_update_cart(Context context , AddCartDataModel model)
+    {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("cart", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String cart_data = gson.toJson(model);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("cart_data", cart_data);
+        editor.apply();
 
+    }
+
+    public AddCartDataModel getCartData(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("cart", Context.MODE_PRIVATE);
+        String json_data = sharedPreferences.getString("cart_data","");
+        Gson gson = new Gson();
+        AddCartDataModel model = gson.fromJson(json_data,AddCartDataModel.class);
+        return model;
+    }
+
+    public void clearCart(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("cart", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.clear();
+        edit.apply();
+    }
 
 
 }
