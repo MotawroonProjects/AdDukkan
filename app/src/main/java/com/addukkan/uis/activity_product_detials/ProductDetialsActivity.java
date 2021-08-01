@@ -605,7 +605,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+            if(addCartDataModel.getCart_products()!=null){
              addCartProductItemModelList=addCartDataModel.getCart_products();
          }
          else {
@@ -726,7 +726,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+            if(addCartDataModel.getCart_products()!=null){
              addCartProductItemModelList=addCartDataModel.getCart_products();
          }
          else {

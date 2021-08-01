@@ -438,7 +438,7 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+            if(addCartDataModel.getCart_products()!=null){
              addCartProductItemModelList=addCartDataModel.getCart_products();
          }
          else {
@@ -550,7 +550,7 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+        if(addCartDataModel.getCart_products()!=null){
              addCartProductItemModelList=addCartDataModel.getCart_products();
          }
          else {

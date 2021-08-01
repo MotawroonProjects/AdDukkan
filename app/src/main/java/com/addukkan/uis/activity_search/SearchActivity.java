@@ -457,7 +457,7 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+            if(addCartDataModel.getCart_products()!=null){
              addCartProductItemModelList=addCartDataModel.getCart_products();
          }
          else {
@@ -569,7 +569,7 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+        if(addCartDataModel.getCart_products()!=null){
              addCartProductItemModelList=addCartDataModel.getCart_products();
          }
          else {
