@@ -1208,7 +1208,8 @@ public class FragmentHome extends Fragment {
         }
         if (userModel != null) {
             addTocart2(addCartDataModel, data, child_pos, parent_pos);
-        } else {
+        }
+        else {
 
           //  data.setLoading(false);
             data.setAmount(data.getAmount() + 1);
