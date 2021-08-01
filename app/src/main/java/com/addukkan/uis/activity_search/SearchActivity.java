@@ -445,24 +445,22 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
     public void additemtoCart(SingleProductModel data, ListProductRowBinding binding) {
         if (userModel != null) {
             binding.progBar.setVisibility(View.VISIBLE);
-                 AddCartDataModel addCartDataModel;
+            AddCartDataModel addCartDataModel;
 
-        if(userModel!=null){
-            addCartDataModel = new AddCartDataModel();
-        }
-        else {
-            addCartDataModel=preferences.getCartData(this);
-            if(addCartDataModel==null){
-                addCartDataModel=new AddCartDataModel();
+            if (userModel != null) {
+                addCartDataModel = new AddCartDataModel();
+            } else {
+                addCartDataModel = preferences.getCartData(this);
+                if (addCartDataModel == null) {
+                    addCartDataModel = new AddCartDataModel();
+                }
             }
-        }
-        List<AddCartProductItemModel> addCartProductItemModelList;
-            if(addCartDataModel.getCart_products()!=null){
-             addCartProductItemModelList=addCartDataModel.getCart_products();
-         }
-         else {
-          addCartProductItemModelList  = new ArrayList<>();
-         }
+            List<AddCartProductItemModel> addCartProductItemModelList;
+            if (addCartDataModel.getCart_products() != null) {
+                addCartProductItemModelList = addCartDataModel.getCart_products();
+            } else {
+                addCartProductItemModelList = new ArrayList<>();
+            }
             AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
             addCartDataModel.setCountry_code(country_coude);
             if (userModel != null) {
@@ -557,24 +555,22 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
     }
 
     public void additemtoCart(SingleProductModel data, int adapterPosition, int type) {
-             AddCartDataModel addCartDataModel;
+        AddCartDataModel addCartDataModel;
 
-        if(userModel!=null){
+        if (userModel != null) {
             addCartDataModel = new AddCartDataModel();
-        }
-        else {
-            addCartDataModel=preferences.getCartData(this);
-            if(addCartDataModel==null){
-                addCartDataModel=new AddCartDataModel();
+        } else {
+            addCartDataModel = preferences.getCartData(this);
+            if (addCartDataModel == null) {
+                addCartDataModel = new AddCartDataModel();
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel.getCart_products()!=null){
-             addCartProductItemModelList=addCartDataModel.getCart_products();
-         }
-         else {
-          addCartProductItemModelList  = new ArrayList<>();
-         }
+        if (addCartDataModel.getCart_products() != null) {
+            addCartProductItemModelList = addCartDataModel.getCart_products();
+        } else {
+            addCartProductItemModelList = new ArrayList<>();
+        }
         AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
         addCartDataModel.setCountry_code(country_coude);
         if (userModel != null) {
