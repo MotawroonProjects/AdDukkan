@@ -114,6 +114,7 @@ public class FragmentHome extends Fragment {
         activity = (HomeActivity) getActivity();
         Paper.init(activity);
         lang = Paper.book().read("lang", "ar");
+        binding.setLang(lang);
         preferences = Preferences.getInstance();
         settings = preferences.isLanguageSelected(activity);
 
@@ -857,7 +858,7 @@ public class FragmentHome extends Fragment {
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+        if(addCartDataModel.getCart_products()!=null){
              addCartProductItemModelList=addCartDataModel.getCart_products();
          }
          else {
@@ -1086,7 +1087,7 @@ public class FragmentHome extends Fragment {
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+        if(addCartDataModel.getCart_products()!=null){
             addCartProductItemModelList=addCartDataModel.getCart_products();
         }
         else {

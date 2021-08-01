@@ -198,6 +198,7 @@
                         />
                 </FrameLayout>
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -254,7 +255,7 @@
                         android:clickable="false"
                         android:longClickable="false"
                         android:padding="3dp"
-                        android:rotation='@{lang.equals("en")?0:180}'
+                        android:rotation='@{lang.equals("en")?180:0}'
                         android:src="@drawable/ic_left_arrow"
                         app:tint="@color/colorAccent" />
                 </LinearLayout>

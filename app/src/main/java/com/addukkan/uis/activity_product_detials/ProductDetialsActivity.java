@@ -339,24 +339,39 @@ public class ProductDetialsActivity extends AppCompatActivity {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
                                 if (response.body().getData().getAttributes().size() > 0) {
-                                    childList.clear();
-                                    if (type.equals("child")) {
-                                        childList.addAll(data);
+                                    if (data.size()>0){
+                                        childList.clear();
+                                        if (type.equals("child")) {
+                                            childList.addAll(data);
+                                        }
+
+                                        checkDefaultValue(response.body().getData().getAttributes());
+
+                                        childAdapter.notifyDataSetChanged();
+
                                     }
 
-                                    checkDefaultValue(response.body().getData().getAttributes());
                                     //childList.addAll(response.body().getData().getAttributes());
                                 } else {
-                                    childList.clear();
-                                    if (type.equals("child")) {
-                                        childList.addAll(data);
+
+                                    if (data.size()>0){
+                                        childList.clear();
+                                        if (type.equals("child")) {
+                                            childList.addAll(data);
+                                        }
+                                        Log.e("vvvvvvvvvv", childList.size()+"_______");
+                                        if (childList.size()>0){
+                                            ProductDataModel.Attribute attribute = childList.get(childList.size() - 1);
+
+                                            updatePrice(attribute);
+                                        }
+
+                                        childAdapter.notifyDataSetChanged();
+
                                     }
 
-                                    ProductDataModel.Attribute attribute = childList.get(childList.size() - 1);
 
-                                    updatePrice(attribute);
                                 }
-                                childAdapter.notifyDataSetChanged();
 
 
                             }

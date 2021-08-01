@@ -345,7 +345,7 @@ public class FragmentOffer extends Fragment {
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel!=null){
+        if(addCartDataModel.getCart_products()!=null){
             addCartProductItemModelList=addCartDataModel.getCart_products();
         }
         else {
