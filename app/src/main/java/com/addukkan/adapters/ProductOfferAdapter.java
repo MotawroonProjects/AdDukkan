@@ -15,6 +15,7 @@ import com.addukkan.R;
 import com.addukkan.databinding.OfferProductRowBinding;
 import com.addukkan.databinding.ProductRowBinding;
 import com.addukkan.models.SingleProductModel;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_home.fragments.FragmentHome;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
@@ -94,7 +95,8 @@ public class ProductOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         myHolder.binding.imgIncrease.setOnClickListener(v -> {
             SingleProductModel model = list.get(myHolder.getAdapterPosition());
             if (!model.isLoading()) {
-                model.setLoading(true);
+                if(Preferences.getInstance().getUserData(context)!=null){
+                    model.setLoading(true);}
                 notifyItemChanged(myHolder.getAdapterPosition());}
 
             if (fragment instanceof FragmentOffer) {

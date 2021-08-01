@@ -106,7 +106,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         binding.setBackListener(this);
         binding.setLang(lang);
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
-
+        binding.progBar.setVisibility(View.GONE);
         preferences = Preferences.getInstance();
         settings = preferences.isLanguageSelected(this);
         createOrderModel = preferences.getCartData(this);
@@ -146,8 +146,8 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             }
         } else {
             if (createOrderModel != null) {
-                itemCartModelList.addAll(createOrderModel.getCart_products());
-                cartProductOfflineAdapter.notifyDataSetChanged();
+//                itemCartModelList.addAll(createOrderModel.getCart_products());
+//                cartProductOfflineAdapter.notifyDataSetChanged();
                 if (itemCartModelList.size() > 0) {
                     binding.tvNoData.setVisibility(View.GONE);
                     binding.fltotal.setVisibility(View.VISIBLE);
@@ -197,7 +197,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     detialsList.addAll(response.body().getData().getDetails());
                                     binding.setModel(response.body().getData());
-                                    binding.setTotal(response.body().getData().getTotal_price()+"");
+                                    binding.setTotal(response.body().getData().getTotal_price() + "");
                                     data2 = response.body().getData();
                                 } else {
                                     binding.flcontain.setVisibility(View.GONE);
@@ -638,6 +638,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         } else {
             createOrderModel = preferences.getCartData(this);
             if (createOrderModel != null) {
+                itemCartModelList.clear();
                 itemCartModelList.addAll(createOrderModel.getCart_products());
                 cartProductOfflineAdapter.notifyDataSetChanged();
                 if (itemCartModelList.size() > 0) {
@@ -673,7 +674,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
         }
         binding.setTotal(total + "");
-     //   binding.tvtotal.setText(String.valueOf(total));
+        //   binding.tvtotal.setText(String.valueOf(total));
     }
 
     public void deleteItem(AddCartProductItemModel model2, int adapterPosition) {

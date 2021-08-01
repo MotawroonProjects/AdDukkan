@@ -123,7 +123,7 @@ public class FragmentHome extends Fragment {
         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
             if (preferences.getCartData(activity) != null) {
-                AddCartDataModel addCartDataModel=preferences.getCartData(activity);
+                AddCartDataModel addCartDataModel = preferences.getCartData(activity);
                 addCartDataModel.setUser_id(userModel.getData().getId());
                 addTocart(addCartDataModel);
             }
@@ -848,22 +848,20 @@ public class FragmentHome extends Fragment {
     public void additemtoCart(SingleProductModel data, int adapterPosition, int type) {
         AddCartDataModel addCartDataModel;
 
-        if(userModel!=null){
+        if (userModel != null) {
             addCartDataModel = new AddCartDataModel();
-        }
-        else {
-            addCartDataModel=preferences.getCartData(activity);
-            if(addCartDataModel==null){
-                addCartDataModel=new AddCartDataModel();
+        } else {
+            addCartDataModel = preferences.getCartData(activity);
+            if (addCartDataModel == null) {
+                addCartDataModel = new AddCartDataModel();
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel.getCart_products()!=null){
-             addCartProductItemModelList=addCartDataModel.getCart_products();
-         }
-         else {
-          addCartProductItemModelList  = new ArrayList<>();
-         }
+        if (addCartDataModel.getCart_products() != null) {
+            addCartProductItemModelList = addCartDataModel.getCart_products();
+        } else {
+            addCartProductItemModelList = new ArrayList<>();
+        }
 
         AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
         addCartDataModel.setCountry_code(country_coude);
@@ -883,30 +881,67 @@ public class FragmentHome extends Fragment {
         } else {
             totalprice = data.getProduct_default_price().getPrice();
         }
-        addCartDataModel.setTotal_price(totalprice);
-        addCartProductItemModel.setAmount(1);
-        addCartProductItemModel.setHave_offer(data.getHave_offer());
-        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
-        addCartProductItemModel.setOffer_min(data.getOffer_min());
-        addCartProductItemModel.setOffer_type(data.getOffer_type());
-        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
-        addCartProductItemModel.setPrice(totalprice);
-        addCartProductItemModel.setProduct_id(data.getId() + "");
-        addCartProductItemModel.setOffer_value(data.getOffer_value());
-        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
-        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
-        addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
-        addCartProductItemModel.setImage(data.getMain_image());
-        addCartProductItemModel.setRate(data.getRate());
-        addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
-        addCartProductItemModelList.add(addCartProductItemModel);
-        addCartDataModel.setCart_products(addCartProductItemModelList);
+        if (userModel != null) {
+            addCartDataModel.setTotal_price(totalprice);
+            addCartProductItemModel.setAmount(1);
+            addCartProductItemModel.setHave_offer(data.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(data.getOffer_min());
+            addCartProductItemModel.setOffer_type(data.getOffer_type());
+            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+            addCartProductItemModel.setPrice(totalprice);
+            addCartProductItemModel.setProduct_id(data.getId() + "");
+            addCartProductItemModel.setOffer_value(data.getOffer_value());
+            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+            addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
+            addCartProductItemModel.setImage(data.getMain_image());
+            addCartProductItemModel.setRate(data.getRate());
+            addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+        } else {
+            int pos = -1;
+            for (int i = 0; i < addCartProductItemModelList.size(); i++) {
+                if (addCartProductItemModelList.get(i).getProduct_id().equals(data.getId() + "")) {
+                    addCartProductItemModel = addCartProductItemModelList.get(i);
+                    pos = i;
+                    break;
+                }
+            }
+            if (pos > -1) {
+                addCartProductItemModel.setAmount(addCartProductItemModel.getAmount() + 1);
+                addCartProductItemModelList.set(pos, addCartProductItemModel);
+                addCartDataModel.setCart_products(addCartProductItemModelList);
+
+            } else {
+                addCartDataModel.setTotal_price(totalprice);
+                addCartProductItemModel.setAmount(1);
+                addCartProductItemModel.setHave_offer(data.getHave_offer());
+                addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+                addCartProductItemModel.setOffer_min(data.getOffer_min());
+                addCartProductItemModel.setOffer_type(data.getOffer_type());
+                addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+                addCartProductItemModel.setPrice(totalprice);
+                addCartProductItemModel.setProduct_id(data.getId() + "");
+                addCartProductItemModel.setOffer_value(data.getOffer_value());
+                addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+                addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+                addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
+                addCartProductItemModel.setImage(data.getMain_image());
+                addCartProductItemModel.setRate(data.getRate());
+                addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
+                addCartProductItemModelList.add(addCartProductItemModel);
+                addCartDataModel.setCart_products(addCartProductItemModelList);
+            }
+
+        }
         if (userModel != null) {
             addTocart(addCartDataModel, data, adapterPosition, type);
         } else {
-            data.setLoading(false);
+         //   data.setLoading(false);
             data.setAmount(data.getAmount() + 1);
-            activity.binding.setCartCount(addCartDataModel.getCart_products().size()+ "");
+            activity.binding.setCartCount(addCartDataModel.getCart_products().size() + "");
             preferences.create_update_cart(activity, addCartDataModel);
             if (type == 0) {
                 mostSellerList.set(adapterPosition, data);
@@ -914,7 +949,8 @@ public class FragmentHome extends Fragment {
             } else {
                 recentArriveList.set(adapterPosition, data);
                 recentArriveAdapter.notifyItemChanged(adapterPosition);
-            }}
+            }
+        }
 
     }
 
@@ -1077,21 +1113,19 @@ public class FragmentHome extends Fragment {
 
         AddCartDataModel addCartDataModel;
 
-        if(userModel!=null){
+        if (userModel != null) {
             addCartDataModel = new AddCartDataModel();
-        }
-        else {
-            addCartDataModel=preferences.getCartData(activity);
-            if(addCartDataModel==null){
-                addCartDataModel=new AddCartDataModel();
+        } else {
+            addCartDataModel = preferences.getCartData(activity);
+            if (addCartDataModel == null) {
+                addCartDataModel = new AddCartDataModel();
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel.getCart_products()!=null){
-            addCartProductItemModelList=addCartDataModel.getCart_products();
-        }
-        else {
-            addCartProductItemModelList  = new ArrayList<>();
+        if (addCartDataModel.getCart_products() != null) {
+            addCartProductItemModelList = addCartDataModel.getCart_products();
+        } else {
+            addCartProductItemModelList = new ArrayList<>();
         }
         AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
         addCartDataModel.setCountry_code(country_coude);
@@ -1112,29 +1146,71 @@ public class FragmentHome extends Fragment {
         } else {
             totalprice = data.getProduct_default_price().getPrice();
         }
-        addCartDataModel.setTotal_price(totalprice);
-        addCartProductItemModel.setAmount(1);
-        addCartProductItemModel.setHave_offer(data.getHave_offer());
-        addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
-        addCartProductItemModel.setOffer_min(data.getOffer_min());
-        addCartProductItemModel.setOffer_type(data.getOffer_type());
-        addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
-        addCartProductItemModel.setPrice(totalprice);
-        addCartProductItemModel.setOffer_value(data.getOffer_value());
-        addCartProductItemModel.setProduct_id(data.getId() + "");
-        addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
-        addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
-        addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
-        addCartProductItemModel.setImage(data.getMain_image());
-        addCartProductItemModel.setRate(data.getRate());
-        addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
-        addCartProductItemModelList.add(addCartProductItemModel);
-        addCartDataModel.setCart_products(addCartProductItemModelList);
+        if (userModel != null) {
+            addCartDataModel.setTotal_price(totalprice);
+            addCartProductItemModel.setAmount(1);
+            addCartProductItemModel.setHave_offer(data.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(data.getOffer_min());
+            addCartProductItemModel.setOffer_type(data.getOffer_type());
+            addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+            addCartProductItemModel.setPrice(totalprice);
+            addCartProductItemModel.setProduct_id(data.getId() + "");
+            addCartProductItemModel.setOffer_value(data.getOffer_value());
+            addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+            addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+            addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
+            addCartProductItemModel.setImage(data.getMain_image());
+            addCartProductItemModel.setRate(data.getRate());
+            addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+        }
+        else {
+            int pos = -1;
+            for (int i = 0; i < addCartProductItemModelList.size(); i++) {
+                if (addCartProductItemModelList.get(i).getProduct_id().equals(data.getId() + "")) {
+                    addCartProductItemModel = addCartProductItemModelList.get(i);
+                    pos = i;
+                    break;
+                }
+            }
+           // Log.e("psosoo",pos+"");
+            if (pos > -1) {
+                addCartProductItemModel.setAmount(addCartProductItemModel.getAmount() + 1);
+                addCartProductItemModelList.set(pos, addCartProductItemModel);
+                addCartDataModel.setCart_products(addCartProductItemModelList);
+                //Log.e("dlld",addCartProductItemModelList.size()+"");
+            }
+            else {
+                Log.e("psosoo",pos+"");
+
+                addCartDataModel.setTotal_price(totalprice);
+                addCartProductItemModel.setAmount(1);
+                addCartProductItemModel.setHave_offer(data.getHave_offer());
+                addCartProductItemModel.setOffer_bonus(data.getOffer_bonus());
+                addCartProductItemModel.setOffer_min(data.getOffer_min());
+                addCartProductItemModel.setOffer_type(data.getOffer_type());
+                addCartProductItemModel.setOld_price(data.getProduct_default_price().getPrice());
+                addCartProductItemModel.setPrice(totalprice);
+                addCartProductItemModel.setProduct_id(data.getId() + "");
+                addCartProductItemModel.setOffer_value(data.getOffer_value());
+                addCartProductItemModel.setProduct_price_id(data.getProduct_default_price().getId() + "");
+                addCartProductItemModel.setVendor_id(data.getVendor_id() + "");
+                addCartProductItemModel.setName(data.getProduct_trans_fk().getTitle());
+                addCartProductItemModel.setImage(data.getMain_image());
+                addCartProductItemModel.setRate(data.getRate());
+                addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
+                addCartProductItemModelList.add(addCartProductItemModel);
+                addCartDataModel.setCart_products(addCartProductItemModelList);
+            }
+
+        }
         if (userModel != null) {
             addTocart2(addCartDataModel, data, child_pos, parent_pos);
         } else {
 
-             data.setLoading(false);
+          //  data.setLoading(false);
             data.setAmount(data.getAmount() + 1);
             preferences.create_update_cart(activity, addCartDataModel);
             MainCategoryDataModel.Data data1 = getCategoryDataModelDataList.get(parent_pos);
@@ -1143,7 +1219,7 @@ public class FragmentHome extends Fragment {
             productData.setProduct_data(data);
             product_list.set(child_pos, productData);
             data1.setProduct_list(product_list);
-            activity.binding.setCartCount(addCartDataModel.getCart_products().size()+"");
+            activity.binding.setCartCount(addCartDataModel.getCart_products().size() + "");
             mainCategoryAdapter.notifyItemChanged(parent_pos);
         }
 

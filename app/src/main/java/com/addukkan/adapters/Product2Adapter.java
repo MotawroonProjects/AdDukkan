@@ -104,7 +104,8 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (fragment instanceof FragmentHome) {
 
                 if (!model.isLoading()) {
-                    model.setLoading(true);
+                    if(preferences.getUserData(context)!=null){
+                    model.setLoading(true);}
                     notifyItemChanged(myHolder.getAdapterPosition());
                     FragmentHome fragmentHome = (FragmentHome) fragment;
                     fragmentHome.additemtoCart(model, myHolder.getAdapterPosition(), i);

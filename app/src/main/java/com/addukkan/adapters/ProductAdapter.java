@@ -78,9 +78,9 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             boolean checked = myHolder.binding.checkbox.isChecked();
 
             if (fragment instanceof FragmentHome) {
-                if (userModel==null){
+                if (userModel == null) {
                     myHolder.binding.checkbox.setChecked(!checked);
-                }else {
+                } else {
                     FragmentHome fragment_main = (FragmentHome) fragment;
                     fragment_main.like_dislike(model2, myHolder.getAdapterPosition(), 2);
 
@@ -109,7 +109,9 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (fragment instanceof FragmentHome) {
 
                 if (!model2.isLoading()) {
-                    model2.setLoading(true);
+                    if (preferences.getUserData(context) != null) {
+                        model2.setLoading(true);
+                    }
                     notifyItemChanged(myHolder.getAdapterPosition());
                     FragmentHome fragmentHome = (FragmentHome) fragment;
                     fragmentHome.additemtoCart2(model2, myHolder.getAdapterPosition(), parent_pos);
