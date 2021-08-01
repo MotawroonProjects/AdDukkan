@@ -591,7 +591,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
     }
 
     private void addItemToCart() {
-        if (userModel != null) {
+
 
                  AddCartDataModel addCartDataModel;
 
@@ -684,7 +684,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
             }
 
 
-        }
+
     }
 
 
