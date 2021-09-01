@@ -82,7 +82,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    image="@{model.main_image}"
+                    image2="@{model.main_image}"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:layout_gravity="center"
