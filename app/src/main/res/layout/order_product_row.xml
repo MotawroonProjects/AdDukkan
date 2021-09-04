@@ -2,6 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
+            name="currency"
+            type="String" />
+        <variable
             name="model"
             type="com.addukkan.models.CartDataModel.Data.Detials" />
     </data>
@@ -43,7 +46,7 @@
             android:textSize="14sp"
             android:gravity="center"
             android:layout_gravity="center_vertical"
-            android:text="@{String.valueOf(model.price)}"
+            android:text="@{String.valueOf(model.price)+currency}"
 
             />
 

@@ -179,6 +179,7 @@ public class CountryActivity extends AppCompatActivity {
 
     public void setcountry(CountryModel countryModel) {
         settings.setCountry_code(countryModel.getCode());
+        settings.setCurrency(countryModel.getCountry_setting_trans_fk().getCurrency());
         preferences.setIsLanguageSelected(this,settings);
         finish();
     }

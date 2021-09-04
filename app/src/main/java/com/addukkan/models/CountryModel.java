@@ -68,11 +68,12 @@ public class CountryModel implements Serializable {
         return country_setting_trans_fk;
     }
 
-    public static class CountrySettingTransFk implements Serializable{
+    public static class CountrySettingTransFk implements Serializable {
         private int id;
         private int country_setting_id;
         private String title;
         private String lang;
+        private String currency;
 
         public int getId() {
             return id;
@@ -104,6 +105,10 @@ public class CountryModel implements Serializable {
 
         public void setLang(String lang) {
             this.lang = lang;
+        }
+
+        public String getCurrency() {
+            return currency;
         }
     }
 

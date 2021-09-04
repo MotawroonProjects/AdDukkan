@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.addukkan.R;
 import com.addukkan.databinding.MainCategoryRowBinding;
 import com.addukkan.databinding.ProductRowBinding;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.MainCategoryDataModel;
 import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.SingleProductModel;
@@ -33,14 +34,24 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int parent_pos;
     private UserModel userModel;
     private Preferences preferences;
-
+    private String currecny;
+    private AppLocalSettings settings;
     public ProductAdapter(List<MainCategoryDataModel.ProductData> list, Context context, Fragment fragment, int parent_pos) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.fragment = fragment;
         this.parent_pos = parent_pos;
-        preferences = Preferences.getInstance();
+        preferences=Preferences.getInstance();
+
+        settings = preferences.isLanguageSelected(context);
+
+        userModel = preferences.getUserData(context);
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
         //  this.fragment_main=fragment_main;
 
 
@@ -64,6 +75,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         SingleProductModel model = list.get(position).getProduct_data();
 
         myHolder.binding.setModel(model);
+        myHolder.binding.setCurrency(currecny);
+
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (model.getFavourite() != null) {
             myHolder.binding.checkbox.setChecked(true);

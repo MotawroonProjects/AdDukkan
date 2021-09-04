@@ -1,5 +1,6 @@
 package com.addukkan.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.util.Log;
@@ -15,9 +16,12 @@ import com.addukkan.R;
 import com.addukkan.databinding.FavouriteProductRowBinding;
 import com.addukkan.databinding.OfferProductRowBinding;
 import com.addukkan.databinding.ProductRowBinding;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.FavouriteProductDataModel;
 import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.SingleProductModel;
+import com.addukkan.models.UserModel;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
 
@@ -28,13 +32,26 @@ public class FavouriteProductAdapter extends RecyclerView.Adapter<RecyclerView.V
     private List<FavouriteProductDataModel.Data> list;
     private Context context;
     private LayoutInflater inflater;
+    private Preferences preferences;
+    private String currecny;
+    private AppLocalSettings settings;
+    private UserModel userModel;
     //private Fragment_Main fragment_main;
     public FavouriteProductAdapter(List<FavouriteProductDataModel.Data> list, Context context) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
-      //  this.fragment_main=fragment_main;
+        preferences=Preferences.getInstance();
 
+        //  this.fragment_main=fragment_main;
+        settings = preferences.isLanguageSelected(context);
+
+        userModel = preferences.getUserData(context);
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
 
     }
 
@@ -50,9 +67,10 @@ public class FavouriteProductAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         MyHolder myHolder = (MyHolder) holder;
+        myHolder.binding.setCurrency(currecny);
         myHolder.binding.setModel(list.get(position).getProduct_data());
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             ((MyHolder) holder).binding.checkbox.setChecked(true);

@@ -39,6 +39,7 @@ public class UserModel extends ResponseModel implements Serializable {
         private int country_setting_id;
         private String title;
         private String lang;
+        public String currency;
 
         public int getId() {
             return id;
@@ -54,6 +55,10 @@ public class UserModel extends ResponseModel implements Serializable {
 
         public String getLang() {
             return lang;
+        }
+
+        public String getCurrency() {
+            return currency;
         }
     }
 

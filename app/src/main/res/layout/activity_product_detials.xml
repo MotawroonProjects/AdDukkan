@@ -6,7 +6,9 @@
     >
 
     <data>
-
+        <variable
+            name="currency"
+            type="String" />
         <variable
             name="lang"
             type="String" />
@@ -232,7 +234,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center"
                                 android:maxLines="2"
-                                android:text='@{model.have_offer.equals("yes")&amp;&amp;!model.offer_type.equals("amount")?(model.offer_type.equals("value")?(model.product_default_price.price-model.offer_value)+"":(model.product_default_price.price-(model.product_default_price.price*model.offer_value/100))+""):model.product_default_price.price+""}'
+                                android:text='@{(model.have_offer.equals("yes")&amp;&amp;!model.offer_type.equals("amount")?(model.offer_type.equals("value")?(model.product_default_price.price-model.offer_value)+"":(model.product_default_price.price-(model.product_default_price.price*model.offer_value/100))+""):model.product_default_price.price+"")+currency}'
                                 android:textColor="@color/black"
                                 android:textSize="13sp" />
 
@@ -245,7 +247,7 @@
                                 android:ellipsize="end"
                                 android:maxLines="2"
                                 android:singleLine="true"
-                                android:text='@{model.product_default_price.price+""}'
+                                android:text='@{model.product_default_price.price+currency}'
                                 android:textColor="@color/gray6"
                                 android:textSize="13sp"
                                 android:visibility='@{model.have_offer.equals("yes")?model.offer_type.equals("amount")?View.INVISIBLE:View.VISIBLE:View.INVISIBLE,default=invisible}'

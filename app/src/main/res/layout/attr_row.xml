@@ -9,7 +9,9 @@
         <variable
             name="title"
             type="String" />
-
+        <variable
+            name="currency"
+            type="String" />
 
     </data>
 <LinearLayout

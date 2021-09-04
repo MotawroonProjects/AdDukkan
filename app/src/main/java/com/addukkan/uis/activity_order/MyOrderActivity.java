@@ -60,8 +60,8 @@ public class MyOrderActivity extends AppCompatActivity implements Listeners.Back
 
     private List<SingleOrderModel.Data> detialsList;
     private MyOrderAdapter myOrderAdapter;
-    private String country_coude;
-    private AppLocalSettings settings;
+  private String country_coude;
+    private String currecny;    private AppLocalSettings settings;
     private String couponid = null;
     private String copoun;
 
@@ -90,10 +90,12 @@ public class MyOrderActivity extends AppCompatActivity implements Listeners.Back
         preferences = Preferences.getInstance();
         settings = preferences.isLanguageSelected(this);
         userModel = preferences.getUserData(this);
-        if (userModel != null) {
+         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
+            currecny=settings.getCurrency();
         }
 
         manager = new GridLayoutManager(this, 1);

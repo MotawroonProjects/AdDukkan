@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.addukkan.R;
 import com.addukkan.databinding.AttrRowBinding;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.SingleProductModel;
+import com.addukkan.models.UserModel;
+import com.addukkan.preferences.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +27,25 @@ public class ProductAttrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private LayoutInflater inflater;
     private Context context;
     private List<ProductDataModel.ParentAttributes> list;
-
+    private UserModel userModel;
+    private Preferences preferences;
+    private String currecny;
+    private AppLocalSettings settings;
     public ProductAttrAdapter(Context context, List<ProductDataModel.ParentAttributes> list) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.list = list;
+        preferences=Preferences.getInstance();
+
+        settings = preferences.isLanguageSelected(context);
+
+        userModel = preferences.getUserData(context);
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
+
     }
 
 
@@ -47,6 +64,7 @@ public class ProductAttrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         MyHolder myHolder = (MyHolder) holder;
         ProductDataModel.ParentAttributes parentAttributes = list.get(position);
+        myHolder.binding.setCurrency(currecny);
 
         myHolder.binding.setTitle(parentAttributes.getAttribute_trans_fk().getTitle());
         if (list.get(position).getAttributes()!=null){

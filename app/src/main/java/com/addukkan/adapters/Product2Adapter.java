@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.addukkan.R;
 import com.addukkan.databinding.ProductRowBinding;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.ProductDataModel;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.UserModel;
@@ -31,6 +32,8 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int i;
     private UserModel userModel;
     private Preferences preferences;
+    private String currecny;
+    private AppLocalSettings settings;
 
     //private Fragment_Main fragment_main;
     public Product2Adapter(List<SingleProductModel> list, Context context, Fragment fragment, int i) {
@@ -39,7 +42,16 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         inflater = LayoutInflater.from(context);
         this.fragment = fragment;
         this.i = i;
-        preferences = Preferences.getInstance();
+        preferences=Preferences.getInstance();
+
+        settings = preferences.isLanguageSelected(context);
+
+        userModel = preferences.getUserData(context);
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
 
         //  this.fragment_main=fragment_main;
 
@@ -61,6 +73,8 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
+        myHolder.binding.setCurrency(currecny);
+
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (list.get(position).getFavourite() != null) {

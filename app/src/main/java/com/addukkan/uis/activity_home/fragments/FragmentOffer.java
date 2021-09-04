@@ -61,8 +61,8 @@ public class FragmentOffer extends Fragment {
     private List<SingleProductModel> productModelList;
     private ProductOfferAdapter productOfferAdapter;
     private String lang;
-    private String country_coude;
-
+  private String country_coude;
+    private String currecny;
     public static FragmentOffer newInstance() {
         return new FragmentOffer();
     }
@@ -83,10 +83,12 @@ public class FragmentOffer extends Fragment {
         preferences = Preferences.getInstance();
         settings = preferences.isLanguageSelected(activity);
         userModel = preferences.getUserData(activity);
-        if (userModel != null) {
+         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
+            currecny=settings.getCurrency();
         }
         binding.progBarSlider.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
@@ -105,10 +107,12 @@ public class FragmentOffer extends Fragment {
 
     private void get_slider() {
         String country_coude;
-        if (userModel != null) {
+         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
+            currecny=settings.getCurrency();
         }
         binding.progBarSlider.setVisibility(View.VISIBLE);
         binding.pager.setVisibility(View.GONE);

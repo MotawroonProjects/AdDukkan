@@ -63,7 +63,8 @@ public class ProductDetialsActivity extends AppCompatActivity {
     private List<ProductDataModel.Attribute> childList;
     private String id;
     private AppLocalSettings settings;
-    private String country_coude;
+  private String country_coude;
+    private String currecny;
     private List<ProductDataModel.Attribute> data = new ArrayList<>();
     private SingleProductModel singleProductModel;
     private double price = 0.0, oldPrice = 0.0;
@@ -101,11 +102,14 @@ public class ProductDetialsActivity extends AppCompatActivity {
         settings = preferences.isLanguageSelected(this);
 
 
-        if (userModel != null) {
+         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
+            currecny=settings.getCurrency();
         }
+         binding.setCurrency(currecny);
         lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         parentAdapter = new ProductAttrAdapter(this, list);

@@ -43,6 +43,7 @@ import com.addukkan.remote.Api;
 import com.addukkan.tags.Tags;
 import com.addukkan.uis.activity_filter.FilterActivity;
 import com.addukkan.uis.activity_login.LoginActivity;
+import com.addukkan.uis.activity_product_detials.ProductDetialsActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,8 +69,8 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
     private ProductOfferAdapter product2Adapter;
     private ProductLisProductAdapter productLisProductAdapter;
     private int pos;
-    private String country_coude;
-
+  private String country_coude;
+    private String currecny;
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -135,10 +136,12 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
         settings = preferences.isLanguageSelected(this);
 
         userModel = preferences.getUserData(this);
-        if (userModel != null) {
+         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
+            currecny=settings.getCurrency();
         }
         if (userModel != null) {
             filterModel.setCountry_code(userModel.getData().getCountry_code());
@@ -700,4 +703,9 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
                 });
     }
 
+    public void showData(String s) {
+        Intent intent = new Intent(this, ProductDetialsActivity.class);
+        intent.putExtra("id", s);
+        startActivityForResult(intent, 100);
+    }
 }

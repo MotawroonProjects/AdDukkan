@@ -1,5 +1,6 @@
 package com.addukkan.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,37 +41,27 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         CountryModel countryModel = list.get(position);
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(countryModel);
 
-        holder.itemView.setOnClickListener(view -> {
-//            CountryModel model1 = list.get(old_pos);
-//            model1.setSelected(false);
-//            list.set(old_pos,model1);
-//            notifyItemChanged(old_pos);
-//
-//            i = holder.getAdapterPosition();
-//            CountryModel model2 = list.get(i);
-//            model2.setSelected(true);
-//            list.set(i,model2);
-//            notifyItemChanged(i);
-//            old_pos =i;
-            i=position;
-            notifyDataSetChanged();
+        ((MyHolder) holder).binding.rb.setOnClickListener(view -> {
 
-            //fragment_categories.setItemData(model2);
+
+            if(context instanceof CountryActivity){
+                CountryActivity countryActivity=(CountryActivity)context;
+                countryActivity.setcountry(list.get(position));
+            }
 
         });
+
 if(i==position){
     ((MyHolder) holder).binding.rb.setSelected(true);
-    if(context instanceof CountryActivity){
-        CountryActivity countryActivity=(CountryActivity)context;
-        countryActivity.setcountry(list.get(position));
-    }
+
 }
 else {
     ((MyHolder) holder).binding.rb.setSelected(false);

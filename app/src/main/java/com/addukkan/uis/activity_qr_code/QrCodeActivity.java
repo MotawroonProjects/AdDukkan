@@ -52,8 +52,8 @@ public class QrCodeActivity extends AppCompatActivity {
     private Preferences preferences;
     private UserModel userModel;
     private AppLocalSettings settings;
-    private String country_coude;
-    protected void attachBaseContext(Context newBase) {
+  private String country_coude;
+    private String currecny;    protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
         super.attachBaseContext(Language.updateResources(newBase, Paper.book().read("lang", "ar")));
     }
@@ -70,10 +70,12 @@ public class QrCodeActivity extends AppCompatActivity {
         userModel=preferences.getUserData(this);
         settings = preferences.isLanguageSelected(this);
         userModel = preferences.getUserData(this);
-        if (userModel != null) {
+         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
+            currecny=settings.getCurrency();
         }
         Paper.init(this);
         lang = Paper.book().read("lang","ar");

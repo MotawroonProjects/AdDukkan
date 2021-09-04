@@ -15,7 +15,10 @@ import com.addukkan.databinding.CartProductOfflineRowBinding;
 import com.addukkan.databinding.CartProductRowBinding;
 import com.addukkan.models.AddCartDataModel;
 import com.addukkan.models.AddCartProductItemModel;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CartDataModel;
+import com.addukkan.models.UserModel;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_cart.CartActivity;
 
 import java.util.List;
@@ -26,6 +29,10 @@ public class CartProductOfflineAdapter extends RecyclerView.Adapter<RecyclerView
     private List<AddCartProductItemModel> list;
     private Context context;
     private LayoutInflater inflater;
+    private Preferences preferences;
+    private String currecny;
+    private AppLocalSettings settings;
+    private UserModel userModel;
     //private Fragment_Main fragment_main;
     public CartProductOfflineAdapter(List<AddCartProductItemModel> list, Context context) {
         this.list = list;
@@ -33,7 +40,18 @@ public class CartProductOfflineAdapter extends RecyclerView.Adapter<RecyclerView
         inflater = LayoutInflater.from(context);
       //  this.fragment_main=fragment_main;
         activity = (CartActivity) context;
+        preferences=Preferences.getInstance();
 
+        settings = preferences.isLanguageSelected(context);
+
+        userModel = preferences.getUserData(context);
+        preferences=Preferences.getInstance();
+
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
 
     }
 
@@ -52,6 +70,8 @@ public class CartProductOfflineAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
+        myHolder.binding.setCurrency(currecny);
+
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 

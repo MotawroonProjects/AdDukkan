@@ -62,8 +62,8 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
     private boolean isItemAdded = false;
     private List<FavouriteProductDataModel.Data> favouriteDataList;
     private FavouriteProductAdapter favouriteProduct_adapter;
-    private String country_coude;
-    private AppLocalSettings settings;
+  private String country_coude;
+    private String currecny;    private AppLocalSettings settings;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -91,10 +91,12 @@ public class MyFavoriteActivity extends AppCompatActivity implements Listeners.B
         preferences = Preferences.getInstance();
         settings = preferences.isLanguageSelected(this);
         userModel = preferences.getUserData(this);
-        if (userModel != null) {
+         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
+            currecny=settings.getCurrency();
         }
 
         manager = new GridLayoutManager(this, 1);

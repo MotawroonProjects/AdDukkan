@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="currency"
+            type="String" />
         <import type="android.view.View" />
 
         <variable
@@ -154,7 +156,7 @@
                             android:ellipsize="end"
                             android:maxLines="2"
                             android:singleLine="true"
-                            android:text='@{model.old_price+""}'
+                            android:text='@{model.old_price+currency}'
                             android:textColor="@color/gray6"
                             android:textSize="13sp"
                             android:visibility='@{model.have_offer.equals("yes")?model.offer_type.equals("amount")?View.INVISIBLE:View.VISIBLE:View.INVISIBLE,default=invisible}'
@@ -169,7 +171,7 @@
                             android:ellipsize="end"
                             android:gravity="center"
                             android:maxLines="2"
-                            android:text='@{model.price+""}'
+                            android:text='@{model.price+currency}'
                             android:textColor="@color/colorPrimary"
                             android:textSize="13sp" />
                     </LinearLayout>
@@ -259,7 +261,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="15dp"
                         android:gravity="center"
-                        android:text='@{(model.amount*model.price)+""}'
+                        android:text='@{(model.amount*model.price)+currency}'
                         android:textColor="@color/gray11"
                         android:textSize="18sp" />
 

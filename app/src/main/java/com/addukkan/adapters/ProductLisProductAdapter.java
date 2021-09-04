@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.addukkan.R;
 import com.addukkan.databinding.ListProductRowBinding;
 import com.addukkan.databinding.OfferProductRowBinding;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.SingleProductModel;
+import com.addukkan.models.UserModel;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_home.fragments.FragmentOffer;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
 import com.addukkan.uis.activity_product_filter.ProductFilterActivity;
@@ -29,14 +32,27 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
     private LayoutInflater inflater;
     //private Fragment_Main fragment_main;
     private Fragment fragment;
-
+    private UserModel userModel;
+    private Preferences preferences;
+    private String currecny;
+    private AppLocalSettings settings;
     public ProductLisProductAdapter(List<SingleProductModel> list, Context context, Fragment fragment) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.fragment = fragment;
         //  this.fragment_main=fragment_main;
+        preferences=Preferences.getInstance();
 
+        //  this.fragment_main=fragment_main;
+        settings = preferences.isLanguageSelected(context);
+
+        userModel = preferences.getUserData(context);
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
 
     }
 
@@ -55,6 +71,7 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
+        myHolder.binding.setCurrency(currecny);
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (list.get(position).getFavourite() != null) {
@@ -62,9 +79,22 @@ public class ProductLisProductAdapter extends RecyclerView.Adapter<RecyclerView.
         }
         //  Log.e("ssss",((list.get(position).getProduct_data().getHave_offer().equals("yes")?(list.get(position).getProduct_data().getOffer_type().equals("per")?(list.get(position).getProduct_data().getProduct_default_price().getPrice()-((list.get(position).getProduct_data().getProduct_default_price().getPrice()*list.get(position).getProduct_data().getOffer_value())/100)):list.get(position).getProduct_data().getProduct_default_price().getPrice()-list.get(position).getProduct_data().getOffer_value()):list.get(position).getProduct_data().getProduct_default_price().getPrice())+""));
         myHolder.itemView.setOnClickListener(view -> {
-            // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
+            if (fragment instanceof FragmentOffer) {
 
-            // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
+                FragmentOffer fragmentOffer = (FragmentOffer) fragment;
+
+                fragmentOffer.setItemData(list.get(myHolder.getAdapterPosition()).getId()+"");
+
+            }else if(context instanceof ProductFilterActivity){
+                ProductFilterActivity activity=(ProductFilterActivity) context;
+                activity.showData(list.get(holder.getLayoutPosition()).getId()+"");
+            }
+            else if(context instanceof SearchActivity){
+                SearchActivity activity=(SearchActivity) context;
+                activity.showData(list.get(holder.getLayoutPosition()).getId()+"");
+
+            }
+
         });
         myHolder.binding.checkbox.setOnClickListener(v -> {
 

@@ -47,6 +47,7 @@ public class LanguageActivity extends AppCompatActivity {
     private SpinnerCountryAdapter adapter;
     private List<CountryModel> countryModelList;
     private String countrycode;
+    private String currency;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -188,6 +189,7 @@ public class LanguageActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 countrycode = countryModelList.get(i).getCode();
+                currency=countryModelList.get(i).getCountry_setting_trans_fk().getCurrency();
             }
 
             @Override
@@ -295,6 +297,7 @@ public class LanguageActivity extends AppCompatActivity {
             Intent intent = getIntent();
             intent.putExtra("lang", lang);
             intent.putExtra("countrycode",countrycode);
+            intent.putExtra("currency",currency);
             setResult(RESULT_OK, intent);
             finish();
 

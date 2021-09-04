@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.addukkan.R;
 import com.addukkan.databinding.CartProductRowBinding;
 import com.addukkan.databinding.OrderProductRowBinding;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CartDataModel;
+import com.addukkan.models.UserModel;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_cart.CartActivity;
 
 import java.util.List;
@@ -24,6 +27,10 @@ public class OrderProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<CartDataModel.Data.Detials> list;
     private Context context;
     private LayoutInflater inflater;
+    private UserModel userModel;
+    private Preferences preferences;
+    private String currecny;
+    private AppLocalSettings settings;
     //private Fragment_Main fragment_main;
     public OrderProductAdapter(List<CartDataModel.Data.Detials> list, Context context) {
         this.list = list;
@@ -31,6 +38,16 @@ public class OrderProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         inflater = LayoutInflater.from(context);
       //  this.fragment_main=fragment_main;
 
+        preferences=Preferences.getInstance();
+
+        settings = preferences.isLanguageSelected(context);
+
+        userModel = preferences.getUserData(context);
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
 
     }
 
@@ -49,6 +66,8 @@ public class OrderProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
+        myHolder.binding.setCurrency(currecny);
+
         myHolder.binding.setModel(list.get(position));
        // myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 

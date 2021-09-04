@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.addukkan.R;
 import com.addukkan.databinding.CartProductRowBinding;
 import com.addukkan.databinding.FavouriteProductRowBinding;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.CartDataModel;
 import com.addukkan.models.FavouriteProductDataModel;
+import com.addukkan.models.UserModel;
+import com.addukkan.preferences.Preferences;
 import com.addukkan.uis.activity_cart.CartActivity;
 import com.addukkan.uis.activity_my_favorite.MyFavoriteActivity;
 
@@ -26,13 +29,26 @@ public class CartProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<CartDataModel.Data.Detials> list;
     private Context context;
     private LayoutInflater inflater;
+    private Preferences preferences;
+    private String currecny;
+    private AppLocalSettings settings;
+    private UserModel userModel;
+
     //private Fragment_Main fragment_main;
     public CartProductAdapter(List<CartDataModel.Data.Detials> list, Context context) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
       //  this.fragment_main=fragment_main;
+        preferences=Preferences.getInstance();
+        settings = preferences.isLanguageSelected(context);
 
+        userModel = preferences.getUserData(context);
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
 
     }
 
@@ -51,6 +67,8 @@ public class CartProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
+        myHolder.binding.setCurrency(currecny);
+
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 

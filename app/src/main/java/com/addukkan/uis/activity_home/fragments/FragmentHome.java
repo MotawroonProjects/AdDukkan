@@ -86,8 +86,8 @@ public class FragmentHome extends Fragment {
     private AppLocalSettings settings;
     private String lang = "";
     private MainCategoryAdapter mainCategoryAdapter;
-    private String country_coude;
-    private Handler handler;
+  private String country_coude;
+    private String currecny;    private Handler handler;
     private final String READ_PERM = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final String camera_permission = Manifest.permission.CAMERA;
@@ -122,7 +122,7 @@ public class FragmentHome extends Fragment {
 
         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
-            if (preferences.getCartData(activity) != null) {
+            if (preferences.getCartData(activity) != null&&preferences.getCartData(activity).getCart_products().size()>0) {
                 AddCartDataModel addCartDataModel = preferences.getCartData(activity);
                 addCartDataModel.setUser_id(userModel.getData().getId());
                 addTocart(addCartDataModel);
@@ -1051,6 +1051,7 @@ public class FragmentHome extends Fragment {
 //                                    recentArriveList.set(adapterPosition, data);
 //                                    recentArriveAdapter.notifyItemChanged(adapterPosition);
 //                                }
+                                preferences.clearCart(activity);
                                 activity.binding.setCartCount(response.body().getData().getDetails().size() + "");
 
                             }

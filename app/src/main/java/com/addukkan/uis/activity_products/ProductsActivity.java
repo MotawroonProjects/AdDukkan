@@ -56,8 +56,8 @@ public class ProductsActivity extends AppCompatActivity implements Listeners.Bac
     private Preferences preferences;
     private List<SingleProductModel> list;
     private Product4Adapter adapter;
-    private String country_coude;
-    private AppLocalSettings settings;
+  private String country_coude;
+    private String currecny;    private AppLocalSettings settings;
     private String type = "";
     private boolean isDataChange = false;
 

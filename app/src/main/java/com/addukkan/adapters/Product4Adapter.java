@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.addukkan.R;
 import com.addukkan.databinding.ProductRow2Binding;
 import com.addukkan.databinding.ProductRowBinding;
+import com.addukkan.models.AppLocalSettings;
 import com.addukkan.models.SingleProductModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
@@ -29,12 +30,23 @@ public class Product4Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private ProductsActivity activity;
     private UserModel userModel;
     private Preferences preferences;
+    private String currecny;
+    private AppLocalSettings settings;
     public Product4Adapter(List<SingleProductModel> list, Context context) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
         activity = (ProductsActivity) context;
-        preferences = Preferences.getInstance();
+        preferences=Preferences.getInstance();
+
+        settings = preferences.isLanguageSelected(context);
+
+        userModel = preferences.getUserData(context);
+        if (userModel != null) {
+            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny=settings.getCurrency();
+        }
 
 
     }
@@ -54,6 +66,8 @@ public class Product4Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
+        myHolder.binding.setCurrency(currecny);
+
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.tvOldprice.setPaintFlags(myHolder.binding.tvOldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 

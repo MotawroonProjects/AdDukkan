@@ -8,7 +8,7 @@ public class AppLocalSettings implements Serializable {
     private double lat = 0.0;
     private double lng = 0.0;
     private String country_code;
-
+    private String currency;
     public boolean isLanguageSelected() {
         return isLanguageSelected;
     }
@@ -47,5 +47,13 @@ public class AppLocalSettings implements Serializable {
 
     public void setCountry_code(String country_code) {
         this.country_code = country_code;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

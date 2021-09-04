@@ -51,7 +51,8 @@ public class FilterActivity extends AppCompatActivity {
     private List<Integer> brand_id;
     private List<Integer> product_company_id;
     private int pos;
-private FilterModel filterModel;
+    private FilterModel filterModel;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -78,7 +79,7 @@ private FilterModel filterModel;
     }
 
     private void initView() {
-        filterModel=new FilterModel();
+        filterModel = new FilterModel();
         preferences = Preferences.getInstance();
         userModel = preferences.getUserData(this);
         Paper.init(this);
@@ -87,14 +88,14 @@ private FilterModel filterModel;
         list = new ArrayList<>();
         dataList = new ArrayList<>();
         subCategoryDataModelList.clear();
-        departments=new ArrayList<>();
-        brand_id=new ArrayList<>();
-        product_company_id=new ArrayList<>();
+        departments = new ArrayList<>();
+        brand_id = new ArrayList<>();
+        product_company_id = new ArrayList<>();
         subCategoryDataModelList.addAll(sub_departments.getSub_departments());
         departments.add(subCategoryDataModelList.get(pos).getId());
         binding.setLang(lang);
         binding.recViewCountry.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SubCategoryFilterAdapter(this, subCategoryDataModelList,pos);
+        adapter = new SubCategoryFilterAdapter(this, subCategoryDataModelList, pos);
         binding.recViewCountry.setAdapter(adapter);
         companyAdapter = new CompanyAdapter(this, list);
         binding.recViewCompany.setLayoutManager(new LinearLayoutManager(this));
@@ -110,10 +111,9 @@ private FilterModel filterModel;
             public void onClick(View v) {
                 if (binding.elexpendCompany.isExpanded()) {
                     binding.elexpendCompany.setExpanded(false);
-                    if(lang.equals("en")){
+                    if (lang.equals("en")) {
                         binding.arrow3.setRotation(180);
-                    }
-                    else {
+                    } else {
                         binding.arrow3.setRotation(0);
                     }
                 } else {
@@ -127,10 +127,9 @@ private FilterModel filterModel;
             public void onClick(View v) {
                 if (binding.elexpendBrand.isExpanded()) {
                     binding.elexpendBrand.setExpanded(false);
-                    if(lang.equals("en")){
+                    if (lang.equals("en")) {
                         binding.arrow2.setRotation(180);
-                    }
-                    else {
+                    } else {
                         binding.arrow2.setRotation(0);
                     }
                 } else {
@@ -144,10 +143,9 @@ private FilterModel filterModel;
             public void onClick(View v) {
                 if (binding.elexpendDepart.isExpanded()) {
                     binding.elexpendDepart.setExpanded(false);
-                    if(lang.equals("en")){
+                    if (lang.equals("en")) {
                         binding.arrow.setRotation(180);
-                    }
-                    else {
+                    } else {
                         binding.arrow.setRotation(0);
                     }
                 } else {
@@ -165,16 +163,16 @@ private FilterModel filterModel;
             public void onClick(View v) {
                 subCategoryDataModelList.clear();
                 subCategoryDataModelList.addAll(sub_departments.getSub_departments());
-                adapter=new SubCategoryFilterAdapter(FilterActivity.this,subCategoryDataModelList,pos);
+                adapter = new SubCategoryFilterAdapter(FilterActivity.this, subCategoryDataModelList, pos);
                 binding.recViewCountry.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 list.clear();
-                companyAdapter=new CompanyAdapter(FilterActivity.this,list);
+                companyAdapter = new CompanyAdapter(FilterActivity.this, list);
                 binding.recViewCompany.setAdapter(companyAdapter);
                 getCompanies();
-               dataList.clear();
-               brandAdapter=new BrandAdapter(FilterActivity.this,dataList);
-               binding.recViewBrand.setAdapter(brandAdapter);
+                dataList.clear();
+                brandAdapter = new BrandAdapter(FilterActivity.this, dataList);
+                binding.recViewBrand.setAdapter(brandAdapter);
                 getBrands();
 
             }
@@ -185,9 +183,9 @@ private FilterModel filterModel;
                 filterModel.setBrand_id(brand_id);
                 filterModel.setDepartments(departments);
                 filterModel.setProduct_company_id(product_company_id);
-                Intent intent=getIntent();
-                intent.putExtra("data",filterModel);
-                setResult(RESULT_OK,intent);
+                Intent intent = getIntent();
+                intent.putExtra("data", filterModel);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -201,7 +199,7 @@ private FilterModel filterModel;
 
 
         Api.getService(Tags.base_url)
-                .getCompany(lang,"all").enqueue(new Callback<CompanyDataModel>() {
+                .getCompany(lang, "all").enqueue(new Callback<CompanyDataModel>() {
             @Override
             public void onResponse(Call<CompanyDataModel> call, Response<CompanyDataModel> response) {
                 //   binding.progBar.setVisibility(View.GONE);
@@ -275,7 +273,7 @@ private FilterModel filterModel;
 
 
         Api.getService(Tags.base_url)
-                .getBrands(lang,"all").enqueue(new Callback<BrandDataModel>() {
+                .getBrands(lang, "all").enqueue(new Callback<BrandDataModel>() {
             @Override
             public void onResponse(Call<BrandDataModel> call, Response<BrandDataModel> response) {
                 //   binding.progBar.setVisibility(View.GONE);
@@ -344,27 +342,25 @@ private FilterModel filterModel;
 
 
     public void addBrandid(BrandDataModel.Data data) {
-        if(brand_id.contains(data.getId())){
+        if (brand_id.contains(data.getId())) {
             brand_id.remove(data.getId());
-        }
-        else {
+        } else {
             brand_id.add(data.getId());
         }
     }
 
     public void addCompanyid(CompanyModel companyModel) {
-        if(product_company_id.contains(companyModel.getId())){
+        if (product_company_id.contains(companyModel.getId())) {
             product_company_id.remove(companyModel.getId());
-        }
-        else {
+        } else {
             product_company_id.add(companyModel.getId());
         }
     }
 
     public void addDepartid(SubCategoryDataModel subCategoryDataModel) {
-        if(departments.contains(subCategoryDataModel.getId())){
+        if (departments.contains(subCategoryDataModel.getId())) {
             departments.remove(subCategoryDataModel.getId());
-        }else {
+        } else {
             departments.add(subCategoryDataModel.getId());
         }
     }
