@@ -1,5 +1,6 @@
 package com.addukkan.uis.activity_countries;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import com.addukkan.models.SettingModel;
 import com.addukkan.models.UserModel;
 import com.addukkan.preferences.Preferences;
 import com.addukkan.remote.Api;
+import com.addukkan.share.Common;
 import com.addukkan.tags.Tags;
+import com.addukkan.uis.activity_sign_up.SignUpActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,9 +181,89 @@ public class CountryActivity extends AppCompatActivity {
 
 
     public void setcountry(CountryModel countryModel) {
+        if(userModel==null){
         settings.setCountry_code(countryModel.getCode());
         settings.setCurrency(countryModel.getCountry_setting_trans_fk().getCurrency());
         preferences.setIsLanguageSelected(this,settings);
-        finish();
+        finish();}
+        else{
+            updateProfile(countryModel.getCode());
+        }
     }
+    private void updateProfile(String country_code) {
+
+        ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .updateProfile("Bearer "+userModel.getData().getToken(),userModel.getData().getId(),country_code)
+                .enqueue(new Callback<UserModel>() {
+                    @Override
+                    public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+
+                            if (response.body()!=null&&response.body().getStatus()==200){
+                                if (response.body() != null&&response.body().getData()!=null){
+                                    Preferences preferences = Preferences.getInstance();
+                                    preferences.create_update_userdata(CountryActivity.this,response.body());
+                                    setResult(RESULT_OK);
+                                    finish();
+                                }
+                            }else if (response.body()!=null&&response.body().getStatus()==404){
+                                Toast.makeText(CountryActivity.this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
+
+                            }else {
+                                Toast.makeText(CountryActivity.this,getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                            }
+
+
+                        } else {
+                            dialog.dismiss();
+
+                            switch (response.code()){
+                                case 500:
+                                    Toast.makeText(CountryActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                                    Toast.makeText(CountryActivity.this,getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                            try {
+                                Log.e("error_code",response.code()+"_");
+                            } catch (NullPointerException e){
+
+                            }
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(CountryActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                }
+                                else if (t.getMessage().toLowerCase().contains("socket")||t.getMessage().toLowerCase().contains("canceled")){ }
+                                else {
+                                    Toast.makeText(CountryActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+
+
+
+    }
+
 }

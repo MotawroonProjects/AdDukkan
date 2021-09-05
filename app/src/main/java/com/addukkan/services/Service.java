@@ -426,4 +426,10 @@ public interface Service {
 
 
     );
+    @FormUrlEncoded
+    @POST("api/update-client-profile")
+    Call<UserModel> updateProfile(@Header("Authorization") String bearer_token,
+                                  @Field("user_id") int user_id,
+                                  @Field("country_code") String country_code
+    );
 }
