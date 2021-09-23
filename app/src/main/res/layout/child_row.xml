@@ -4,7 +4,7 @@
     <data>
         <variable
             name="model"
-            type="com.addukkan.models.ProductDataModel.Attribute" />
+            type="com.addukkanapp.models.ProductDataModel.Attribute" />
 
     </data>
 

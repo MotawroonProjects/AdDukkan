@@ -5,10 +5,10 @@
     <data>
         <variable
             name="model"
-            type="com.addukkan.models.UserModel" />
+            type="com.addukkanapp.models.UserModel" />
         <variable
             name="contactModel"
-            type="com.addukkan.models.ContactUsModel" />
+            type="com.addukkanapp.models.ContactUsModel" />
         <variable
             name="lang"
             type="String" />

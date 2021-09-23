@@ -13,7 +13,7 @@
             type="String" />
         <variable
             name="model"
-            type="com.addukkan.models.ChatRoomModel" />
+            type="com.addukkanapp.models.ChatRoomModel" />
 
     </data>
 

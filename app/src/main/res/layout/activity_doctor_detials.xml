@@ -10,11 +10,11 @@
             type="String" />
         <variable
             name="model"
-            type="com.addukkan.models.UserModel.Data" />
+            type="com.addukkanapp.models.UserModel.Data" />
 
         <variable
             name="backListener"
-            type="com.addukkan.interfaces.Listeners.BackListener" />
+            type="com.addukkanapp.interfaces.Listeners.BackListener" />
     </data>
 
     <LinearLayout
@@ -265,7 +265,7 @@
 
                                     <fragment
                                         android:id="@+id/map"
-                                        android:name="com.addukkan.uis.FragmentMapTouchListener"
+                                        android:name="com.addukkanapp.uis.FragmentMapTouchListener"
                                         android:layout_width="match_parent"
                                         android:layout_height="150dp" />
                                 </androidx.cardview.widget.CardView>

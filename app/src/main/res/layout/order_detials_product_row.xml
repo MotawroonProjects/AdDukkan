@@ -11,7 +11,7 @@
 
         <variable
             name="model"
-            type="com.addukkan.models.SingleOrderModel.Data.Detials" />
+            type="com.addukkanapp.models.SingleOrderModel.Data.Detials" />
     </data>
 
     <androidx.cardview.widget.CardView

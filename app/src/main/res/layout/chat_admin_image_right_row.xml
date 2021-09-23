@@ -8,7 +8,7 @@
     <data>
         <variable
             name="model"
-            type="com.addukkan.models.AdminMessageModel" />
+            type="com.addukkanapp.models.AdminMessageModel" />
         <import type="android.view.View" />
 
     </data>

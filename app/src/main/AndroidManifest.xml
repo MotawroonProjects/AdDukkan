@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.addukkan">
+    package="com.addukkanapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
-        android:name=".share.App"
+        android:name="com.addukkanapp.share.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -31,139 +31,139 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".uis.activity_products.ProductsActivity"></activity>
+        <activity android:name="com.addukkanapp.uis.activity_products.ProductsActivity"></activity>
         <activity
-            android:name=".uis.activity_admin_chat.ChatAdminActivity"
+            android:name="com.addukkanapp.uis.activity_admin_chat.ChatAdminActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".uis.activity_product_detials.ProductDetialsActivity"
+            android:name="com.addukkanapp.uis.activity_product_detials.ProductDetialsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_qr_code.QrCodeActivity"
+            android:name="com.addukkanapp.uis.activity_qr_code.QrCodeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_order_detials.OrderDetialsActivity"
+            android:name="com.addukkanapp.uis.activity_order_detials.OrderDetialsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_complete_order_detials.CompleteOrderDetialsActivity"
+            android:name="com.addukkanapp.uis.activity_complete_order_detials.CompleteOrderDetialsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_order.MyOrderActivity"
+            android:name="com.addukkanapp.uis.activity_order.MyOrderActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_location_detials.LocationDetialsActivity"
+            android:name="com.addukkanapp.uis.activity_location_detials.LocationDetialsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_filter_search.FilterSearchActivity"
+            android:name="com.addukkanapp.uis.activity_filter_search.FilterSearchActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_search.SearchActivity"
+            android:name="com.addukkanapp.uis.activity_search.SearchActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_rooms.RoomsActivity"
+            android:name="com.addukkanapp.uis.activity_rooms.RoomsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_chat.ChatActivity"
+            android:name="com.addukkanapp.uis.activity_chat.ChatActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".uis.activity_about_us.AboutUsActivity"
+            android:name="com.addukkanapp.uis.activity_about_us.AboutUsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_contact_us.ContactUsActivity"
+            android:name="com.addukkanapp.uis.activity_contact_us.ContactUsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_notification.NotificationActivity"
+            android:name="com.addukkanapp.uis.activity_notification.NotificationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_filter.FilterActivity"
+            android:name="com.addukkanapp.uis.activity_filter.FilterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_product_filter.ProductFilterActivity"
+            android:name="com.addukkanapp.uis.activity_product_filter.ProductFilterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_my_favorite.MyFavoriteActivity"
+            android:name="com.addukkanapp.uis.activity_my_favorite.MyFavoriteActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_countries.CountryActivity"
+            android:name="com.addukkanapp.uis.activity_countries.CountryActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_ask_doctor.AskDoctorActivity"
+            android:name="com.addukkanapp.uis.activity_ask_doctor.AskDoctorActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_doctor_detials.DoctorDetialsActivity"
+            android:name="com.addukkanapp.uis.activity_doctor_detials.DoctorDetialsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_verification_code.VerificationCodeActivity"
+            android:name="com.addukkanapp.uis.activity_verification_code.VerificationCodeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_sign_up.SignUpActivity"
+            android:name="com.addukkanapp.uis.activity_sign_up.SignUpActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_home.HomeActivity"
+            android:name="com.addukkanapp.uis.activity_home.HomeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_language.LanguageActivity"
+            android:name="com.addukkanapp.uis.activity_language.LanguageActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_map.MapActivity"
+            android:name="com.addukkanapp.uis.activity_map.MapActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_login.LoginActivity"
+            android:name="com.addukkanapp.uis.activity_login.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".uis.activity_cart.CartActivity"
+            android:name="com.addukkanapp.uis.activity_cart.CartActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -174,13 +174,13 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="dokan.sray.live"
+                    android:host="ad-dukkan.com"
                     android:pathPrefix="/api/share/"
                     android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".uis.activity_splash.SplashActivity"
+            android:name="com.addukkanapp.uis.activity_splash.SplashActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -199,16 +199,16 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".uis.activity_chat.ServiceUploadAttachment"
+            android:name="com.addukkanapp.uis.activity_chat.ServiceUploadAttachment"
             android:enabled="true"
             android:stopWithTask="false" />
 
         <service
-            android:name=".uis.activity_admin_chat.ServiceAdminUploadAttachment"
+            android:name="com.addukkanapp.uis.activity_admin_chat.ServiceAdminUploadAttachment"
             android:enabled="true"
             android:stopWithTask="false" />
         <service
-            android:name=".notifications.FireBaseMessaging"
+            android:name="com.addukkanapp.notifications.FireBaseMessaging"
             android:enabled="true"
             android:exported="false"
             android:stopWithTask="false">

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="model"
-            type="com.addukkan.models.ProductDataModel.Comment" />
+            type="com.addukkanapp.models.ProductDataModel.Comment" />
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="230dp"

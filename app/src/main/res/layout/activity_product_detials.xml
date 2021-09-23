@@ -15,7 +15,7 @@
 
         <variable
             name="model"
-            type="com.addukkan.models.SingleProductModel" />
+            type="com.addukkanapp.models.SingleProductModel" />
 
         <import type="android.view.View" />
     </data>

@@ -6,7 +6,7 @@
             type="String" />
         <variable
             name="model"
-            type="com.addukkan.models.CartDataModel.Data.Detials" />
+            type="com.addukkanapp.models.CartDataModel.Data.Detials" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"

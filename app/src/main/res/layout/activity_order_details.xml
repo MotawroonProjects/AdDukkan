@@ -15,7 +15,7 @@
 
         <variable
             name="model"
-            type="com.addukkan.models.SingleOrderModel.Data" />
+            type="com.addukkanapp.models.SingleOrderModel.Data" />
 
     </data>
 

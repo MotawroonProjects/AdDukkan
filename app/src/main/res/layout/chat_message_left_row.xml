@@ -9,7 +9,7 @@
 
         <variable
             name="model"
-            type="com.addukkan.models.MessageModel" />
+            type="com.addukkanapp.models.MessageModel" />
         <import type="android.view.View" />
 
     </data>

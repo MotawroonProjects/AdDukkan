@@ -3,7 +3,7 @@
     <data>
         <variable
             name="model"
-            type="com.addukkan.models.SpecialModel" />
+            type="com.addukkanapp.models.SpecialModel" />
     </data>
     <FrameLayout
         android:layout_width="match_parent"

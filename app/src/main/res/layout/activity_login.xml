@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.addukkan.models.LoginModel" />
+            type="com.addukkanapp.models.LoginModel" />
         <variable
             name="lang"
             type="String" />

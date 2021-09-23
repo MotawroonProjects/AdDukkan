@@ -10,11 +10,11 @@
             type="String" />
         <variable
             name="model"
-            type="com.addukkan.models.UserModel" />
+            type="com.addukkanapp.models.UserModel" />
         <import type="android.view.View"/>
         <variable
             name="actions"
-            type="com.addukkan.interfaces.Listeners.ProfileActions" />
+            type="com.addukkanapp.interfaces.Listeners.ProfileActions" />
 
     </data>
     <androidx.core.widget.NestedScrollView

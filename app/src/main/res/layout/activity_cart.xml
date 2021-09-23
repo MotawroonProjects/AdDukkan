@@ -7,13 +7,13 @@
 
         <variable
             name="backListener"
-            type="com.addukkan.interfaces.Listeners.BackListener" />
+            type="com.addukkanapp.interfaces.Listeners.BackListener" />
 <variable
     name="total"
     type="String" />
         <variable
             name="model"
-            type="com.addukkan.models.CartDataModel.Data" />
+            type="com.addukkanapp.models.CartDataModel.Data" />
 
         <variable
             name="lang"

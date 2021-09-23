@@ -6,7 +6,7 @@
 <import type="android.view.View"/>
         <variable
             name="model"
-            type="com.addukkan.models.MainCategoryDataModel.Data" />
+            type="com.addukkanapp.models.MainCategoryDataModel.Data" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

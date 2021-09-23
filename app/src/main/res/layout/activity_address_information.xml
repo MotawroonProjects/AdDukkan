@@ -9,7 +9,7 @@
     type="String" />
         <variable
             name="model"
-            type="com.addukkan.models.LocationDetialsModel" />
+            type="com.addukkanapp.models.LocationDetialsModel" />
         <variable
             name="lang"
             type="String" />
