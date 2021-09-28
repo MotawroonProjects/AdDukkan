@@ -64,7 +64,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private CartDataModel.Data data2;
     private CartProductAdapter cartProductAdapter;
     private CartProductOfflineAdapter cartProductOfflineAdapter;
-  private String country_coude;
+    private String country_coude;
     private String currecny;
     private AppLocalSettings settings;
     private String couponid = null;
@@ -94,7 +94,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         Intent intent = getIntent();
         if (intent.getData() != null) {
             bill_code = intent.getData().getLastPathSegment();
-            Log.e("code", bill_code + "__");
+            Log.e("codeeeee", bill_code + "__");
         }
     }
 

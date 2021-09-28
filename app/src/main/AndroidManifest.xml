@@ -175,7 +175,7 @@
 
                 <data
                     android:host="ad-dukkan.com"
-                    android:pathPrefix="/api/share/"
+                    android:pathPrefix="/share-prescription/"
                     android:scheme="http" />
             </intent-filter>
         </activity>
