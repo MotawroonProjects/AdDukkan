@@ -68,7 +68,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private String currecny;
     private AppLocalSettings settings;
     private String couponid = null;
-    private String copoun;
+    private String copoun,prescription_id;
     private String bill_code = "";
     private boolean isDataChanged = false;
     private AddCartDataModel createOrderModel;
@@ -574,6 +574,8 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             addOrderModel.setSubtotal(data2.getTotal_price() + "");
             addOrderModel.setTotal_payments(data2.getTotal_price() + "");
             addOrderModel.setCopoun(copoun);
+            addOrderModel.setPrescription_id(data2.getPrescription_id()+"");
+
             Intent intent = new Intent(CartActivity.this, LocationDetialsActivity.class);
             intent.putExtra("data", addOrderModel);
             startActivity(intent);

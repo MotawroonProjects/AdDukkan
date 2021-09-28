@@ -5,6 +5,7 @@ import java.util.List;
 
 public class AddOrderModel implements Serializable {
     private int user_id;
+    private String prescription_id;
     private String country_code;
     private String name;
     private String phone;
@@ -27,6 +28,14 @@ public class AddOrderModel implements Serializable {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    public String getPrescription_id() {
+        return prescription_id;
+    }
+
+    public void setPrescription_id(String prescription_id) {
+        this.prescription_id = prescription_id;
     }
 
     public String getCountry_code() {
