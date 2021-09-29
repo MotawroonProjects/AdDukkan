@@ -181,6 +181,7 @@
             android:background="@color/white"
             android:layout_gravity="bottom"
             android:visibility="gone"
+            android:layout_marginTop="40dp"
 
             >
 
