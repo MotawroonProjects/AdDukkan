@@ -576,7 +576,13 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             addOrderModel.setSubtotal(data2.getTotal_price() + "");
             addOrderModel.setTotal_payments(data2.getTotal_price() + "");
             addOrderModel.setCopoun(copoun);
-            addOrderModel.setPrescription_id(data2.getPrescription_id()+"");
+            if (data2.getPrescription_id()==null){
+                addOrderModel.setPrescription_id("");
+
+            }else {
+                addOrderModel.setPrescription_id(data2.getPrescription_id()+"");
+
+            }
 
             Intent intent = new Intent(CartActivity.this, LocationDetialsActivity.class);
             intent.putExtra("data", addOrderModel);

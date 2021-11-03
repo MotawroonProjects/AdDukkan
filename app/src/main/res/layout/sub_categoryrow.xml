@@ -5,7 +5,9 @@
     <data>
 
         <import type="android.view.View" />
-
+        <variable
+            name="lang"
+            type="String" />
         <variable
             name="model"
             type="com.addukkanapp.models.SubCategoryDataModel" />
@@ -20,7 +22,7 @@
 
 
         <ImageView
-            image="@{model.department_trans_fk.image}"
+            image2="@{model.department_trans_fk.image}"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_marginTop="5dp"

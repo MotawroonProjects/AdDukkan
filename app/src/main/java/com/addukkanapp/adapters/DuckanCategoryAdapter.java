@@ -83,12 +83,12 @@ public class DuckanCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
             myHolder.binding.card.setCardBackgroundColor(context.getResources().getColor(R.color.colorAccent));
             ((MyHolder) holder).binding.tvName.setTextColor(context.getResources().getColor(R.color.white));
-            ((MyHolder) holder).binding.image.setColorFilter(ContextCompat.getColor(context, R.color.white));
+           // ((MyHolder) holder).binding.image.setColorFilter(ContextCompat.getColor(context, R.color.white));
         } else {
             myHolder.binding.card.setCardBackgroundColor(context.getResources().getColor(R.color.white));
 
             ((MyHolder) holder).binding.tvName.setTextColor(context.getResources().getColor(R.color.black));
-            ((MyHolder) holder).binding.image.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
+         //   ((MyHolder) holder).binding.image.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
 
         }
 

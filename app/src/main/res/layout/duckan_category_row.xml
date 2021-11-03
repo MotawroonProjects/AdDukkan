@@ -31,7 +31,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
 
-            image="@{model.department_trans_fk.image}"
+            image2="@{model.department_trans_fk.image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

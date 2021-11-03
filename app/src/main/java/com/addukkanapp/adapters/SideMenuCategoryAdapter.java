@@ -57,7 +57,7 @@ public class SideMenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.setLang(lang);
         SideMenuSubCategoryAdapter subCategoryAdapter = new SideMenuSubCategoryAdapter(list.get(position).getSub_departments(), context,list.get(position));
-        myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context, 1));
+        myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context, 3));
         myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
 
         myHolder.itemView.setOnClickListener(view -> {
@@ -69,18 +69,18 @@ public class SideMenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.V
             if(((MyHolder) holder).binding.elexpend.isExpanded()){
                 type=0;
                 myHolder.binding.elexpend.setExpanded(false);
-                myHolder.binding.arrow.setRotation(-90);
+             //   myHolder.binding.arrow.setRotation(-90);
             }else {
                 type=1;
                 myHolder.binding.elexpend.setExpanded(true);
-                myHolder.binding.arrow.setRotation(90);
+              //  myHolder.binding.arrow.setRotation(90);
             }
             myHolder.binding.setType(type+"");
         }
         else {
             type=0;
             myHolder.binding.elexpend.setExpanded(false);
-            myHolder.binding.arrow.setRotation(-90);
+       //     myHolder.binding.arrow.setRotation(-90);
             myHolder.binding.setType(type+"");
 
         }
