@@ -9,9 +9,6 @@
         <variable
             name="lang"
             type="String" />
-        <variable
-            name="type"
-            type="String" />
 
         <variable
             name="model"
@@ -19,17 +16,17 @@
     </data>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:orientation="vertical">
+
         <androidx.cardview.widget.CardView
             android:id="@+id/card"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
             app:cardCornerRadius="10dp"
-            app:cardElevation="10dp"
+            app:cardElevation="3dp"
 
             >
 
@@ -37,16 +34,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_gravity="center"
-                >
+                android:layout_margin="5dp">
 
                 <ImageView
                     android:id="@+id/image"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-
                     image2="@{model.department_trans_fk.image}"
+                    android:layout_width="50dp"
+
+                    android:layout_height="50dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -70,73 +66,21 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-<!--
-        <LinearLayout
+
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/expandLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="3dp"
-            android:weightSum="1">
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            app:el_duration="400"
+            app:el_expanded="false">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:clickable="false"
-                android:longClickable="false"
-                android:padding="3dp"
-                image2="@{model.department_trans_fk.image}"
-                />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@{model.department_trans_fk.title}"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-
-
-            </FrameLayout>
-
-            <ImageView
-                android:id="@+id/arrow"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:clickable="false"
-                android:longClickable="false"
-                android:padding="3dp"
-                android:rotation='@{type.equals("1")?-90:lang.equals("en")?180:0}'
-                android:src="@drawable/ic_left_arrow"
-                app:tint="@color/black" />
-        </LinearLayout>
--->
-
-<net.cachapa.expandablelayout.ExpandableLayout
-    android:id="@+id/elexpend"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:el_duration="1000"
-    app:el_expanded="false"
-    android:layout_marginStart="30dp"
-    android:layout_marginEnd="30dp"
-    >
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recViewSubCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-</net.cachapa.expandablelayout.ExpandableLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recViewSubCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </net.cachapa.expandablelayout.ExpandableLayout>
 
     </LinearLayout>
 </layout>

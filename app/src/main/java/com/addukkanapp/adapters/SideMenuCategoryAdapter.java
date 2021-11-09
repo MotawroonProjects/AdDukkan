@@ -24,17 +24,14 @@ public class SideMenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.V
     private List<MainCategoryDataModel.Data> list;
     private Context context;
     private LayoutInflater inflater;
-    private int i=-1;
-    private int type=0;
+    private int currentPos = -1;
 
-    //private Fragment_Main fragment_main;
     public SideMenuCategoryAdapter(List<MainCategoryDataModel.Data> list, Context context) {
         this.list = list;
         this.context = context;
         Paper.init(context);
         lang = Paper.book().read("lang", "ar");
         inflater = LayoutInflater.from(context);
-        //  this.fragment_main=fragment_main;
 
 
     }
@@ -56,34 +53,28 @@ public class SideMenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.setLang(lang);
-        SideMenuSubCategoryAdapter subCategoryAdapter = new SideMenuSubCategoryAdapter(list.get(position).getSub_departments(), context,list.get(position));
+        SideMenuSubCategoryAdapter subCategoryAdapter = new SideMenuSubCategoryAdapter(list.get(position).getSub_departments(), context, list.get(position));
         myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context, 3));
         myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
 
-        myHolder.itemView.setOnClickListener(view -> {
-           i=holder.getLayoutPosition();
-           type=1;
-           notifyDataSetChanged();
-        });
-        if(i==position){
-            if(((MyHolder) holder).binding.elexpend.isExpanded()){
-                type=0;
-                myHolder.binding.elexpend.setExpanded(false);
-             //   myHolder.binding.arrow.setRotation(-90);
-            }else {
-                type=1;
-                myHolder.binding.elexpend.setExpanded(true);
-              //  myHolder.binding.arrow.setRotation(90);
-            }
-            myHolder.binding.setType(type+"");
+        if (currentPos == position) {
+            myHolder.binding.expandLayout.expand(true);
+        } else {
+            myHolder.binding.expandLayout.collapse(true);
         }
-        else {
-            type=0;
-            myHolder.binding.elexpend.setExpanded(false);
-       //     myHolder.binding.arrow.setRotation(-90);
-            myHolder.binding.setType(type+"");
 
-        }
+        myHolder.itemView.setOnClickListener(v -> {
+            currentPos = myHolder.getAdapterPosition();
+            if (myHolder.binding.expandLayout.isExpanded()) {
+                myHolder.binding.expandLayout.collapse(true);
+
+            } else {
+                myHolder.binding.expandLayout.expand(true);
+
+            }
+        });
+
+
     }
 
     @Override
@@ -91,7 +82,7 @@ public class SideMenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         return list.size();
     }
 
-    public class MyHolder extends RecyclerView.ViewHolder {
+    public static class MyHolder extends RecyclerView.ViewHolder {
         public SideMenuCategoryRowBinding binding;
 
         public MyHolder(@NonNull SideMenuCategoryRowBinding binding) {

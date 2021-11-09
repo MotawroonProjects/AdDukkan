@@ -55,11 +55,9 @@ import retrofit2.Response;
 public class CartActivity extends AppCompatActivity implements Listeners.BackListener {
     private ActivityCartBinding binding;
     private String lang;
-
     private LinearLayoutManager manager;
     private UserModel userModel;
     private Preferences preferences;
-
     private List<CartDataModel.Data.Detials> detialsList;
     private CartDataModel.Data data2;
     private CartProductAdapter cartProductAdapter;
