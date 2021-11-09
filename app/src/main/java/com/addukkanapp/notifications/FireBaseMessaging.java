@@ -128,6 +128,9 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
     private void updateToken(String token) {
         UserModel userModel = getUserData();
+        if (userModel==null){
+            return;
+        }
         Api.getService(Tags.base_url)
                 .updateFirebaseToken("Bearer " + userModel.getData().getToken(), userModel.getData().getId(), token, "android")
                 .enqueue(new Callback<ResponseModel>() {

@@ -86,8 +86,9 @@ public class FragmentHome extends Fragment {
     private AppLocalSettings settings;
     private String lang = "";
     private MainCategoryAdapter mainCategoryAdapter;
-  private String country_coude;
-    private String currecny;    private Handler handler;
+    private String country_coude;
+    private String currecny;
+    private Handler handler;
     private final String READ_PERM = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final String camera_permission = Manifest.permission.CAMERA;
@@ -122,7 +123,7 @@ public class FragmentHome extends Fragment {
 
         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
-            if (preferences.getCartData(activity) != null&&preferences.getCartData(activity).getCart_products().size()>0) {
+            if (preferences.getCartData(activity) != null && preferences.getCartData(activity).getCart_products().size() > 0) {
                 AddCartDataModel addCartDataModel = preferences.getCartData(activity);
                 addCartDataModel.setUser_id(userModel.getData().getId());
                 addTocart(addCartDataModel);
@@ -939,7 +940,7 @@ public class FragmentHome extends Fragment {
         if (userModel != null) {
             addTocart(addCartDataModel, data, adapterPosition, type);
         } else {
-         //   data.setLoading(false);
+            //   data.setLoading(false);
             data.setAmount(data.getAmount() + 1);
             activity.binding.setCartCount(addCartDataModel.getCart_products().size() + "");
             preferences.create_update_cart(activity, addCartDataModel);
@@ -1166,8 +1167,7 @@ public class FragmentHome extends Fragment {
             addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
             addCartProductItemModelList.add(addCartProductItemModel);
             addCartDataModel.setCart_products(addCartProductItemModelList);
-        }
-        else {
+        } else {
             int pos = -1;
             for (int i = 0; i < addCartProductItemModelList.size(); i++) {
                 if (addCartProductItemModelList.get(i).getProduct_id().equals(data.getId() + "")) {
@@ -1176,15 +1176,14 @@ public class FragmentHome extends Fragment {
                     break;
                 }
             }
-           // Log.e("psosoo",pos+"");
+            // Log.e("psosoo",pos+"");
             if (pos > -1) {
                 addCartProductItemModel.setAmount(addCartProductItemModel.getAmount() + 1);
                 addCartProductItemModelList.set(pos, addCartProductItemModel);
                 addCartDataModel.setCart_products(addCartProductItemModelList);
                 //Log.e("dlld",addCartProductItemModelList.size()+"");
-            }
-            else {
-                Log.e("psosoo",pos+"");
+            } else {
+                Log.e("psosoo", pos + "");
 
                 addCartDataModel.setTotal_price(totalprice);
                 addCartProductItemModel.setAmount(1);
@@ -1209,10 +1208,9 @@ public class FragmentHome extends Fragment {
         }
         if (userModel != null) {
             addTocart2(addCartDataModel, data, child_pos, parent_pos);
-        }
-        else {
+        } else {
 
-          //  data.setLoading(false);
+            //  data.setLoading(false);
             data.setAmount(data.getAmount() + 1);
             preferences.create_update_cart(activity, addCartDataModel);
             MainCategoryDataModel.Data data1 = getCategoryDataModelDataList.get(parent_pos);

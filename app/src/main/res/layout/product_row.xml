@@ -81,12 +81,11 @@
 
             <ImageView
                 image2="@{model.main_image}"
-                android:layout_width="90dp"
+                android:layout_width="match_parent"
                 android:layout_height="90dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:scaleType="fitXY"
 
 
                 />
@@ -99,7 +98,11 @@
                 android:layout_marginEnd="8dp"
                 android:text="@{model.product_trans_fk.title}"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:lines="2"
+                android:ellipsize="end"
+                android:gravity="center"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
