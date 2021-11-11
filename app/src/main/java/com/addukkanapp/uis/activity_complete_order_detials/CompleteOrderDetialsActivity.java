@@ -114,7 +114,9 @@ public class CompleteOrderDetialsActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         dialog.show();
-          Log.e("sssssssssssssss", addOrderModel.getPrescription_id()+"____");
+          Log.e("sssssssssssssss", addOrderModel.getTotal_payments()+"____");
+        Log.e("sssssssssssssss", addOrderModel.getSubtotal()+"____");
+
         Api.getService(Tags.base_url)
                 .addOrder("Bearer " + userModel.getData().getToken(), addOrderModel)
                 .enqueue(new Callback<SingleOrderModel>() {

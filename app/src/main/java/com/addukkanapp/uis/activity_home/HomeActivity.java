@@ -100,7 +100,10 @@ public class HomeActivity extends AppCompatActivity {
         binding.llOffer.setOnClickListener(v -> displayFragmentOffers());
         binding.llProfile.setOnClickListener(v -> displayFragmentProfile());
 
-        updateTokenFireBase();
+        if (userModel != null) {
+            updateTokenFireBase();
+
+        }
         getSideMenu();
         binding.flSearch.setOnClickListener(new View.OnClickListener() {
             @Override

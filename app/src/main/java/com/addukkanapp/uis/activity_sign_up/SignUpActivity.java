@@ -198,6 +198,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     private void signUp() {
+Log.e("cc000ode", signUpModel.getCountry_code());
 
         ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
         dialog.setCanceledOnTouchOutside(false);

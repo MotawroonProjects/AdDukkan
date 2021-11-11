@@ -96,6 +96,7 @@ public class QrCodeActivity extends AppCompatActivity {
         ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.show();
+        Log.e("vvvvvvvv", barcode+"___");
         Api.getService(Tags.base_url)
                 .scanOrder("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", barcode,country_coude)
                 .enqueue(new Callback<ResponseModel>() {
@@ -122,7 +123,7 @@ public class QrCodeActivity extends AppCompatActivity {
                             finish();
                         } else {
                             if (response.code() == 500) {
-                                Toast.makeText(QrCodeActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(QrCodeActivity.this, "Server Error ssss", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(QrCodeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                             }

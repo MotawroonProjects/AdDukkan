@@ -142,10 +142,12 @@ public class VerificationCodeActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.show();
 
+        Log.e("vvvvvvvvvv", "vvvvvvvvv");
         if (verificationId != null) {
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
             mAuth.signInWithCredential(credential)
                     .addOnSuccessListener(authResult -> {
+                        Log.e("cccccccccccc", "ccccccccccccc");
                         dialog.dismiss();
                         onSuccessCode();
                     }).addOnFailureListener(e -> {

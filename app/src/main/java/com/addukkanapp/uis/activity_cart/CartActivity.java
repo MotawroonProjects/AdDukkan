@@ -267,9 +267,9 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                         binding.progBarcopun.setVisibility(View.GONE);
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
+                                //     Toast.makeText(SignUpAdvisorActivity.this, R.string.coupon_vaild, Toast.LENGTH_SHORT).show();
                                 if (response.body().getStatus() == 200) {
-                                    //     Toast.makeText(SignUpAdvisorActivity.this, R.string.coupon_vaild, Toast.LENGTH_SHORT).show();
-                                    UpdateData(response.body());
+                                     UpdateData(response.body());
 
 
                                 } else if (response.body().getStatus() == 406) {
@@ -359,8 +359,19 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
                             }
                         } else {
+
+                            try {
+                                Toast.makeText(CartActivity.this, response.errorBody().string()+"__", Toast.LENGTH_SHORT).show();
+//                                Log.e("cccccc", response.errorBody().string()+"");
+//                                Log.e("cccccc", "ttttttttt");
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                             if (response.code() == 500) {
-                                Toast.makeText(CartActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(CartActivity.this, "server error", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(CartActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                             }
