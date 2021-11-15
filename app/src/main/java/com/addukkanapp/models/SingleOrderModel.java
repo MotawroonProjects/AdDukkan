@@ -30,11 +30,14 @@ public class SingleOrderModel extends ResponseModel implements Serializable {
         private String payment_status;
         private String form_type;
         private String coupon_id;
+        private String coupon_type;
+        private String coupon_discount;
         private String status;
         private String start_shipping_date;
         private String end_shipping_date;
         private String created_at;
         private String updated_at;
+        private String price_after_coupon_discount;
         private List<Detials> order_details;
 
         public int getId() {
@@ -111,6 +114,18 @@ public class SingleOrderModel extends ResponseModel implements Serializable {
 
         public String getCoupon_id() {
             return coupon_id;
+        }
+
+        public String getCoupon_type() {
+            return coupon_type;
+        }
+
+        public String getCoupon_discount() {
+            return coupon_discount;
+        }
+
+        public String getPrice_after_coupon_discount() {
+            return price_after_coupon_discount;
         }
 
         public String getStatus() {

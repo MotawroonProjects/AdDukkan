@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-<import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="title"
             type="String" />
@@ -191,7 +193,7 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                   android:layout_marginTop="15dp"
+                                    android:layout_marginTop="15dp"
                                     android:orientation="horizontal">
 
                                     <TextView
@@ -208,7 +210,7 @@
                                         />
 
                                     <TextView
-                                        
+
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_vertical"
@@ -225,6 +227,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="1px"
                                     android:background="@color/gray11" />
+
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -245,12 +248,14 @@
                                         />
 
                                     <TextView
-                                        
+
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_vertical"
+                                        android:text='@{model.coupon_type.equals("per")?model.coupon_discount+"%":model.coupon_type.equals("value")?model.coupon_discount:""}'
 
-                                        android:gravity="center_vertical" android:textColor="@color/colorPrimary"
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorPrimary"
                                         android:textSize="15sp"
 
                                         />
@@ -261,7 +266,6 @@
                                     android:layout_height="1px"
 
                                     android:background="@color/gray11" />
-
 
 
                                 <LinearLayout
@@ -285,19 +289,18 @@
                                         />
 
                                     <TextView
-                                        
+
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_vertical"
 
                                         android:gravity="center_vertical"
-                                        android:text='@{model.total_payments+""}'
+                                        android:text='@{model.price_after_coupon_discount+""}'
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="15sp"
 
                                         />
                                 </LinearLayout>
-
 
 
                             </LinearLayout>
