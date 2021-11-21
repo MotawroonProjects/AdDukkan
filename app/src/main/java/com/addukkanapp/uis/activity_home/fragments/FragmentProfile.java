@@ -84,9 +84,18 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
 
 
         binding.setNotcount("0");
+        binding.tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToLoginActivity();
+
+            }
+        });
 
         if (userModel != null) {
             getNotificationCount();
+        }else {
+            binding.tvLogin.setVisibility(View.VISIBLE);
         }
         getSetting();
     }

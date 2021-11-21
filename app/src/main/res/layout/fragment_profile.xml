@@ -48,15 +48,32 @@
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     >
-                    <TextView
+                    <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:singleLine="true"
-                        android:text="@{model.data.name}"
-                        />
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:singleLine="true"
+                            android:text="@{model.data.name}"
+                            />
+                        <TextView
+                            android:id="@+id/tvLogin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:layout_gravity="center"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:singleLine="true"
+                            android:visibility="gone"
+                            android:text="@string/login"
+                            />
+                    </FrameLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
