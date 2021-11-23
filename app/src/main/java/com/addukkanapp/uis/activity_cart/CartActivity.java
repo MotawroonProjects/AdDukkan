@@ -30,7 +30,7 @@ import com.addukkanapp.models.AddOrderModel;
 import com.addukkanapp.models.AppLocalSettings;
 import com.addukkanapp.models.CartDataModel;
 import com.addukkanapp.models.CouponDataModel;
-import com.addukkanapp.models.ResponseModel;
+import com.addukkanapp.models.ScanCart;
 import com.addukkanapp.models.SelectedLocation;
 import com.addukkanapp.models.SingleOrderModel;
 import com.addukkanapp.models.UserModel;
@@ -66,7 +66,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private String currecny;
     private AppLocalSettings settings;
     private String couponid = null;
-    private String copoun,prescription_id;
+    private String copoun, prescription_id;
     private String bill_code = "";
     private boolean isDataChanged = false;
     private AddCartDataModel createOrderModel;
@@ -113,10 +113,10 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         userModel = preferences.getUserData(this);
         if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
-            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+            currecny = userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
-            currecny=settings.getCurrency();
+            currecny = settings.getCurrency();
         }
 
         manager = new GridLayoutManager(this, 1);
@@ -269,7 +269,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                             if (response.body() != null) {
                                 //     Toast.makeText(SignUpAdvisorActivity.this, R.string.coupon_vaild, Toast.LENGTH_SHORT).show();
                                 if (response.body().getStatus() == 200) {
-                                     UpdateData(response.body());
+                                    UpdateData(response.body());
 
 
                                 } else if (response.body().getStatus() == 406) {
@@ -338,12 +338,21 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
     private void scanOrder(String barcode) {
 
+        String token = null;
+        String user_id = null;
+
+        if (userModel != null) {
+            token = "Bearer " + userModel.getData().getToken();
+            user_id = userModel.getData().getId() + "";
+        } else {
+
+        }
 
         Api.getService(Tags.base_url)
-                .scanOrder("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", barcode, country_coude)
-                .enqueue(new Callback<ResponseModel>() {
+                .scanOrder(token, user_id, barcode, country_coude)
+                .enqueue(new Callback<ScanCart>() {
                     @Override
-                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                    public void onResponse(Call<ScanCart> call, Response<ScanCart> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
                                 getData();
@@ -361,7 +370,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                         } else {
 
                             try {
-                                Toast.makeText(CartActivity.this, response.errorBody().string()+"__", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CartActivity.this, response.errorBody().string() + "__", Toast.LENGTH_SHORT).show();
 //                                Log.e("cccccc", response.errorBody().string()+"");
 //                                Log.e("cccccc", "ttttttttt");
 
@@ -385,7 +394,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                    public void onFailure(Call<ScanCart> call, Throwable t) {
                         try {
                             if (t.getMessage() != null) {
                                 Log.e("msg_category_error", t.getMessage() + "__");
@@ -585,11 +594,11 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             addOrderModel.setSubtotal(data2.getTotal_price() + "");
             addOrderModel.setTotal_payments(data2.getTotal_price() + "");
             addOrderModel.setCopoun(copoun);
-            if (data2.getPrescription_id()==null){
+            if (data2.getPrescription_id() == null) {
                 addOrderModel.setPrescription_id("");
 
-            }else {
-                addOrderModel.setPrescription_id(data2.getPrescription_id()+"");
+            } else {
+                addOrderModel.setPrescription_id(data2.getPrescription_id() + "");
 
             }
 

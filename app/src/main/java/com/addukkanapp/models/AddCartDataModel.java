@@ -7,7 +7,7 @@ public class AddCartDataModel implements Serializable {
     private int user_id;
     private double total_price;
     private String country_code;
-private List<AddCartProductItemModel> cart_products;
+    private List<AddCartProductItemModel> cart_products;
 
     public int getUser_id() {
         return user_id;

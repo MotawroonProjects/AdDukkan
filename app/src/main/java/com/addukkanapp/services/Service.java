@@ -24,6 +24,7 @@ import com.addukkanapp.models.PlaceMapDetailsData;
 import com.addukkanapp.models.ProductDataModel;
 import com.addukkanapp.models.ResponseModel;
 import com.addukkanapp.models.RoomDataModel;
+import com.addukkanapp.models.ScanCart;
 import com.addukkanapp.models.SettingModel;
 import com.addukkanapp.models.SingleAdminMessageDataModel;
 import com.addukkanapp.models.SingleMessageDataModel;
@@ -401,10 +402,10 @@ public interface Service {
 
     @FormUrlEncoded
     @POST("api/scan-prescription")
-    Call<ResponseModel> scanOrder(@Header("Authorization") String user_token,
-                                  @Field("user_id") String user_id,
-                                  @Field("code") String code,
-                                  @Field("country_code") String country_code
+    Call<ScanCart> scanOrder(@Header("Authorization") String user_token,
+                             @Field("user_id") String user_id,
+                             @Field("code") String code,
+                             @Field("country_code") String country_code
 
 
     );

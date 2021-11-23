@@ -915,7 +915,8 @@ public class FragmentHome extends Fragment {
                 addCartProductItemModelList.set(pos, addCartProductItemModel);
                 addCartDataModel.setCart_products(addCartProductItemModelList);
 
-            } else {
+            }
+                else {
                 addCartDataModel.setTotal_price(totalprice);
                 addCartProductItemModel.setAmount(1);
                 addCartProductItemModel.setHave_offer(data.getHave_offer());
@@ -1117,7 +1118,8 @@ public class FragmentHome extends Fragment {
 
         if (userModel != null) {
             addCartDataModel = new AddCartDataModel();
-        } else {
+        }
+        else {
             addCartDataModel = preferences.getCartData(activity);
             if (addCartDataModel == null) {
                 addCartDataModel = new AddCartDataModel();

@@ -21,6 +21,7 @@ import com.addukkanapp.databinding.ActivityQrCodeBinding;
 import com.addukkanapp.language.Language;
 import com.addukkanapp.models.AppLocalSettings;
 import com.addukkanapp.models.ResponseModel;
+import com.addukkanapp.models.ScanCart;
 import com.addukkanapp.models.UserModel;
 import com.addukkanapp.preferences.Preferences;
 import com.addukkanapp.remote.Api;
@@ -42,12 +43,14 @@ public class QrCodeActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
     private final String camera_permission = Manifest.permission.CAMERA;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-    private final int  CAMERA_REQ = 2;
+    private final int CAMERA_REQ = 2;
     private Preferences preferences;
     private UserModel userModel;
     private AppLocalSettings settings;
-  private String country_coude;
-    private String currecny;    protected void attachBaseContext(Context newBase) {
+    private String country_coude;
+    private String currecny;
+
+    protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
         super.attachBaseContext(Language.updateResources(newBase, Paper.book().read("lang", "ar")));
     }
@@ -60,25 +63,25 @@ public class QrCodeActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        preferences=Preferences.getInstance();
-        userModel=preferences.getUserData(this);
+        preferences = Preferences.getInstance();
+        userModel = preferences.getUserData(this);
         settings = preferences.isLanguageSelected(this);
         userModel = preferences.getUserData(this);
-         if (userModel != null) {
+        if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
-            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+            currecny = userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
-            currecny=settings.getCurrency();
+            currecny = settings.getCurrency();
         }
         Paper.init(this);
-        lang = Paper.book().read("lang","ar");
+        lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         checkCameraPermission();
 
     }
 
-    private void initScanner(){
+    private void initScanner() {
 
         mCodeScanner = new CodeScanner(this, binding.scannerView);
         mCodeScanner.setScanMode(ScanMode.SINGLE);
@@ -96,28 +99,39 @@ public class QrCodeActivity extends AppCompatActivity {
         ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.show();
-        Log.e("vvvvvvvv", barcode+"___");
+        Log.e("vvvvvvvv", barcode + "___");
+
+        String token = null;
+        String user_id = null;
+
+        if (userModel != null) {
+            token = "Bearer " + userModel.getData().getToken();
+            user_id = userModel.getData().getId() + "";
+        } else {
+
+        }
+
         Api.getService(Tags.base_url)
-                .scanOrder("Bearer " + userModel.getData().getToken(), userModel.getData().getId() + "", barcode,country_coude)
-                .enqueue(new Callback<ResponseModel>() {
+                .scanOrder(token, user_id, barcode, country_coude)
+                .enqueue(new Callback<ScanCart>() {
                     @Override
-                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                    public void onResponse(Call<ScanCart> call, Response<ScanCart> response) {
                         dialog.dismiss();
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
                                 //  CreateDialogAlert(activity, response.body());
                                 mCodeScanner.releaseResources();
                                 mCodeScanner.stopPreview();
-                                Toast.makeText(QrCodeActivity.this,getResources().getString(R.string.suc_and),Toast.LENGTH_LONG).show();
+                                Toast.makeText(QrCodeActivity.this, getResources().getString(R.string.suc_and), Toast.LENGTH_LONG).show();
 
-                            } else if (response.body().getStatus() == 404 ) {
+                            } else if (response.body().getStatus() == 404) {
                                 Toast.makeText(QrCodeActivity.this, getString(R.string.not_found), Toast.LENGTH_SHORT).show();
 
                             } else if (response.body().getStatus() == 406) {
                                 Toast.makeText(QrCodeActivity.this, getString(R.string.no_product), Toast.LENGTH_SHORT).show();
 
                             } else {
-                               // Toast.makeText(HomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(HomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
 
                             }
                             finish();
@@ -137,7 +151,7 @@ public class QrCodeActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                    public void onFailure(Call<ScanCart> call, Throwable t) {
                         try {
                             dialog.dismiss();
                             if (t.getMessage() != null) {
@@ -155,7 +169,6 @@ public class QrCodeActivity extends AppCompatActivity {
                     }
                 });
     }
-
 
 
     public void checkCameraPermission() {
@@ -186,11 +199,10 @@ public class QrCodeActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
 
-            finish();
+        finish();
 
 
     }
@@ -198,7 +210,7 @@ public class QrCodeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCodeScanner!=null){
+        if (mCodeScanner != null) {
             mCodeScanner.releaseResources();
 
         }
@@ -208,7 +220,7 @@ public class QrCodeActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (mCodeScanner!=null){
+        if (mCodeScanner != null) {
             mCodeScanner.startPreview();
 
         }
