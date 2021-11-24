@@ -1,6 +1,7 @@
 package com.addukkanapp.uis.activity_qr_code;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -19,6 +20,8 @@ import androidx.databinding.DataBindingUtil;
 import com.addukkanapp.R;
 import com.addukkanapp.databinding.ActivityQrCodeBinding;
 import com.addukkanapp.language.Language;
+import com.addukkanapp.models.AddCartDataModel;
+import com.addukkanapp.models.AddCartProductItemModel;
 import com.addukkanapp.models.AppLocalSettings;
 import com.addukkanapp.models.ResponseModel;
 import com.addukkanapp.models.ScanCart;
@@ -31,6 +34,8 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.ScanMode;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.paperdb.Paper;
 import retrofit2.Call;
@@ -49,6 +54,7 @@ public class QrCodeActivity extends AppCompatActivity {
     private AppLocalSettings settings;
     private String country_coude;
     private String currecny;
+    private AddCartDataModel createOrderModel;
 
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -122,8 +128,11 @@ public class QrCodeActivity extends AppCompatActivity {
                                 //  CreateDialogAlert(activity, response.body());
                                 mCodeScanner.releaseResources();
                                 mCodeScanner.stopPreview();
-                                Toast.makeText(QrCodeActivity.this, getResources().getString(R.string.suc_and), Toast.LENGTH_LONG).show();
 
+                                Toast.makeText(QrCodeActivity.this, getResources().getString(R.string.suc_and), Toast.LENGTH_LONG).show();
+                                if (userModel == null) {
+                                    updateData(response.body());
+                                }
                             } else if (response.body().getStatus() == 404) {
                                 Toast.makeText(QrCodeActivity.this, getString(R.string.not_found), Toast.LENGTH_SHORT).show();
 
@@ -198,6 +207,82 @@ public class QrCodeActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private void updateData(ScanCart body) {
+        for (int i = 0; i < body.getData().getDetails().size(); i++) {
+            addItemToCart(body.getData().getDetails().get(i));
+        }
+
+    }
+
+    private void addItemToCart(ScanCart.Data.Detail singleProductModel) {
+
+
+        AddCartDataModel addCartDataModel;
+
+        if (userModel != null) {
+            addCartDataModel = new AddCartDataModel();
+        } else {
+            addCartDataModel = preferences.getCartData(this);
+            if (addCartDataModel == null) {
+                addCartDataModel = new AddCartDataModel();
+            }
+        }
+        List<AddCartProductItemModel> addCartProductItemModelList;
+        if (addCartDataModel.getCart_products() != null) {
+            addCartProductItemModelList = addCartDataModel.getCart_products();
+        } else {
+            addCartProductItemModelList = new ArrayList<>();
+        }
+        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+        addCartDataModel.setCountry_code(country_coude);
+        if (userModel != null) {
+            addCartDataModel.setUser_id(userModel.getData().getId());
+        }
+        //double totalPrice = price;
+        // Log.e("ttt", totalPrice + "__" + price);
+
+        int pos = -1;
+        for (int i = 0; i < addCartProductItemModelList.size(); i++) {
+            if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getId() + "")) {
+                addCartProductItemModel = addCartProductItemModelList.get(i);
+                pos = i;
+                break;
+            }
+        }
+        if (pos > -1) {
+            addCartProductItemModel.setAmount(addCartProductItemModel.getAmount() + 1);
+            addCartProductItemModelList.set(pos, addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+
+        } else {
+            addCartDataModel.setTotal_price(singleProductModel.getPrice());
+            addCartProductItemModel.setAmount(singleProductModel.getAmount());
+            addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(singleProductModel.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(singleProductModel.getOffer_min());
+            addCartProductItemModel.setOffer_type(singleProductModel.getOffer_type());
+            addCartProductItemModel.setOld_price(singleProductModel.getPrice());
+            addCartProductItemModel.setPrice(singleProductModel.getPrice());
+            addCartProductItemModel.setProduct_id(singleProductModel.getId() + "");
+            addCartProductItemModel.setOffer_value(singleProductModel.getOffer_value());
+            addCartProductItemModel.setProduct_price_id(singleProductModel.getProduct_price_id() + "");
+            addCartProductItemModel.setVendor_id(singleProductModel.getVendor_id() + "");
+            addCartProductItemModel.setName(singleProductModel.getProduct_data().getProduct_trans_fk().getTitle());
+            addCartProductItemModel.setImage(singleProductModel.getProduct_data().getMain_image());
+            addCartProductItemModel.setRate(singleProductModel.getProduct_data().getRate());
+            addCartProductItemModel.setDesc(singleProductModel.getProduct_data().getProduct_trans_fk().getDescription());
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+        }
+
+
+        // binding.tvCounter.setText(counter + "");
+
+        preferences.create_update_cart(this, addCartDataModel);
+
+
+    }
 
     @Override
     public void onBackPressed() {
