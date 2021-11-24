@@ -367,7 +367,6 @@ public interface Service {
     @POST("api/delete-item-cart")
     Call<CartDataModel> deleteItemCart(
             @Header("Authorization") String bearer_token,
-
             @Field("id") String id,
             @Field("cart_id") String cart_id
     );
@@ -376,7 +375,6 @@ public interface Service {
     @POST("api/active-coupon")
     Call<CouponDataModel> checkCoupon(
             @Header("Authorization") String bearer_token,
-
             @Field("user_id") String user_id,
             @Field(value = "code") String code
     );
