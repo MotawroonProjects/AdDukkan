@@ -197,12 +197,12 @@ public class FragmentHome extends Fragment {
         });
         binding.imQr.setOnClickListener(v -> {
             binding.flroshata.setVisibility(View.GONE);
-            if (userModel != null) {
+//            if (userModel != null) {
                 Intent intent = new Intent(activity, QrCodeActivity.class);
                 startActivity(intent);
-            } else {
-                activity.navigateToSignInActivity();
-            }
+//            } else {
+//                activity.navigateToSignInActivity();
+//            }
         });
 
         binding.flclose.setOnClickListener(v -> binding.flroshata.setVisibility(View.GONE));
