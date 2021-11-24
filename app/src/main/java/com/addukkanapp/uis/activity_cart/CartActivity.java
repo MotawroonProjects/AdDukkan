@@ -489,7 +489,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
             } else {
                 addCartDataModel.setTotal_price(singleProductModel.getPrice());
-                addCartProductItemModel.setAmount(1);
+                addCartProductItemModel.setAmount(singleProductModel.getAmount());
                 addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
                 addCartProductItemModel.setOffer_bonus(singleProductModel.getOffer_bonus());
                 addCartProductItemModel.setOffer_min(singleProductModel.getOffer_min());
