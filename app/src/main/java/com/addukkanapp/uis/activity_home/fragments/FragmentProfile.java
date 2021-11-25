@@ -94,6 +94,8 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
 
         if (userModel != null) {
             getNotificationCount();
+            binding.tvLogin.setVisibility(View.GONE);
+
         }else {
             binding.tvLogin.setVisibility(View.VISIBLE);
         }
@@ -106,8 +108,10 @@ public class FragmentProfile extends Fragment implements Listeners.ProfileAction
     }
 
     public void updateUserData() {
+        binding.tvLogin.setVisibility(View.GONE);
         userModel = preferences.getUserData(activity);
         binding.setModel(userModel);
+
     }
 
 

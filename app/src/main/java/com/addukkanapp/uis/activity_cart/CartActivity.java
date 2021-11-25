@@ -476,7 +476,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
             int     pos = -1;
             for (int i = 0; i < addCartProductItemModelList.size(); i++) {
-                if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getId() + "")) {
+                if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getProduct_data().getId() + "")) {
                     addCartProductItemModel = addCartProductItemModelList.get(i);
                     pos = i;
                     break;
@@ -488,6 +488,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                 addCartDataModel.setCart_products(addCartProductItemModelList);
 
             } else {
+            //    Log.e("lll", singleProductModel.getProduct_data().getId() + " "+singleProductModel.getId());
                 addCartDataModel.setTotal_price(singleProductModel.getPrice());
                 addCartProductItemModel.setAmount(singleProductModel.getAmount());
                 addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
@@ -496,7 +497,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                 addCartProductItemModel.setOffer_type(singleProductModel.getOffer_type());
                 addCartProductItemModel.setOld_price(singleProductModel.getPrice());
                 addCartProductItemModel.setPrice(singleProductModel.getPrice());
-                addCartProductItemModel.setProduct_id(singleProductModel.getId() + "");
+                addCartProductItemModel.setProduct_id(singleProductModel.getProduct_data().getId() + "");
                 addCartProductItemModel.setOffer_value(singleProductModel.getOffer_value());
                 addCartProductItemModel.setProduct_price_id(singleProductModel.getProduct_price_id() + "");
                 addCartProductItemModel.setVendor_id(singleProductModel.getVendor_id() + "");
