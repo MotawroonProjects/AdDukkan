@@ -232,7 +232,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="15dp"
                                     android:orientation="horizontal"
-                                    android:visibility='@{model.copoun==null?View.GONE:View.VISIBLE,default=gone}'>
+                                    android:visibility='@{model.copoun==null||model.copoun.equals("0")?View.GONE:View.VISIBLE,default=gone}'>
 
                                     <TextView
                                         android:layout_width="0dp"
@@ -266,7 +266,7 @@
                                     android:layout_height="1px"
                                     android:background="@color/gray11"
 
-                                    android:visibility='@{model.copoun==null?View.GONE:View.VISIBLE,default=gone}' />
+                                    android:visibility='@{model.copoun==null||model.copoun.equals("0")?View.GONE:View.VISIBLE,default=gone}' />
 
 
                                 <LinearLayout

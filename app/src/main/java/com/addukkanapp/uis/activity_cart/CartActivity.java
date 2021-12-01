@@ -67,7 +67,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private String currecny;
     private AppLocalSettings settings;
     private String couponid = null;
-    private String copoun, prescription_id;
+    private String copoun="0", prescription_id;
     private String bill_code = "";
     private boolean isDataChanged = false;
     private AddCartDataModel createOrderModel;
@@ -353,6 +353,11 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         } else {
 
         }
+
+        Log.e("bbbb", token+"___");
+        Log.e("bbbb", user_id+"___");
+        Log.e("bbbb", barcode+"___");
+        Log.e("bbbb", country_coude+"___");
 
         Api.getService(Tags.base_url)
                 .scanOrder(token, user_id, barcode, country_coude)
@@ -703,6 +708,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             addOrderModel.setProduct_list(detialsList);
             addOrderModel.setSubtotal(data2.getTotal_price() + "");
             addOrderModel.setTotal_payments(data2.getTotal_price() + "");
+
             addOrderModel.setCopoun(copoun);
             if (data2.getPrescription_id() == null) {
                 addOrderModel.setPrescription_id("");

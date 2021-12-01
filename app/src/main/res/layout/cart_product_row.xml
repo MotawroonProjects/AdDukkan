@@ -267,7 +267,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="15dp"
                         android:gravity="center"
-                        android:text='@{(model.amount*model.price)+currency}'
+                        android:text='@{((int)(model.amount*model.price))+currency}'
                         android:textColor="@color/gray11"
                         android:textSize="18sp" />
 

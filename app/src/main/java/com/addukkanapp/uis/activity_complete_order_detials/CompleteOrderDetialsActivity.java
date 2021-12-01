@@ -98,6 +98,7 @@ public class CompleteOrderDetialsActivity extends AppCompatActivity {
         binding.btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("mmmmmmm", "nnn");
                 createOrder(addorderModel);
             }
         });
@@ -140,6 +141,17 @@ public class CompleteOrderDetialsActivity extends AppCompatActivity {
                         } else {
 
                             try {
+                                binding.flData.setVisibility(View.VISIBLE);
+                                binding.btnComplete.setVisibility(View.GONE);
+                                Handler h2 = new Handler();
+
+                                CompleteOrderDetialsActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        h2.postDelayed(this, 500);
+                                        finish();
+                                    }
+                                });
                                 Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
                             } catch (IOException e) {
                                 e.printStackTrace();

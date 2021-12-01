@@ -91,7 +91,6 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:scaleType="fitXY"
 
 
                     />
@@ -170,8 +169,8 @@
                             android:layout_gravity="center"
                             android:ellipsize="end"
                             android:gravity="center"
-                            android:maxLines="2"
-                            android:text='@{model.price+currency}'
+                            android:maxLines="1"
+                            android:text='@{(model.price)+currency}'
                             android:textColor="@color/colorPrimary"
                             android:textSize="13sp" />
                     </LinearLayout>
@@ -261,7 +260,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="15dp"
                         android:gravity="center"
-                        android:text='@{(model.amount*model.price)+currency}'
+                        android:text='@{((int)(model.amount*model.price))+currency}'
                         android:textColor="@color/gray11"
                         android:textSize="18sp" />
 
