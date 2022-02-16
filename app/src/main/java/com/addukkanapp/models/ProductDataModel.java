@@ -81,8 +81,8 @@ public class ProductDataModel extends ResponseModel implements Serializable {
         private int level;
         private String parent_id;
         private int attribute_id;
-        private int price;
-        private int stock;
+        private double price;
+        private double stock;
         private String is_default;
         private String is_default_price;
         private String country_code;
@@ -115,11 +115,11 @@ public class ProductDataModel extends ResponseModel implements Serializable {
             return attribute_id;
         }
 
-        public int getPrice() {
+        public double getPrice() {
             return price;
         }
 
-        public int getStock() {
+        public double getStock() {
             return stock;
         }
 
