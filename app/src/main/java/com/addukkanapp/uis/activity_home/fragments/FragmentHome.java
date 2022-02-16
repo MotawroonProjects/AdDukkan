@@ -122,11 +122,13 @@ public class FragmentHome extends Fragment {
         userModel = preferences.getUserData(activity);
 
         if (userModel != null) {
+         //   Log.e("ccccccccc", "xxxxxxx");
             country_coude = userModel.getData().getCountry_code();
             if (preferences.getCartData(activity) != null && preferences.getCartData(activity).getCart_products().size() > 0) {
                 AddCartDataModel addCartDataModel = preferences.getCartData(activity);
                 addCartDataModel.setUser_id(userModel.getData().getId());
                 addTocart(addCartDataModel);
+                preferences.clearCart(activity);
             }
         } else {
             country_coude = settings.getCountry_code();
@@ -1301,4 +1303,9 @@ public class FragmentHome extends Fragment {
                 });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
 }

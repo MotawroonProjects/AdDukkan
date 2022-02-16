@@ -23,6 +23,7 @@ import com.addukkanapp.R;
 import com.addukkanapp.adapters.SideMenuCategoryAdapter;
 import com.addukkanapp.databinding.ActivityHomeBinding;
 import com.addukkanapp.language.Language;
+import com.addukkanapp.models.AddCartDataModel;
 import com.addukkanapp.models.CartDataModel;
 import com.addukkanapp.models.MainCategoryDataModel;
 import com.addukkanapp.models.ResponseModel;
@@ -382,7 +383,7 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
 
-        Log.e("ddd", userModel.getData().getFirebase_token());
+        //Log.e("ddd", userModel.getData().getFirebase_token());
         ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
@@ -626,8 +627,21 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(preferences!=null){
+            userModel=preferences.getUserData(this);
+        }
         if (userModel != null) {
+            updateTokenFireBase();
             getData();
+                //   Log.e("ccccccccc", "xxxxxxx");
+                if (preferences.getCartData(this) != null && preferences.getCartData(this).getCart_products().size() > 0) {
+                    AddCartDataModel addCartDataModel = preferences.getCartData(this);
+                    addCartDataModel.setUser_id(userModel.getData().getId());
+                    addTocart(addCartDataModel);
+                    preferences.clearCart(this);
+
+                }
+
         }
         else {
             if(preferences.getCartData(this)!=null){
@@ -635,4 +649,86 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+    private void addTocart(AddCartDataModel addCartDataModel) {
+
+        //   Log.e("sllsks", user_id + lang + country_coude);
+        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.upload_cart));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .createCart("Bearer " + userModel.getData().getToken(), addCartDataModel)
+                .enqueue(new Callback<CartDataModel>() {
+                    @Override
+                    public void onResponse(Call<CartDataModel> call, Response<CartDataModel> response) {
+                        //   data.setLoading(false);
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getStatus() == 200) {
+//                                data.setAmount(data.getAmount() + 1);
+//                                if (type == 0) {
+//                                    mostSellerList.set(adapterPosition, data);
+//                                    mostSellerAdapter.notifyItemChanged(adapterPosition);
+//                                } else {
+//                                    recentArriveList.set(adapterPosition, data);
+//                                    recentArriveAdapter.notifyItemChanged(adapterPosition);
+//                                }
+                                preferences.clearCart(HomeActivity.this);
+                                binding.setCartCount(response.body().getData().getDetails().size() + "");
+
+                            }
+                        } else {
+//                            if (type == 0) {
+//                                mostSellerList.set(adapterPosition, data);
+//                                mostSellerAdapter.notifyItemChanged(adapterPosition);
+//                            } else {
+//                                recentArriveList.set(adapterPosition, data);
+//                                recentArriveAdapter.notifyItemChanged(adapterPosition);
+//                            }
+                            try {
+                                Log.e("errorNotCode", response.code() + "__" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.code() == 500) {
+                                //Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CartDataModel> call, Throwable t) {
+
+                        try {
+                            dialog.dismiss();
+                            //                            if (type == 0) {
+
+//                            if (type == 0) {
+//                                mostSellerList.set(adapterPosition, data);
+//                                mostSellerAdapter.notifyItemChanged(adapterPosition);
+//                            } else {
+//                                recentArriveList.set(adapterPosition, data);
+//                                recentArriveAdapter.notifyItemChanged(adapterPosition);
+//                            }
+
+
+                            if (t.getMessage() != null) {
+                                Log.e("error_not_code", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    //  Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage() + "__");
+                        }
+                    }
+                });
+    }
+
 }

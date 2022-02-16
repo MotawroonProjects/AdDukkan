@@ -60,7 +60,7 @@ public class FragmentOffer extends Fragment {
     private List<SingleProductModel> productModelList;
     private ProductOfferAdapter productOfferAdapter;
     private String lang;
-  private String country_coude;
+    private String country_coude;
     private String currecny;
     public static FragmentOffer newInstance() {
         return new FragmentOffer();

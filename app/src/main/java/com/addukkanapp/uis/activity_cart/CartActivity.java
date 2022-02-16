@@ -67,7 +67,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private String currecny;
     private AppLocalSettings settings;
     private String couponid = null;
-    private String copoun, prescription_id;
+    private String copoun="0", prescription_id;
     private String bill_code = "";
     private boolean isDataChanged = false;
     private AddCartDataModel createOrderModel;
@@ -354,6 +354,11 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
         }
 
+        Log.e("bbbb", token+"___");
+        Log.e("bbbb", user_id+"___");
+        Log.e("bbbb", barcode+"___");
+        Log.e("bbbb", country_coude+"___");
+
         Api.getService(Tags.base_url)
                 .scanOrder(token, user_id, barcode, country_coude)
                 .enqueue(new Callback<ScanCart>() {
@@ -476,7 +481,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
             int     pos = -1;
             for (int i = 0; i < addCartProductItemModelList.size(); i++) {
-                if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getId() + "")) {
+                if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getProduct_data().getId() + "")) {
                     addCartProductItemModel = addCartProductItemModelList.get(i);
                     pos = i;
                     break;
@@ -488,6 +493,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                 addCartDataModel.setCart_products(addCartProductItemModelList);
 
             } else {
+            //    Log.e("lll", singleProductModel.getProduct_data().getId() + " "+singleProductModel.getId());
                 addCartDataModel.setTotal_price(singleProductModel.getPrice());
                 addCartProductItemModel.setAmount(singleProductModel.getAmount());
                 addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
@@ -496,7 +502,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                 addCartProductItemModel.setOffer_type(singleProductModel.getOffer_type());
                 addCartProductItemModel.setOld_price(singleProductModel.getPrice());
                 addCartProductItemModel.setPrice(singleProductModel.getPrice());
-                addCartProductItemModel.setProduct_id(singleProductModel.getId() + "");
+                addCartProductItemModel.setProduct_id(singleProductModel.getProduct_data().getId() + "");
                 addCartProductItemModel.setOffer_value(singleProductModel.getOffer_value());
                 addCartProductItemModel.setProduct_price_id(singleProductModel.getProduct_price_id() + "");
                 addCartProductItemModel.setVendor_id(singleProductModel.getVendor_id() + "");
@@ -702,6 +708,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             addOrderModel.setProduct_list(detialsList);
             addOrderModel.setSubtotal(data2.getTotal_price() + "");
             addOrderModel.setTotal_payments(data2.getTotal_price() + "");
+
             addOrderModel.setCopoun(copoun);
             if (data2.getPrescription_id() == null) {
                 addOrderModel.setPrescription_id("");
