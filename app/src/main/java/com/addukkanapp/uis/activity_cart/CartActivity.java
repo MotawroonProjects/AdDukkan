@@ -843,6 +843,6 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     public void navigateToSignInActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-        finishAffinity();
+     //   finishAffinity();
     }
 }

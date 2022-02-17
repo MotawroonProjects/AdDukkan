@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AdDukkan</string>
+    <string name="app_name">Ad-dukkan</string>
     <string name="map_api_key">AIzaSyAnjvMAJEmiAv3yeCDUXWv-PboXiT_uaoQ</string>
     <string name="search_key">AIzaSyAnjvMAJEmiAv3yeCDUXWv-PboXiT_uaoQ</string>
     <string name="open">open</string>

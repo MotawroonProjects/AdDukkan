@@ -75,6 +75,7 @@ public interface Service {
     Call<UserModel> signUp(@Field("name") String name,
                            @Field("phone_code") String phone_code,
                            @Field("phone") String phone,
+                           @Field("email") String email,
                            @Field("password") String password,
                            @Field("software_type") String software_type,
                            @Field("country_code") String country_code
@@ -88,6 +89,7 @@ public interface Service {
                                   @Field("name") String name,
                                   @Field("phone_code") String phone_code,
                                   @Field("phone") String phone,
+                                  @Field("email") String email,
                                   @Field("password") String password,
                                   @Field("software_type") String software_type,
                                   @Field("country_code") String country_code

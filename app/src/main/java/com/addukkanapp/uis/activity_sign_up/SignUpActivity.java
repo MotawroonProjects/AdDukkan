@@ -100,6 +100,8 @@ public class SignUpActivity extends AppCompatActivity {
             signUpModel.setPhone_code(userModel.getData().getPhone_code());
             signUpModel.setPhone(userModel.getData().getPhone());
             signUpModel.setName(userModel.getData().getName());
+            signUpModel.setEmail(userModel.getData().getEmail());
+
             signUpModel.setCountry_code(userModel.getData().getUser_country().getCode());
             signUpModel.setPassword("123456");
             binding.setModel(signUpModel);
@@ -205,7 +207,7 @@ Log.e("cc000ode", signUpModel.getCountry_code());
         dialog.setCancelable(false);
         dialog.show();
         Api.getService(Tags.base_url)
-                .signUp(signUpModel.getName(),signUpModel.getPhone_code(),signUpModel.getPhone(),signUpModel.getPassword(),"android",signUpModel.getCountry_code())
+                .signUp(signUpModel.getName(),signUpModel.getPhone_code(),signUpModel.getPhone(),signUpModel.getEmail(),signUpModel.getPassword(),"android",signUpModel.getCountry_code())
                 .enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Call<UserModel> call, Response<UserModel> response) {
@@ -278,7 +280,7 @@ Log.e("cc000ode", signUpModel.getCountry_code());
         dialog.setCancelable(false);
         dialog.show();
         Api.getService(Tags.base_url)
-                .updateProfile("Bearer "+userModel.getData().getToken(),userModel.getData().getId(),signUpModel.getName(),signUpModel.getPhone_code(),signUpModel.getPhone(),signUpModel.getPassword(),"android",signUpModel.getCountry_code())
+                .updateProfile("Bearer "+userModel.getData().getToken(),userModel.getData().getId(),signUpModel.getName(),signUpModel.getPhone_code(),signUpModel.getPhone(),signUpModel.getEmail(),signUpModel.getPassword(),"android",signUpModel.getCountry_code())
                 .enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Call<UserModel> call, Response<UserModel> response) {

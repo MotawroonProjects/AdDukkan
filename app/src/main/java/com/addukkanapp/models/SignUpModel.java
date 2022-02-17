@@ -16,16 +16,19 @@ public class SignUpModel extends BaseObservable implements Serializable {
     private String name;
     private String phone_code;
     private String phone;
+    private String email;
     private String password;
     private String country_code;
     public ObservableField<String> error_name = new ObservableField<>();
     public ObservableField<String> error_phone = new ObservableField<>();
+    public ObservableField<String> error_email = new ObservableField<>();
     public ObservableField<String> error_password = new ObservableField<>();
 
     public SignUpModel() {
         name ="";
         phone_code ="+966";
         phone = "";
+        email = "";
         password = "";
         country_code = "sar";
     }
@@ -93,7 +96,15 @@ public class SignUpModel extends BaseObservable implements Serializable {
         this.phone = phone;
         notifyPropertyChanged(BR.phone);
     }
+    @Bindable
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+        notifyPropertyChanged(BR.email);
+    }
     @Bindable
     public String getPassword() {
         return password;
