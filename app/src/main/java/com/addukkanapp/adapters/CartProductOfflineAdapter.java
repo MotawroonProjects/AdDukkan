@@ -96,6 +96,10 @@ public class CartProductOfflineAdapter extends RecyclerView.Adapter<RecyclerView
             AddCartProductItemModel model2 = list.get(myHolder.getAdapterPosition());
             activity.deleteItem(model2, myHolder.getAdapterPosition());
         });
+        myHolder.itemView.setOnClickListener(v -> {
+            AddCartProductItemModel model2 = list.get(myHolder.getAdapterPosition());
+            activity.showdetials2(model2);
+        });
     }
 
     @Override

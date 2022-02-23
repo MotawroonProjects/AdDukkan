@@ -161,9 +161,9 @@ public class FragmenDukkan extends Fragment {
     public void setDepartid(int id) {
         this.id=id;
         if(duckanCategoryAdapter!=null){
+            duckanCategoryAdapter.setid(id);
 //            categoryDataModelDataList.clear();
 //            duckanCategoryAdapter.notifyDataSetChanged();
-            duckanCategoryAdapter.setid(id);
         getCategory();}
     }
 }

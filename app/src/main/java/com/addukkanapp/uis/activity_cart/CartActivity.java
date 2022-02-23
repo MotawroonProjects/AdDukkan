@@ -31,6 +31,7 @@ import com.addukkanapp.models.AddOrderModel;
 import com.addukkanapp.models.AppLocalSettings;
 import com.addukkanapp.models.CartDataModel;
 import com.addukkanapp.models.CouponDataModel;
+import com.addukkanapp.models.FilterModel;
 import com.addukkanapp.models.ScanCart;
 import com.addukkanapp.models.SelectedLocation;
 import com.addukkanapp.models.SingleOrderModel;
@@ -42,6 +43,7 @@ import com.addukkanapp.tags.Tags;
 import com.addukkanapp.uis.activity_location_detials.LocationDetialsActivity;
 import com.addukkanapp.uis.activity_login.LoginActivity;
 import com.addukkanapp.uis.activity_map.MapActivity;
+import com.addukkanapp.uis.activity_product_detials.ProductDetialsActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     private String currecny;
     private AppLocalSettings settings;
     private String couponid = null;
-    private String copoun="0", prescription_id;
+    private String copoun = "0", prescription_id;
     private String bill_code = "";
     private boolean isDataChanged = false;
     private AddCartDataModel createOrderModel;
@@ -148,22 +150,22 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             }
 
         } else {
-            if(bill_code.isEmpty()){
-            if (createOrderModel != null) {
+            if (bill_code.isEmpty()) {
+                if (createOrderModel != null) {
 //                itemCartModelList.addAll(createOrderModel.getCart_products());
 //                cartProductOfflineAdapter.notifyDataSetChanged();
-                if (itemCartModelList.size() > 0) {
-                    binding.tvNoData.setVisibility(View.GONE);
-                    binding.fltotal.setVisibility(View.VISIBLE);
-                    binding.progBar.setVisibility(View.GONE);
-                } else {
-                    binding.tvNoData.setVisibility(View.VISIBLE);
-                    binding.fltotal.setVisibility(View.GONE);
-                    binding.progBar.setVisibility(View.GONE);
+                    if (itemCartModelList.size() > 0) {
+                        binding.tvNoData.setVisibility(View.GONE);
+                        binding.fltotal.setVisibility(View.VISIBLE);
+                        binding.progBar.setVisibility(View.GONE);
+                    } else {
+                        binding.tvNoData.setVisibility(View.VISIBLE);
+                        binding.fltotal.setVisibility(View.GONE);
+                        binding.progBar.setVisibility(View.GONE);
+                    }
+                    calculateTotal();
                 }
-                calculateTotal();
-            }}
-            else{
+            } else {
                 scanOrder(bill_code);
             }
         }
@@ -354,10 +356,10 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
         }
 
-        Log.e("bbbb", token+"___");
-        Log.e("bbbb", user_id+"___");
-        Log.e("bbbb", barcode+"___");
-        Log.e("bbbb", country_coude+"___");
+        Log.e("bbbb", token + "___");
+        Log.e("bbbb", user_id + "___");
+        Log.e("bbbb", barcode + "___");
+        Log.e("bbbb", country_coude + "___");
 
         Api.getService(Tags.base_url)
                 .scanOrder(token, user_id, barcode, country_coude)
@@ -366,9 +368,9 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
                     public void onResponse(Call<ScanCart> call, Response<ScanCart> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
-                                if(userModel!=null){
-                                getData();}
-                                else{
+                                if (userModel != null) {
+                                    getData();
+                                } else {
                                     UpdateData(response.body());
                                 }
 
@@ -429,7 +431,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
     @SuppressLint("NotifyDataSetChanged")
     private void UpdateData(ScanCart body) {
-        for(int i=0;i<body.getData().getDetails().size();i++){
+        for (int i = 0; i < body.getData().getDetails().size(); i++) {
             addItemToCart(body.getData().getDetails().get(i));
         }
         createOrderModel = preferences.getCartData(this);
@@ -450,26 +452,25 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
 
         }
     }
+
     private void addItemToCart(ScanCart.Data.Detail singleProductModel) {
 
 
         AddCartDataModel addCartDataModel;
 
-        if(userModel!=null){
+        if (userModel != null) {
             addCartDataModel = new AddCartDataModel();
-        }
-        else {
-            addCartDataModel=preferences.getCartData(this);
-            if(addCartDataModel==null){
-                addCartDataModel=new AddCartDataModel();
+        } else {
+            addCartDataModel = preferences.getCartData(this);
+            if (addCartDataModel == null) {
+                addCartDataModel = new AddCartDataModel();
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-        if(addCartDataModel.getCart_products()!=null){
-            addCartProductItemModelList=addCartDataModel.getCart_products();
-        }
-        else {
-            addCartProductItemModelList  = new ArrayList<>();
+        if (addCartDataModel.getCart_products() != null) {
+            addCartProductItemModelList = addCartDataModel.getCart_products();
+        } else {
+            addCartProductItemModelList = new ArrayList<>();
         }
         AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
         addCartDataModel.setCountry_code(country_coude);
@@ -477,52 +478,47 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             addCartDataModel.setUser_id(userModel.getData().getId());
         }
         //double totalPrice = price;
-       // Log.e("ttt", totalPrice + "__" + price);
+        // Log.e("ttt", totalPrice + "__" + price);
 
-            int     pos = -1;
-            for (int i = 0; i < addCartProductItemModelList.size(); i++) {
-                if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getProduct_data().getId() + "")) {
-                    addCartProductItemModel = addCartProductItemModelList.get(i);
-                    pos = i;
-                    break;
-                }
+        int pos = -1;
+        for (int i = 0; i < addCartProductItemModelList.size(); i++) {
+            if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getProduct_data().getId() + "")) {
+                addCartProductItemModel = addCartProductItemModelList.get(i);
+                pos = i;
+                break;
             }
-            if (pos > -1) {
-                addCartProductItemModel.setAmount(addCartProductItemModel.getAmount() + 1);
-                addCartProductItemModelList.set(pos, addCartProductItemModel);
-                addCartDataModel.setCart_products(addCartProductItemModelList);
+        }
+        if (pos > -1) {
+            addCartProductItemModel.setAmount(addCartProductItemModel.getAmount() + 1);
+            addCartProductItemModelList.set(pos, addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
 
-            } else {
+        } else {
             //    Log.e("lll", singleProductModel.getProduct_data().getId() + " "+singleProductModel.getId());
-                addCartDataModel.setTotal_price(singleProductModel.getPrice());
-                addCartProductItemModel.setAmount(singleProductModel.getAmount());
-                addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
-                addCartProductItemModel.setOffer_bonus(singleProductModel.getOffer_bonus());
-                addCartProductItemModel.setOffer_min(singleProductModel.getOffer_min());
-                addCartProductItemModel.setOffer_type(singleProductModel.getOffer_type());
-                addCartProductItemModel.setOld_price(singleProductModel.getPrice());
-                addCartProductItemModel.setPrice(singleProductModel.getPrice());
-                addCartProductItemModel.setProduct_id(singleProductModel.getProduct_data().getId() + "");
-                addCartProductItemModel.setOffer_value(singleProductModel.getOffer_value());
-                addCartProductItemModel.setProduct_price_id(singleProductModel.getProduct_price_id() + "");
-                addCartProductItemModel.setVendor_id(singleProductModel.getVendor_id() + "");
-                addCartProductItemModel.setName(singleProductModel.getProduct_data().getProduct_trans_fk().getTitle());
-                addCartProductItemModel.setImage(singleProductModel.getProduct_data().getMain_image());
-                addCartProductItemModel.setRate(singleProductModel.getProduct_data().getRate());
-                addCartProductItemModel.setDesc(singleProductModel.getProduct_data().getProduct_trans_fk().getDescription());
-                addCartProductItemModelList.add(addCartProductItemModel);
-                addCartDataModel.setCart_products(addCartProductItemModelList);
-            }
+            addCartDataModel.setTotal_price(singleProductModel.getPrice());
+            addCartProductItemModel.setAmount(singleProductModel.getAmount());
+            addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(singleProductModel.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(singleProductModel.getOffer_min());
+            addCartProductItemModel.setOffer_type(singleProductModel.getOffer_type());
+            addCartProductItemModel.setOld_price(singleProductModel.getPrice());
+            addCartProductItemModel.setPrice(singleProductModel.getPrice());
+            addCartProductItemModel.setProduct_id(singleProductModel.getProduct_data().getId() + "");
+            addCartProductItemModel.setOffer_value(singleProductModel.getOffer_value());
+            addCartProductItemModel.setProduct_price_id(singleProductModel.getProduct_price_id() + "");
+            addCartProductItemModel.setVendor_id(singleProductModel.getVendor_id() + "");
+            addCartProductItemModel.setName(singleProductModel.getProduct_data().getProduct_trans_fk().getTitle());
+            addCartProductItemModel.setImage(singleProductModel.getProduct_data().getMain_image());
+            addCartProductItemModel.setRate(singleProductModel.getProduct_data().getRate());
+            addCartProductItemModel.setDesc(singleProductModel.getProduct_data().getProduct_trans_fk().getDescription());
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+        }
 
 
+        // binding.tvCounter.setText(counter + "");
 
-
-           // binding.tvCounter.setText(counter + "");
-
-            preferences.create_update_cart(this, addCartDataModel);
-
-
-
+        preferences.create_update_cart(this, addCartDataModel);
 
 
     }
@@ -722,6 +718,29 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             intent.putExtra("data", addOrderModel);
             startActivity(intent);
         }
+//        else if (requestCode == 200) {
+//            if (userModel != null) {
+//                getData();
+//
+//
+//            } else {
+//                if (createOrderModel != null) {
+////                itemCartModelList.addAll(createOrderModel.getCart_products());
+////                cartProductOfflineAdapter.notifyDataSetChanged();
+//                    if (itemCartModelList.size() > 0) {
+//                        binding.tvNoData.setVisibility(View.GONE);
+//                        binding.fltotal.setVisibility(View.VISIBLE);
+//                        binding.progBar.setVisibility(View.GONE);
+//                    } else {
+//                        binding.tvNoData.setVisibility(View.VISIBLE);
+//                        binding.fltotal.setVisibility(View.GONE);
+//                        binding.progBar.setVisibility(View.GONE);
+//                    }
+//                    calculateTotal();
+//                }
+//
+//            }
+//        }
     }
 
     private void createOrder(AddOrderModel addOrderModel) {
@@ -782,7 +801,8 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
         super.onResume();
         if (userModel != null) {
             getData();
-        } else {
+        }
+        else {
             createOrderModel = preferences.getCartData(this);
             if (createOrderModel != null) {
                 itemCartModelList.clear();
@@ -843,6 +863,19 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
     public void navigateToSignInActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-     //   finishAffinity();
+        //   finishAffinity();
     }
+
+    public void showdetials(CartDataModel.Data.Detials detials) {
+        Intent intent = new Intent(this, ProductDetialsActivity.class);
+        intent.putExtra("id", detials.getProduct_id() + "");
+        startActivityForResult(intent, 200);
+    }
+
+    public void showdetials2(AddCartProductItemModel model2) {
+        Intent intent = new Intent(this, ProductDetialsActivity.class);
+        intent.putExtra("id", model2.getProduct_id() + "");
+        startActivityForResult(intent, 200);
+    }
+
 }

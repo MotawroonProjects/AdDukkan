@@ -102,6 +102,15 @@ public class CartProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
         });
+        myHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof  CartActivity){
+                    CartActivity cartActivity=(CartActivity) context;
+                    cartActivity.showdetials(list.get(holder.getLayoutPosition()));
+                }
+            }
+        });
     }
 
     @Override

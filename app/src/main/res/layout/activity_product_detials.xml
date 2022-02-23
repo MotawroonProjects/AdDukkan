@@ -129,21 +129,21 @@
                                 android:id="@+id/flNoSlider"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
-                                android:background="@color/gray1"
                                 android:visibility="gone">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:layout_gravity="center"
                                     android:orientation="vertical">
 
                                     <ImageView
-                                        android:layout_width="48dp"
-                                        android:layout_height="48dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:scaleType="fitXY"
+                                        image2="@{model.main_image}"
                                         android:layout_gravity="center_horizontal"
-                                        android:src="@drawable/ic_gallery"
-                                        app:tint="@color/gray3" />
+                                         />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -151,6 +151,7 @@
                                         android:layout_gravity="center_horizontal"
                                         android:layout_marginTop="8dp"
                                         android:text="@string/no_image"
+                                        android:visibility="gone"
                                         android:textColor="@color/gray4"
                                         android:textSize="15sp" />
                                 </LinearLayout>
@@ -282,7 +283,76 @@
 
                             </FrameLayout>
                         </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="3dp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:singleLine="true"
+                            android:text='@{model.brand_fk.brand_trans_fk.title}'
+                            android:textColor="@color/gray6"
+                            android:textSize="13sp"
 
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="56dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:gravity="center_vertical"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:text="@string/total"
+                                />
+                            <TextView
+                                android:id="@+id/tvTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="16sp"
+                                android:text="0.0"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginEnd="5dp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:text=""
+                                />
+
+                            <androidx.legacy.widget.Space
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"/>
+
+
+                            <TextView
+                                android:id="@+id/tvCounter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/black"
+                                android:textSize="18sp" />
+                            <ImageView
+                                android:id="@+id/imageIncrease"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/add"
+                                />
+                        </LinearLayout>
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recViewParent"
                             android:layout_width="match_parent"
@@ -400,63 +470,7 @@
 
                     />
             </FrameLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="56dp"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:text="@string/total"
-                    />
-                <TextView
-                    android:id="@+id/tvTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
-                    android:text="0.0"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:text=""
-                    />
 
-                <androidx.legacy.widget.Space
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-
-                <TextView
-                    android:id="@+id/tvCounter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
-                <ImageView
-                    android:id="@+id/imageIncrease"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/add"
-                    />
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

@@ -725,4 +725,5 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
         intent.putExtra("id", s);
         startActivityForResult(intent, 100);
     }
+
 }

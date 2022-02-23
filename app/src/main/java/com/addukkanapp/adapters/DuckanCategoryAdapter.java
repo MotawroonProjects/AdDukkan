@@ -1,5 +1,6 @@
 package com.addukkanapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class DuckanCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.fragment = fragment;
         this.id = id;
         if(id==0){
-            i=0;
+            i=-1;
         }
         //  this.fragment_main=fragment_main;
 
@@ -60,17 +61,18 @@ public class DuckanCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         MyHolder myHolder = (MyHolder) holder;
         myHolder.binding.setModel(list.get(position));
         if (list.get(position).getId() == id) {
             i = position;
-          //  notifyDataSetChanged();
+          //  notifyItemChanged(i);
         }
         myHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                id=-1;
                 i = holder.getLayoutPosition();
 
                 notifyDataSetChanged();
@@ -101,14 +103,8 @@ public class DuckanCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public void setid(int id) {
         this.id=id;
-        if(id!=0){
-            i=0;
-        }
-        else {
-            i=-1;
-        }
-        notifyDataSetChanged();
     }
+
 
     public class MyHolder extends RecyclerView.ViewHolder {
         public DuckanCategoryRowBinding binding;

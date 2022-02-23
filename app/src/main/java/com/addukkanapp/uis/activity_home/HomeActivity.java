@@ -157,10 +157,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void displayFragmentDukkan(int id) {
-        if (fragmenDukkan == null) {
             fragmenDukkan = FragmenDukkan.newInstance();
 
-        }
+
 
         fragmenDukkan.setDepartid(id);
         if (fragmentHome != null && fragmentHome.isAdded()) {

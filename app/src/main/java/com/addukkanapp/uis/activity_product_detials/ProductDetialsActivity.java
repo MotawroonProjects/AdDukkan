@@ -59,7 +59,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
     private List<ProductDataModel.Attribute> childList;
     private String id;
     private AppLocalSettings settings;
-  private String country_coude;
+    private String country_coude;
     private String currecny;
     private List<ProductDataModel.Attribute> data = new ArrayList<>();
     private SingleProductModel singleProductModel;
@@ -98,14 +98,14 @@ public class ProductDetialsActivity extends AppCompatActivity {
         settings = preferences.isLanguageSelected(this);
 
 
-         if (userModel != null) {
+        if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
-            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+            currecny = userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
-            currecny=settings.getCurrency();
+            currecny = settings.getCurrency();
         }
-         binding.setCurrency(currecny);
+        binding.setCurrency(currecny);
         lang = Paper.book().read("lang", "ar");
         binding.setLang(lang);
         parentAdapter = new ProductAttrAdapter(this, list);
@@ -339,7 +339,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
                                 if (response.body().getData().getAttributes().size() > 0) {
-                                    if (data.size()>0){
+                                    if (data.size() > 0) {
                                         childList.clear();
                                         if (type.equals("child")) {
                                             childList.addAll(data);
@@ -354,13 +354,13 @@ public class ProductDetialsActivity extends AppCompatActivity {
                                     //childList.addAll(response.body().getData().getAttributes());
                                 } else {
 
-                                    if (data.size()>0){
+                                    if (data.size() > 0) {
                                         childList.clear();
                                         if (type.equals("child")) {
                                             childList.addAll(data);
                                         }
-                                        Log.e("vvvvvvvvvv", childList.size()+"_______");
-                                        if (childList.size()>0){
+                                        Log.e("vvvvvvvvvv", childList.size() + "_______");
+                                        if (childList.size() > 0) {
                                             ProductDataModel.Attribute attribute = childList.get(childList.size() - 1);
 
                                             updatePrice(attribute);
@@ -593,32 +593,63 @@ public class ProductDetialsActivity extends AppCompatActivity {
     private void addItemToCart() {
 
 
-                 AddCartDataModel addCartDataModel;
+        AddCartDataModel addCartDataModel;
 
-        if(userModel!=null){
+        if (userModel != null) {
             addCartDataModel = new AddCartDataModel();
-        }
-        else {
-            addCartDataModel=preferences.getCartData(this);
-            if(addCartDataModel==null){
-                addCartDataModel=new AddCartDataModel();
+        } else {
+            addCartDataModel = preferences.getCartData(this);
+            if (addCartDataModel == null) {
+                addCartDataModel = new AddCartDataModel();
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-            if(addCartDataModel.getCart_products()!=null){
-             addCartProductItemModelList=addCartDataModel.getCart_products();
-         }
-         else {
-          addCartProductItemModelList  = new ArrayList<>();
-         }
-            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
-            addCartDataModel.setCountry_code(country_coude);
-            if (userModel != null) {
-                addCartDataModel.setUser_id(userModel.getData().getId());
+        if (addCartDataModel.getCart_products() != null) {
+            addCartProductItemModelList = addCartDataModel.getCart_products();
+        } else {
+            addCartProductItemModelList = new ArrayList<>();
+        }
+        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+        addCartDataModel.setCountry_code(country_coude);
+        if (userModel != null) {
+            addCartDataModel.setUser_id(userModel.getData().getId());
+        }
+        double totalPrice = price;
+        Log.e("ttt", totalPrice + "__" + price);
+        if (userModel != null) {
+            addCartDataModel.setTotal_price(totalPrice);
+            addCartProductItemModel.setAmount(1);
+            addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
+            addCartProductItemModel.setOffer_bonus(singleProductModel.getOffer_bonus());
+            addCartProductItemModel.setOffer_min(singleProductModel.getOffer_min());
+            addCartProductItemModel.setOffer_type(singleProductModel.getOffer_type());
+            addCartProductItemModel.setOld_price(singleProductModel.getProduct_default_price().getPrice());
+            addCartProductItemModel.setPrice(totalPrice);
+            addCartProductItemModel.setProduct_id(singleProductModel.getId() + "");
+            addCartProductItemModel.setOffer_value(singleProductModel.getOffer_value());
+            addCartProductItemModel.setProduct_price_id(singleProductModel.getProduct_default_price().getId() + "");
+            addCartProductItemModel.setVendor_id(singleProductModel.getVendor_id() + "");
+            addCartProductItemModel.setName(singleProductModel.getProduct_trans_fk().getTitle());
+            addCartProductItemModel.setImage(singleProductModel.getMain_image());
+            addCartProductItemModel.setRate(singleProductModel.getRate());
+            addCartProductItemModel.setDesc(singleProductModel.getProduct_trans_fk().getDescription());
+            addCartProductItemModelList.add(addCartProductItemModel);
+            addCartDataModel.setCart_products(addCartProductItemModelList);
+        } else {
+            int pos = -1;
+            for (int i = 0; i < addCartProductItemModelList.size(); i++) {
+                if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getId() + "")) {
+                    addCartProductItemModel = addCartProductItemModelList.get(i);
+                    pos = i;
+                    break;
+                }
             }
-            double totalPrice = price;
-            Log.e("ttt", totalPrice + "__" + price);
-            if (userModel != null) {
+            if (pos > -1) {
+                addCartProductItemModel.setAmount(addCartProductItemModel.getAmount() + 1);
+                addCartProductItemModelList.set(pos, addCartProductItemModel);
+                addCartDataModel.setCart_products(addCartProductItemModelList);
+
+            } else {
                 addCartDataModel.setTotal_price(totalPrice);
                 addCartProductItemModel.setAmount(1);
                 addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
@@ -638,53 +669,20 @@ public class ProductDetialsActivity extends AppCompatActivity {
                 addCartProductItemModelList.add(addCartProductItemModel);
                 addCartDataModel.setCart_products(addCartProductItemModelList);
             }
-            else {
-           int     pos = -1;
-                for (int i = 0; i < addCartProductItemModelList.size(); i++) {
-                    if (addCartProductItemModelList.get(i).getProduct_id().equals(singleProductModel.getId() + "")) {
-                        addCartProductItemModel = addCartProductItemModelList.get(i);
-                        pos = i;
-                        break;
-                    }
-                }
-                if (pos > -1) {
-                    addCartProductItemModel.setAmount(addCartProductItemModel.getAmount() + 1);
-                    addCartProductItemModelList.set(pos, addCartProductItemModel);
-                    addCartDataModel.setCart_products(addCartProductItemModelList);
 
-                } else {
-                    addCartDataModel.setTotal_price(totalPrice);
-                    addCartProductItemModel.setAmount(1);
-                    addCartProductItemModel.setHave_offer(singleProductModel.getHave_offer());
-                    addCartProductItemModel.setOffer_bonus(singleProductModel.getOffer_bonus());
-                    addCartProductItemModel.setOffer_min(singleProductModel.getOffer_min());
-                    addCartProductItemModel.setOffer_type(singleProductModel.getOffer_type());
-                    addCartProductItemModel.setOld_price(singleProductModel.getProduct_default_price().getPrice());
-                    addCartProductItemModel.setPrice(totalPrice);
-                    addCartProductItemModel.setProduct_id(singleProductModel.getId() + "");
-                    addCartProductItemModel.setOffer_value(singleProductModel.getOffer_value());
-                    addCartProductItemModel.setProduct_price_id(singleProductModel.getProduct_default_price().getId() + "");
-                    addCartProductItemModel.setVendor_id(singleProductModel.getVendor_id() + "");
-                    addCartProductItemModel.setName(singleProductModel.getProduct_trans_fk().getTitle());
-                    addCartProductItemModel.setImage(singleProductModel.getMain_image());
-                    addCartProductItemModel.setRate(singleProductModel.getRate());
-                    addCartProductItemModel.setDesc(singleProductModel.getProduct_trans_fk().getDescription());
-                    addCartProductItemModelList.add(addCartProductItemModel);
-                    addCartDataModel.setCart_products(addCartProductItemModelList);
-                }
+        }
+        if (userModel != null) {
+            addToCart(addCartDataModel);
 
-            }
-            if (userModel != null) {
-                addToCart(addCartDataModel);
-            } else {
-                counter++;
+        } else {
+            counter++;
+            binding.tvTotal.setText(String.format("%.2f",counter*totalPrice));
 
-                binding.tvCounter.setText(counter + "");
+            binding.tvCounter.setText(counter + "");
 
-                preferences.create_update_cart(this, addCartDataModel);
+            preferences.create_update_cart(this, addCartDataModel);
 
-            }
-
+        }
 
 
     }
@@ -753,43 +751,41 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
     public void additemtoCart2(SingleProductModel data, ProductRowBinding binding) {
 
-                 AddCartDataModel addCartDataModel;
+        AddCartDataModel addCartDataModel;
 
-        if(userModel!=null){
+        if (userModel != null) {
             addCartDataModel = new AddCartDataModel();
-        }
-        else {
-            addCartDataModel=preferences.getCartData(this);
-            if(addCartDataModel==null){
-                addCartDataModel=new AddCartDataModel();
+        } else {
+            addCartDataModel = preferences.getCartData(this);
+            if (addCartDataModel == null) {
+                addCartDataModel = new AddCartDataModel();
             }
         }
         List<AddCartProductItemModel> addCartProductItemModelList;
-            if(addCartDataModel.getCart_products()!=null){
-             addCartProductItemModelList=addCartDataModel.getCart_products();
-         }
-         else {
-          addCartProductItemModelList  = new ArrayList<>();
-         }
-            AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
-            addCartDataModel.setCountry_code(country_coude);
-            if (userModel != null) {
-                addCartDataModel.setUser_id(userModel.getData().getId());
-            }
-            double totalprice = 0;
-            if (data.getHave_offer().equals("yes")) {
-                if (data.getOffer_type().equals("value")) {
-                    totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
-                } else if (data.getOffer_type().equals("per")) {
-                    totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.
-                            getOffer_value()) / 100);
-                } else {
-                    totalprice = data.getProduct_default_price().getPrice();
-
-                }
+        if (addCartDataModel.getCart_products() != null) {
+            addCartProductItemModelList = addCartDataModel.getCart_products();
+        } else {
+            addCartProductItemModelList = new ArrayList<>();
+        }
+        AddCartProductItemModel addCartProductItemModel = new AddCartProductItemModel();
+        addCartDataModel.setCountry_code(country_coude);
+        if (userModel != null) {
+            addCartDataModel.setUser_id(userModel.getData().getId());
+        }
+        double totalprice = 0;
+        if (data.getHave_offer().equals("yes")) {
+            if (data.getOffer_type().equals("value")) {
+                totalprice = data.getProduct_default_price().getPrice() - data.getOffer_value();
+            } else if (data.getOffer_type().equals("per")) {
+                totalprice = (data.getProduct_default_price().getPrice()) - ((data.getProduct_default_price().getPrice() * data.
+                        getOffer_value()) / 100);
             } else {
                 totalprice = data.getProduct_default_price().getPrice();
+
             }
+        } else {
+            totalprice = data.getProduct_default_price().getPrice();
+        }
         if (userModel != null) {
             addCartDataModel.setTotal_price(totalprice);
             addCartProductItemModel.setAmount(1);
@@ -809,9 +805,8 @@ public class ProductDetialsActivity extends AppCompatActivity {
             addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
             addCartProductItemModelList.add(addCartProductItemModel);
             addCartDataModel.setCart_products(addCartProductItemModelList);
-        }
-        else {
-            int  pos = -1;
+        } else {
+            int pos = -1;
             for (int i = 0; i < addCartProductItemModelList.size(); i++) {
                 if (addCartProductItemModelList.get(i).getProduct_id().equals(data.getId() + "")) {
                     addCartProductItemModel = addCartProductItemModelList.get(i);
