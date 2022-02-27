@@ -24,12 +24,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private LayoutInflater inflater;
     //private Fragment_Main fragment_main;
     private Fragment fragment;
+
     public CategoryAdapter(List<MainCategoryDataModel.Data> list, Context context, Fragment fragment) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
-      //  this.fragment_main=fragment_main;
-this.fragment=fragment;
+        //  this.fragment_main=fragment_main;
+        this.fragment = fragment;
 
     }
 
@@ -51,8 +52,8 @@ this.fragment=fragment;
         myHolder.binding.setModel(list.get(position));
 
         myHolder.itemView.setOnClickListener(view -> {
-            if(fragment instanceof FragmentHome){
-                FragmentHome fragmentHome=(FragmentHome)fragment;
+            if (fragment instanceof FragmentHome) {
+                FragmentHome fragmentHome = (FragmentHome) fragment;
                 fragmentHome.showDepart(list.get(position).getId());
             }
         });
@@ -72,8 +73,6 @@ this.fragment=fragment;
 
         }
     }
-
-
 
 
 }

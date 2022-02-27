@@ -20,7 +20,7 @@
             android:layout_height="70dp"
             app:civ_border_color="@color/color3"
             app:civ_border_width="2dp"
-            image="@{model.department_trans_fk.image}"
+            image2="@{model.department_trans_fk.image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
