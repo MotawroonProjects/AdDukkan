@@ -20,7 +20,7 @@
             android:layout_height="70dp"
             app:civ_border_color="@color/color3"
             app:civ_border_width="2dp"
-            image2="@{model.department_trans_fk.image}"
+            image2="@{model.icon}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,11 +49,13 @@
             android:gravity="center"
             android:text="@{model.department_trans_fk.title}"
             android:textColor="@color/black"
-            android:textSize="12sp"
+            android:textSize="9sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image"
+            android:lines="3"
+            android:ellipsize="end"
 
             />
 

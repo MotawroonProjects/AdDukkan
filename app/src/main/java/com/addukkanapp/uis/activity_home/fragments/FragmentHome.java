@@ -122,7 +122,6 @@ public class FragmentHome extends Fragment {
         userModel = preferences.getUserData(activity);
 
         if (userModel != null) {
-         //   Log.e("ccccccccc", "xxxxxxx");
             country_coude = userModel.getData().getCountry_code();
             if (preferences.getCartData(activity) != null && preferences.getCartData(activity).getCart_products().size() > 0) {
                 AddCartDataModel addCartDataModel = preferences.getCartData(activity);
@@ -132,7 +131,10 @@ public class FragmentHome extends Fragment {
             }
         } else {
             country_coude = settings.getCountry_code();
+
         }
+
+
         binding.cardaskdoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,8 +202,8 @@ public class FragmentHome extends Fragment {
         binding.imQr.setOnClickListener(v -> {
             binding.flroshata.setVisibility(View.GONE);
 //            if (userModel != null) {
-                Intent intent = new Intent(activity, QrCodeActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(activity, QrCodeActivity.class);
+            startActivity(intent);
 //            } else {
 //                activity.navigateToSignInActivity();
 //            }
@@ -302,6 +304,7 @@ public class FragmentHome extends Fragment {
                         binding.progBar.setVisibility(View.GONE);
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
+
 
                                 getCategoryDataModelDataList.clear();
                                 getCategoryDataModelDataList.addAll(response.body().getData());
@@ -917,8 +920,7 @@ public class FragmentHome extends Fragment {
                 addCartProductItemModelList.set(pos, addCartProductItemModel);
                 addCartDataModel.setCart_products(addCartProductItemModelList);
 
-            }
-                else {
+            } else {
                 addCartDataModel.setTotal_price(totalprice);
                 addCartProductItemModel.setAmount(1);
                 addCartProductItemModel.setHave_offer(data.getHave_offer());
@@ -1120,8 +1122,7 @@ public class FragmentHome extends Fragment {
 
         if (userModel != null) {
             addCartDataModel = new AddCartDataModel();
-        }
-        else {
+        } else {
             addCartDataModel = preferences.getCartData(activity);
             if (addCartDataModel == null) {
                 addCartDataModel = new AddCartDataModel();

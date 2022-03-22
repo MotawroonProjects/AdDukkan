@@ -59,14 +59,13 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         }
         String notification_type = map.get("noti_type");
 
-
         if (notification_type.equals("chat")) {
             ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             String className = activityManager.getRunningTasks(1).get(0).topActivity.getClassName();
             if (className.equals("com.addukkanapp.uis.activity_chat.ChatActivity")) {
                 String room_id = map.get("room_id");
                 String current_room_id = getRoom();
-                if (room_id.equals(current_room_id)){
+                if (room_id.equals(current_room_id)) {
                     String id = map.get("room_message_id");
                     String from_user_id = map.get("from_user_id");
                     String to_user_id = map.get("to_user_id");
@@ -82,16 +81,16 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
                     if (type.equals("voice")) {
                         voice = map.get("voice");
-                    }else if (type.equals("image")) {
+                    } else if (type.equals("image")) {
                         image = map.get("image");
                     }
 
-                    UserModel.Data from_user = new Gson().fromJson(from,UserModel.Data.class);
-                    UserModel.Data to_user = new Gson().fromJson(to,UserModel.Data.class);
+                    UserModel.Data from_user = new Gson().fromJson(from, UserModel.Data.class);
+                    UserModel.Data to_user = new Gson().fromJson(to, UserModel.Data.class);
 
-                    MessageModel messageModel = new MessageModel(Integer.parseInt(id),Integer.parseInt(from_user_id), Integer.parseInt(to_user_id),Integer.parseInt(room_id) , type, message,voice ,image ,date ,date ,from_user,to_user );
+                    MessageModel messageModel = new MessageModel(Integer.parseInt(id), Integer.parseInt(from_user_id), Integer.parseInt(to_user_id), Integer.parseInt(room_id), type, message, voice, image, date, date, from_user, to_user);
                     EventBus.getDefault().post(messageModel);
-                }else {
+                } else {
                     manageNotification(map);
 
                 }
@@ -128,7 +127,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
     private void updateToken(String token) {
         UserModel userModel = getUserData();
-        if (userModel==null){
+        if (userModel == null) {
             return;
         }
         Api.getService(Tags.base_url)
@@ -205,18 +204,18 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         Intent intent;
 
         if (notification_type.equals("chat")) {
-            String my_id = getUserData().getData().getId()+"";
+            String my_id = getUserData().getData().getId() + "";
             String from_user_id = map.get("from_user_id");
             String to_user_id = map.get("to_user_id");
             String from = map.get("from_user_data");
             String to = map.get("to_user_data");
             String room_id = map.get("room_id");
-            UserModel.Data from_user = new Gson().fromJson(from,UserModel.Data.class);
-            UserModel.Data to_user = new Gson().fromJson(to,UserModel.Data.class);
+            UserModel.Data from_user = new Gson().fromJson(from, UserModel.Data.class);
+            UserModel.Data to_user = new Gson().fromJson(to, UserModel.Data.class);
             ChatRoomModel roomModel;
-            if (my_id.equals(from_user_id)){
+            if (my_id.equals(from_user_id)) {
                 roomModel = new ChatRoomModel(Integer.parseInt(room_id), Integer.parseInt(to_user_id), to_user.getLogo(), to_user.getName());
-            }else {
+            } else {
                 roomModel = new ChatRoomModel(Integer.parseInt(room_id), Integer.parseInt(from_user_id), from_user.getLogo(), from_user.getName());
 
             }
@@ -283,18 +282,18 @@ public class FireBaseMessaging extends FirebaseMessagingService {
         Intent intent;
 
         if (notification_type.equals("chat")) {
-            String my_id = getUserData().getData().getId()+"";
+            String my_id = getUserData().getData().getId() + "";
             String from_user_id = map.get("from_user_id");
             String to_user_id = map.get("to_user_id");
             String from = map.get("from_user_data");
             String to = map.get("to_user_data");
             String room_id = map.get("room_id");
-            UserModel.Data from_user = new Gson().fromJson(from,UserModel.Data.class);
-            UserModel.Data to_user = new Gson().fromJson(to,UserModel.Data.class);
+            UserModel.Data from_user = new Gson().fromJson(from, UserModel.Data.class);
+            UserModel.Data to_user = new Gson().fromJson(to, UserModel.Data.class);
             ChatRoomModel roomModel;
-            if (my_id.equals(from_user_id)){
+            if (my_id.equals(from_user_id)) {
                 roomModel = new ChatRoomModel(Integer.parseInt(room_id), Integer.parseInt(to_user_id), to_user.getLogo(), to_user.getName());
-            }else {
+            } else {
                 roomModel = new ChatRoomModel(Integer.parseInt(room_id), Integer.parseInt(from_user_id), from_user.getLogo(), from_user.getName());
 
             }
@@ -339,7 +338,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
 
     }
-    
+
     private UserModel getUserData() {
         return preferences.getUserData(this);
     }

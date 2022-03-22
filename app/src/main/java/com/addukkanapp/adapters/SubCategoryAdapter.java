@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.addukkanapp.R;
+import com.addukkanapp.databinding.SubCategoryrow2Binding;
 import com.addukkanapp.databinding.SubCategoryrowBinding;
 import com.addukkanapp.models.MainCategoryDataModel;
 import com.addukkanapp.models.SubCategoryDataModel;
@@ -19,20 +20,21 @@ import com.addukkanapp.uis.activity_home.fragments.FragmentHome;
 import java.util.List;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
+    private final int DATA = 1;
+    private final int DATA2 = 2;
     private List<SubCategoryDataModel> list;
     private Context context;
     private LayoutInflater inflater;
     private Fragment fragment;
     private MainCategoryDataModel.Data data;
-    //private Fragment_Main fragment_main;
+
+
     public SubCategoryAdapter(List<SubCategoryDataModel> list, Context context, Fragment fragment, MainCategoryDataModel.Data data) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.fragment=fragment;
-        this.data=data;
-      //  this.fragment_main=fragment_main;
+        this.fragment = fragment;
+        this.data = data;
 
 
     }
@@ -41,9 +43,13 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-
-        SubCategoryrowBinding binding = DataBindingUtil.inflate(inflater, R.layout.sub_categoryrow, parent, false);
-        return new MyHolder(binding);
+        if (viewType == DATA) {
+            SubCategoryrowBinding binding = DataBindingUtil.inflate(inflater, R.layout.sub_categoryrow, parent, false);
+            return new MyHolder(binding);
+        } else {
+            SubCategoryrow2Binding binding = DataBindingUtil.inflate(inflater, R.layout.sub_categoryrow2, parent, false);
+            return new MyHolder2(binding);
+        }
 
 
     }
@@ -51,23 +57,37 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        MyHolder myHolder = (MyHolder) holder;
-        myHolder.binding.setModel(list.get(position));
+        if (holder instanceof MyHolder) {
+            MyHolder myHolder = (MyHolder) holder;
+            myHolder.binding.setModel(list.get(position));
 
-        myHolder.itemView.setOnClickListener(view -> {
-           // Log.e("sssss",list.get(holder.getLayoutPosition()).getId()+"");
-
-           // fragment_main.setitemData(list.get(holder.getLayoutPosition()).getId()+"");
-            if(fragment instanceof FragmenDukkan){
-                FragmenDukkan fragmenDukkan=(FragmenDukkan)fragment;
-                fragmenDukkan.filter(holder.getLayoutPosition());
-            }
-            else if(fragment instanceof FragmentHome){
-                    FragmentHome fragmentHome=(FragmentHome)fragment;
-                    fragmentHome.filter(holder.getLayoutPosition(),data);
+            myHolder.itemView.setOnClickListener(view -> {
+                if (fragment instanceof FragmenDukkan) {
+                    FragmenDukkan fragmenDukkan = (FragmenDukkan) fragment;
+                    fragmenDukkan.filter(holder.getLayoutPosition());
+                } else if (fragment instanceof FragmentHome) {
+                    FragmentHome fragmentHome = (FragmentHome) fragment;
+                    fragmentHome.filter(holder.getLayoutPosition(), data);
                 }
 
-        });
+            });
+        } else {
+            MyHolder2 myHolder = (MyHolder2) holder;
+            myHolder.binding.setModel(list.get(position));
+
+            myHolder.itemView.setOnClickListener(view -> {
+                if (fragment instanceof FragmenDukkan) {
+                    FragmenDukkan fragmenDukkan = (FragmenDukkan) fragment;
+                    fragmenDukkan.filter(holder.getLayoutPosition());
+                } else if (fragment instanceof FragmentHome) {
+                    FragmentHome fragmentHome = (FragmentHome) fragment;
+                    fragmentHome.filter(holder.getLayoutPosition(), data);
+                }
+
+            });
+        }
+
+
     }
 
     @Override
@@ -85,7 +105,23 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    public class MyHolder2 extends RecyclerView.ViewHolder {
+        public SubCategoryrow2Binding binding;
+
+        public MyHolder2(@NonNull SubCategoryrow2Binding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+
+        }
+    }
 
 
-
+    @Override
+    public int getItemViewType(int position) {
+        if (fragment instanceof FragmentHome) {
+            return DATA;
+        } else {
+            return DATA2;
+        }
+    }
 }

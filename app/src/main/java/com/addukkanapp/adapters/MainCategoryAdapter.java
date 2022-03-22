@@ -57,25 +57,26 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MyHolder myHolder = (MyHolder) holder;
+
         myHolder.binding.setModel(list.get(position));
         myHolder.binding.setLang(lang);
-        SubCategoryAdapter subCategoryAdapter = new SubCategoryAdapter(list.get(position).getSub_departments(), context, fragment,list.get(position));
-        myHolder.binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(context, 4));
+        SubCategoryAdapter subCategoryAdapter = new SubCategoryAdapter(list.get(position).getSub_departments(), context, fragment, list.get(position));
+        myHolder.binding.recViewSubCategory.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
         myHolder.binding.recViewSubCategory.setAdapter(subCategoryAdapter);
-        ProductAdapter productAdapter = new ProductAdapter(list.get(position).getProduct_list(), context, fragment,position);
+        ProductAdapter productAdapter = new ProductAdapter(list.get(position).getProduct_list(), context, fragment, position);
         myHolder.binding.recView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
 
         myHolder.binding.recView.setAdapter(productAdapter);
         myHolder.binding.imbanner.setOnClickListener(view -> {
-        if(fragment instanceof FragmentHome){
-            FragmentHome fragmentHome=(FragmentHome)fragment;
-            fragmentHome.showDepart(list.get(position).getId());
-        }
+            if (fragment instanceof FragmentHome) {
+                FragmentHome fragmentHome = (FragmentHome) fragment;
+                fragmentHome.showDepart(list.get(position).getId());
+            }
         });
 
         myHolder.binding.tvShowAll.setOnClickListener(v -> {
-            if(fragment instanceof FragmentHome){
-                FragmentHome fragmentHome=(FragmentHome)fragment;
+            if (fragment instanceof FragmentHome) {
+                FragmentHome fragmentHome = (FragmentHome) fragment;
                 fragmentHome.displayFragmentDepartment(list.get(position).getId());
             }
         });

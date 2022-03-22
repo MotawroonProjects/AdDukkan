@@ -70,6 +70,7 @@ public class FragmenDukkan extends Fragment {
         subCategoryAdapter = new SubCategoryAdapter(subCategoryDataModelList, activity,this, null);
         binding.recViewMainCategory.setLayoutManager(new LinearLayoutManager(activity));
         binding.recViewMainCategory.setAdapter(duckanCategoryAdapter);
+
         binding.recViewSubCategory.setLayoutManager(new GridLayoutManager(activity, 2));
         binding.recViewSubCategory.setAdapter(subCategoryAdapter);
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
