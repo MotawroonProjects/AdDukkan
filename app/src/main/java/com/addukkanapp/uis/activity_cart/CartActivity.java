@@ -841,8 +841,7 @@ public class CartActivity extends AppCompatActivity implements Listeners.BackLis
             total += model.getAmount() * model.getPrice();
 
         }
-        binding.setTotal(total + "");
-        //   binding.tvtotal.setText(String.valueOf(total));
+        binding.setTotal(String.format(Locale.ENGLISH,"%.2f",total));
     }
 
     public void deleteItem(AddCartProductItemModel model2, int adapterPosition) {
