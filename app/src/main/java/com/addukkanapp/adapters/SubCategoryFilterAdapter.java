@@ -51,15 +51,16 @@ public class SubCategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.
         if (position == pos) {
             myHolder.binding.rb.setChecked(true);
         }
-        myHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(context instanceof FilterActivity){
-                    FilterActivity activity=(FilterActivity)context;
-                    activity.addDepartid(list.get(holder.getLayoutPosition()));
-                }
+
+        myHolder.binding.rb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (context instanceof FilterActivity) {
+                FilterActivity activity = (FilterActivity) context;
+                SubCategoryDataModel model = list.get(myHolder.getLayoutPosition());
+                model.setChecked(isChecked);
+                activity.addDepartid(model);
             }
         });
+
 
     }
 

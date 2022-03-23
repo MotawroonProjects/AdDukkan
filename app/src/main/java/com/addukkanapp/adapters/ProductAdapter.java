@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -115,6 +116,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
         myHolder.binding.imgIncrease.setOnClickListener(v -> {
             SingleProductModel model2 = list.get(myHolder.getAdapterPosition()).getProduct_data();
+            Toast.makeText(context, R.string.added_suc, Toast.LENGTH_SHORT).show();
 
             if (fragment instanceof FragmentHome) {
 

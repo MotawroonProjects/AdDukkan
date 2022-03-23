@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.addukkanapp.R;
@@ -97,11 +98,18 @@ public class FilterActivity extends AppCompatActivity {
         binding.recViewCountry.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SubCategoryFilterAdapter(this, subCategoryDataModelList, pos);
         binding.recViewCountry.setAdapter(adapter);
+        binding.recViewCountry.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+
+
         companyAdapter = new CompanyAdapter(this, list);
         binding.recViewCompany.setLayoutManager(new LinearLayoutManager(this));
         binding.recViewCompany.setAdapter(companyAdapter);
+
+
+
         brandAdapter = new BrandAdapter(this, dataList);
         binding.recViewBrand.setLayoutManager(new LinearLayoutManager(this));
+        binding.recViewBrand.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
         binding.recViewBrand.setAdapter(brandAdapter);
         binding.llBack.setOnClickListener(view -> finish());
 
@@ -180,8 +188,6 @@ public class FilterActivity extends AppCompatActivity {
         binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filterModel.setBrand_id(brand_id);
-                filterModel.setDepartments(departments);
                 filterModel.setProduct_company_id(product_company_id);
                 Intent intent = getIntent();
                 intent.putExtra("data", filterModel);
@@ -342,11 +348,20 @@ public class FilterActivity extends AppCompatActivity {
 
 
     public void addBrandid(BrandDataModel.Data data) {
-        if (brand_id.contains(data.getId())) {
-            brand_id.remove(data.getId());
+        if (data.isChecked()) {
+            if (!brand_id.contains(data.getId())) {
+                brand_id.add(data.getId());
+            }
         } else {
-            brand_id.add(data.getId());
+            if (brand_id.contains(data.getId())) {
+                brand_id.remove(data.getId());
+            }
         }
+
+        filterModel.setBrand_id(brand_id);
+        Log.e("bid",brand_id.size()+"_");
+
+
     }
 
     public void addCompanyid(CompanyModel companyModel) {
@@ -358,10 +373,16 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     public void addDepartid(SubCategoryDataModel subCategoryDataModel) {
-        if (departments.contains(subCategoryDataModel.getId())) {
-            departments.remove(subCategoryDataModel.getId());
+        if (subCategoryDataModel.isChecked()) {
+            if (!departments.contains(subCategoryDataModel.getId())) {
+                departments.add(subCategoryDataModel.getId());
+            }
         } else {
-            departments.add(subCategoryDataModel.getId());
+            if (departments.contains(subCategoryDataModel.getId())) {
+                departments.remove(subCategoryDataModel.getId());
+            }
         }
+
+        filterModel.setDepartments(departments);
     }
 }

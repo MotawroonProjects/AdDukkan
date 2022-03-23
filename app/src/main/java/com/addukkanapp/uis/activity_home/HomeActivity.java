@@ -10,12 +10,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
@@ -64,6 +71,7 @@ public class HomeActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private List<MainCategoryDataModel.Data> categoryDataModelDataList;
     private SideMenuCategoryAdapter sideMenuSubCategoryAdapter;
+    private int actionbarheight;
 
 
     @Override
@@ -115,13 +123,19 @@ public class HomeActivity extends AppCompatActivity {
         });
         binding.flCart.setOnClickListener(v -> {
             //if (userModel != null) {
-                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                startActivityForResult(intent,200);
+            Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+            startActivityForResult(intent, 200);
 //            } else {
 //                Intent intent = new Intent(this, LoginActivity.class);
 //                startActivityForResult(intent,100);
 //            }
         });
+
+        TypedValue tv = new TypedValue();
+
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionbarheight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
     }
 
     private void updateCartCount(int count) {
@@ -157,8 +171,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void displayFragmentDukkan(int id) {
-            fragmenDukkan = FragmenDukkan.newInstance();
-
+        fragmenDukkan = FragmenDukkan.newInstance();
 
 
         fragmenDukkan.setDepartid(id);
@@ -236,14 +249,15 @@ public class HomeActivity extends AppCompatActivity {
         updateNavUiProfile();
     }
 
-    public void updateFragmentHome(){
-        if (fragmentHome!=null&&fragmentHome.isAdded()){
+    public void updateFragmentHome() {
+        if (fragmentHome != null && fragmentHome.isAdded()) {
             fragmentHome.getMostSell();
             fragmentHome.getRecentArrived();
             fragmentHome.getMainCategorySubCategoryProduct();
 
         }
     }
+
     private void updateNavUiHome() {
         binding.iconHome.setSaturation(1.0f);
         binding.tvHome.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -258,8 +272,6 @@ public class HomeActivity extends AppCompatActivity {
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.gray9));
 
     }
-
-
 
     private void updateNavUiDukkan() {
         binding.iconStore.setSaturation(1.0f);
@@ -327,14 +339,14 @@ public class HomeActivity extends AppCompatActivity {
                 FirebaseInstanceId.getInstance()
                         .getInstanceId()
                         .addOnCompleteListener(this, task -> {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 String token = task.getResult().getToken();
                                 Api.getService(Tags.base_url)
                                         .updateFirebaseToken("Bearer " + userModel.getData().getToken(), userModel.getData().getId(), token, "android")
                                         .enqueue(new Callback<ResponseModel>() {
                                             @Override
                                             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                                                if (response.isSuccessful() && response.body() != null ) {
+                                                if (response.isSuccessful() && response.body() != null) {
                                                     userModel.getData().setFirebase_token(token);
                                                     preferences.create_update_userdata(HomeActivity.this, userModel);
                                                     Log.e("data", "success");
@@ -517,14 +529,14 @@ public class HomeActivity extends AppCompatActivity {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
 
-        if (requestCode==100&&resultCode==RESULT_OK){
+        if (requestCode == 100 && resultCode == RESULT_OK) {
             userModel = preferences.getUserData(this);
-            if (fragmentProfile!=null&&fragmentProfile.isAdded()){
+            if (fragmentProfile != null && fragmentProfile.isAdded()) {
                 fragmentProfile.updateUserData();
             }
 
 
-        }else if (requestCode==200&&resultCode==RESULT_OK){
+        } else if (requestCode == 200 && resultCode == RESULT_OK) {
             updateFragmentHome();
 
 
@@ -578,7 +590,7 @@ public class HomeActivity extends AppCompatActivity {
 
                                 if (response.body().getData() != null && response.body().getData().getDetails() != null) {
                                     updateCartCount(response.body().getData().getDetails().size());
-                                }else {
+                                } else {
                                     updateCartCount(0);
 
                                 }
@@ -626,28 +638,28 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(preferences!=null){
-            userModel=preferences.getUserData(this);
+        if (preferences != null) {
+            userModel = preferences.getUserData(this);
         }
         if (userModel != null) {
             updateTokenFireBase();
             getData();
-                //   Log.e("ccccccccc", "xxxxxxx");
-                if (preferences.getCartData(this) != null && preferences.getCartData(this).getCart_products().size() > 0) {
-                    AddCartDataModel addCartDataModel = preferences.getCartData(this);
-                    addCartDataModel.setUser_id(userModel.getData().getId());
-                    addTocart(addCartDataModel);
-                    preferences.clearCart(this);
+            //   Log.e("ccccccccc", "xxxxxxx");
+            if (preferences.getCartData(this) != null && preferences.getCartData(this).getCart_products().size() > 0) {
+                AddCartDataModel addCartDataModel = preferences.getCartData(this);
+                addCartDataModel.setUser_id(userModel.getData().getId());
+                addTocart(addCartDataModel);
+                preferences.clearCart(this);
 
-                }
+            }
 
-        }
-        else {
-            if(preferences.getCartData(this)!=null){
-                binding.setCartCount(preferences.getCartData(this).getCart_products().size()+"");
+        } else {
+            if (preferences.getCartData(this) != null) {
+                binding.setCartCount(preferences.getCartData(this).getCart_products().size() + "");
             }
         }
     }
+
     private void addTocart(AddCartDataModel addCartDataModel) {
 
         //   Log.e("sllsks", user_id + lang + country_coude);
@@ -728,6 +740,39 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+
+    public void animateView(View foodCardView) {
+        Bitmap b = loadBitmapFromView(foodCardView, foodCardView.getWidth(), foodCardView.getHeight());
+        binding.imageDummy.setImageBitmap(b);
+        binding.imageDummy.setVisibility(View.VISIBLE);
+        int u[] = new int[2];
+        binding.flCart.getLocationInWindow(u);
+        binding.imageDummy.setLeft(foodCardView.getLeft());
+        binding.imageDummy.setTop(foodCardView.getTop());
+        AnimatorSet animSetXY = new AnimatorSet();
+        ObjectAnimator y = ObjectAnimator.ofFloat(binding.imageDummy, "translationY", binding.imageDummy.getTop(), u[1] - (2 * actionbarheight));
+        ObjectAnimator x = ObjectAnimator.ofFloat(binding.imageDummy, "translationX", binding.imageDummy.getLeft(), u[0] - (2 * actionbarheight));
+        ObjectAnimator sy = ObjectAnimator.ofFloat(binding.imageDummy, "scaleY", 0.8f, 0.1f);
+        ObjectAnimator sx = ObjectAnimator.ofFloat(binding.imageDummy, "scaleX", 0.8f, 0.1f);
+        animSetXY.playTogether(x, y, sx, sy);
+        animSetXY.setDuration(650);
+        animSetXY.start();
+    }
+
+    public Bitmap loadBitmapFromView(View view, int width, int height) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+
+
+        return returnedBitmap;
     }
 
 }

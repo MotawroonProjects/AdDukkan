@@ -1,6 +1,7 @@
 package com.addukkanapp.uis.activity_home.fragments;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -33,7 +34,6 @@ import com.addukkanapp.adapters.MainCategoryAdapter;
 import com.addukkanapp.adapters.Product2Adapter;
 import com.addukkanapp.adapters.SliderAdapter;
 import com.addukkanapp.databinding.FragmentHomeBinding;
-import com.addukkanapp.databinding.ProductRowBinding;
 import com.addukkanapp.models.ALLProductDataModel;
 import com.addukkanapp.models.AddCartDataModel;
 import com.addukkanapp.models.AddCartProductItemModel;
@@ -851,7 +851,10 @@ public class FragmentHome extends Fragment {
 
     }
 
-    public void additemtoCart(SingleProductModel data, int adapterPosition, int type) {
+    public void additemtoCart(View view, SingleProductModel data, int adapterPosition, int type) {
+
+        activity.animateView(view);
+
         AddCartDataModel addCartDataModel;
 
         if (userModel != null) {

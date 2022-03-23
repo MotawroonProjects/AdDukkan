@@ -281,14 +281,15 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
         }
         filterModel.setUser_id(user_id);
         binding.progBar.setVisibility(View.VISIBLE);
-        //   Log.e("sllsks", user_id + lang + country_coude);
+
+        Log.e("asss",filterModel.getBrand_id().size()+"__");
+
         Api.getService(Tags.base_url)
                 .Filter(lang, filterModel)
                 .enqueue(new Callback<ALLProductDataModel>() {
                     @Override
                     public void onResponse(Call<ALLProductDataModel> call, Response<ALLProductDataModel> response) {
                         binding.progBar.setVisibility(View.GONE);
-                        Log.e("Slslls", response.message());
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getStatus() == 200) {
 
@@ -348,7 +349,7 @@ public class ProductFilterActivity extends AppCompatActivity implements Listener
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
+        if (requestCode == 100 && resultCode == RESULT_OK&&data!=null) {
             FilterModel filterModel = (FilterModel) data.getSerializableExtra("data");
             this.filterModel.setProduct_company_id(filterModel.getProduct_company_id());
             this.filterModel.setDepartments(filterModel.getDepartments());

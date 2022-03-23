@@ -216,19 +216,16 @@ public interface Service {
     );
 
     @POST("api/search")
-    Call<ALLProductDataModel> Filter(
-            @Header("lang") String lang,
-            @Body FilterModel filterModel);
+    Call<ALLProductDataModel> Filter(@Header("lang") String lang,
+                                     @Body FilterModel filterModel);
 
     @GET("api/companies")
-    Call<CompanyDataModel> getCompany(
-            @Header("lang") String lang,
-            @Query("search_key") String search_key);
+    Call<CompanyDataModel> getCompany(@Header("lang") String lang,
+                                      @Query("search_key") String search_key);
 
     @GET("api/brands")
-    Call<BrandDataModel> getBrands(
-            @Header("lang") String lang,
-            @Query("search_key") String search_key);
+    Call<BrandDataModel> getBrands(@Header("lang") String lang,
+                                   @Query("search_key") String search_key);
 
     @FormUrlEncoded
     @POST("api/contact-us")

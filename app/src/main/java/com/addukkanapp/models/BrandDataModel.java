@@ -61,6 +61,7 @@ public class BrandDataModel implements Serializable {
         public String image;
         public String created_at;
         public String updated_at;
+        private boolean isChecked;
         public BrandTransFk brand_trans_fk;
 
         public int getId() {
@@ -85,6 +86,14 @@ public class BrandDataModel implements Serializable {
 
         public BrandTransFk getBrand_trans_fk() {
             return brand_trans_fk;
+        }
+
+        public boolean isChecked() {
+            return isChecked;
+        }
+
+        public void setChecked(boolean checked) {
+            isChecked = checked;
         }
 
         public class BrandTransFk implements Serializable{

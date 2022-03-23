@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -615,7 +616,6 @@ public class ProductDetialsActivity extends AppCompatActivity {
             addCartDataModel.setUser_id(userModel.getData().getId());
         }
         double totalPrice = price;
-        Log.e("ttt", totalPrice + "__" + price);
         if (userModel != null) {
             addCartDataModel.setTotal_price(totalPrice);
             addCartProductItemModel.setAmount(1);
@@ -676,7 +676,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
 
         } else {
             counter++;
-            binding.tvTotal.setText(String.format("%.2f",counter*totalPrice));
+            binding.tvTotal.setText(String.format("%.2f", counter * totalPrice));
 
             binding.tvCounter.setText(counter + "");
 

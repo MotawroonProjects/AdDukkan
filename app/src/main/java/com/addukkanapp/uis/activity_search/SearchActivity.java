@@ -67,8 +67,9 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
     private List<SingleProductModel> productModelList;
     private ProductOfferAdapter product2Adapter;
     private ProductLisProductAdapter productLisProductAdapter;
-  private String country_coude;
+    private String country_coude;
     private String currecny;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         Paper.init(newBase);
@@ -131,12 +132,12 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
         settings = preferences.isLanguageSelected(this);
 
         userModel = preferences.getUserData(this);
-         if (userModel != null) {
+        if (userModel != null) {
             country_coude = userModel.getData().getCountry_code();
-            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+            currecny = userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
             country_coude = settings.getCountry_code();
-            currecny=settings.getCurrency();
+            currecny = settings.getCurrency();
         }
         if (userModel != null) {
             filterModel.setCountry_code(userModel.getData().getCountry_code());
@@ -301,6 +302,7 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
         filterModel.setUser_id(user_id);
         binding.progBar.setVisibility(View.VISIBLE);
         //   Log.e("sllsks", user_id + lang + country_coude);
+        Log.e("dddsad", filterModel.getBrand_id().size() + "__");
         Api.getService(Tags.base_url)
                 .Filter(lang, filterModel)
                 .enqueue(new Callback<ALLProductDataModel>() {
@@ -367,8 +369,9 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             FilterModel filterModel = (FilterModel) data.getSerializableExtra("data");
+
             this.filterModel.setProduct_company_id(filterModel.getProduct_company_id());
             this.filterModel.setDepartments(filterModel.getDepartments());
             this.filterModel.setBrand_id(filterModel.getBrand_id());
@@ -610,8 +613,7 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
             addCartProductItemModel.setDesc(data.getProduct_trans_fk().getDescription());
             addCartProductItemModelList.add(addCartProductItemModel);
             addCartDataModel.setCart_products(addCartProductItemModelList);
-        }
-        else {
+        } else {
             int pos = -1;
             for (int i = 0; i < addCartProductItemModelList.size(); i++) {
                 if (addCartProductItemModelList.get(i).getProduct_id().equals(data.getId() + "")) {
@@ -651,7 +653,7 @@ public class SearchActivity extends AppCompatActivity implements Listeners.BackL
             addTocart(addCartDataModel, data, adapterPosition, type);
         } else {
 
-        //    data.setLoading(false);
+            //    data.setLoading(false);
 
             data.setAmount(data.getAmount() + 1);
             preferences.create_update_cart(this, addCartDataModel);

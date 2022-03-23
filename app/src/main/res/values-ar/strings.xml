@@ -157,6 +157,7 @@
     <string name="admin">الإدارة</string>
     <string name="voice_uploaded">تم إرفاق صوت</string>
     <string name="image_uploaded">تم إرفاق صورة</string>
-    <string name="upload_cart">Upload Cart</string>
+    <string name="upload_cart">رفع السلة</string>
+    <string name="added_suc">تم الاضافة لسلة المشتريات</string>
 
 </resources>

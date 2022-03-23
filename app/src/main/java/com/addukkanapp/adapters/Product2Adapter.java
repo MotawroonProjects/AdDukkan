@@ -39,15 +39,15 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         inflater = LayoutInflater.from(context);
         this.fragment = fragment;
         this.i = i;
-        preferences=Preferences.getInstance();
+        preferences = Preferences.getInstance();
 
         settings = preferences.isLanguageSelected(context);
 
         userModel = preferences.getUserData(context);
         if (userModel != null) {
-            currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+            currecny = userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
         } else {
-            currecny=settings.getCurrency();
+            currecny = settings.getCurrency();
         }
 
         //  this.fragment_main=fragment_main;
@@ -85,9 +85,9 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             boolean checked = myHolder.binding.checkbox.isChecked();
 
             if (fragment instanceof FragmentHome) {
-                if (userModel==null){
+                if (userModel == null) {
                     myHolder.binding.checkbox.setChecked(!checked);
-                }else {
+                } else {
                     FragmentHome fragment_main = (FragmentHome) fragment;
 
                     fragment_main.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), i);
@@ -115,11 +115,12 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (fragment instanceof FragmentHome) {
 
                 if (!model.isLoading()) {
-                    if(preferences.getUserData(context)!=null){
-                    model.setLoading(true);}
-                    notifyItemChanged(myHolder.getAdapterPosition());
+                    if (preferences.getUserData(context) != null) {
+                        model.setLoading(true);
+                    }
                     FragmentHome fragmentHome = (FragmentHome) fragment;
-                    fragmentHome.additemtoCart(model, myHolder.getAdapterPosition(), i);
+                    fragmentHome.additemtoCart(myHolder.binding.cardView, model, myHolder.getAdapterPosition(), i);
+                    notifyItemChanged(myHolder.getAdapterPosition());
                 }
 
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -29,9 +30,9 @@ public class ProductOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context context;
     private LayoutInflater inflater;
     private Fragment fragment;
-private UserModel userModel;
-private Preferences preferences;
-private String currecny;
+    private UserModel userModel;
+    private Preferences preferences;
+    private String currecny;
     private AppLocalSettings settings;
 
 
@@ -40,16 +41,16 @@ private String currecny;
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.fragment = fragment;
-        preferences=Preferences.getInstance();
+        preferences = Preferences.getInstance();
 
         settings = preferences.isLanguageSelected(context);
 
         userModel = preferences.getUserData(context);
-    if (userModel != null) {
-        currecny=userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
-    } else {
-        currecny=settings.getCurrency();
-    }
+        if (userModel != null) {
+            currecny = userModel.getData().getUser_country().getCountry_setting_trans_fk().getCurrency();
+        } else {
+            currecny = settings.getCurrency();
+        }
 
     }
 
@@ -79,15 +80,14 @@ private String currecny;
 
                 FragmentOffer fragmentOffer = (FragmentOffer) fragment;
 
-                fragmentOffer.setItemData(list.get(myHolder.getAdapterPosition()).getId()+"");
+                fragmentOffer.setItemData(list.get(myHolder.getAdapterPosition()).getId() + "");
 
-            }else if(context instanceof ProductFilterActivity){
-                ProductFilterActivity activity=(ProductFilterActivity) context;
-                activity.showData(list.get(holder.getLayoutPosition()).getId()+"");
-            }
-            else if(context instanceof SearchActivity){
-                SearchActivity activity=(SearchActivity) context;
-                activity.showData(list.get(holder.getLayoutPosition()).getId()+"");
+            } else if (context instanceof ProductFilterActivity) {
+                ProductFilterActivity activity = (ProductFilterActivity) context;
+                activity.showData(list.get(holder.getLayoutPosition()).getId() + "");
+            } else if (context instanceof SearchActivity) {
+                SearchActivity activity = (SearchActivity) context;
+                activity.showData(list.get(holder.getLayoutPosition()).getId() + "");
 
             }
 
@@ -105,8 +105,7 @@ private String currecny;
 
                 productFilterActivity.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), 0);
 
-            }
-            else if (context instanceof SearchActivity) {
+            } else if (context instanceof SearchActivity) {
                 SearchActivity productFilterActivity = (SearchActivity) context;
 
                 productFilterActivity.like_dislike(list.get(myHolder.getLayoutPosition()), myHolder.getLayoutPosition(), 0);
@@ -117,10 +116,14 @@ private String currecny;
         });
         myHolder.binding.imgIncrease.setOnClickListener(v -> {
             SingleProductModel model = list.get(myHolder.getAdapterPosition());
+
+            Toast.makeText(context, R.string.added_suc, Toast.LENGTH_SHORT).show();
             if (!model.isLoading()) {
-                if(Preferences.getInstance().getUserData(context)!=null){
-                    model.setLoading(true);}
-                notifyItemChanged(myHolder.getAdapterPosition());}
+                if (Preferences.getInstance().getUserData(context) != null) {
+                    model.setLoading(true);
+                }
+                notifyItemChanged(myHolder.getAdapterPosition());
+            }
 
             if (fragment instanceof FragmentOffer) {
 

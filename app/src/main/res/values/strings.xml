@@ -159,5 +159,6 @@
     <string name="voice_uploaded">Voice uploaded</string>
     <string name="image_uploaded">Image uploaded</string>
     <string name="upload_cart">Upload Cart</string>
+    <string name="added_suc">Added to cart successfully</string>
 
 </resources>

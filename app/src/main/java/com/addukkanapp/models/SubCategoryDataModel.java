@@ -11,6 +11,7 @@ public class SubCategoryDataModel implements Serializable {
     public int level;
     public String created_at;
     public String updated_at;
+    private boolean isChecked;
     public DepartmentTransFk department_trans_fk;
 
     public int getId() {
@@ -47,6 +48,14 @@ public class SubCategoryDataModel implements Serializable {
 
     public DepartmentTransFk getDepartment_trans_fk() {
         return department_trans_fk;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
     public class DepartmentTransFk implements Serializable{
