@@ -56,14 +56,14 @@ public class GeneralMethod {
 
             if (endPoint != null) {
 
-                Picasso.get().load(Uri.parse(endPoint)).fit().into(imageView);
+                Picasso.get().load(Uri.parse(endPoint)).into(imageView);
             }
         } else if (view instanceof ImageView) {
             ImageView imageView = (ImageView) view;
 
             if (endPoint != null) {
 
-                Picasso.get().load(Uri.parse(endPoint)).fit().into(imageView);
+                Picasso.get().load(Uri.parse(endPoint)).into(imageView);
             }
         }
 

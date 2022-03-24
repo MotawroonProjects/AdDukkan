@@ -592,6 +592,7 @@ public class ProductDetialsActivity extends AppCompatActivity {
     }
 
     private void addItemToCart() {
+        Toast.makeText(this, R.string.added_suc, Toast.LENGTH_SHORT).show();
 
 
         AddCartDataModel addCartDataModel;

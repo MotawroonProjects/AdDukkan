@@ -119,7 +119,8 @@ public class Product2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         model.setLoading(true);
                     }
                     FragmentHome fragmentHome = (FragmentHome) fragment;
-                    fragmentHome.additemtoCart(myHolder.binding.cardView, model, myHolder.getAdapterPosition(), i);
+
+                    fragmentHome.additemtoCart( model, myHolder.getAdapterPosition(), i);
                     notifyItemChanged(myHolder.getAdapterPosition());
                 }
 

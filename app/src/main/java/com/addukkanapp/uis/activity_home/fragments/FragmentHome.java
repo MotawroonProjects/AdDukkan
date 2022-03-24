@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -851,9 +852,10 @@ public class FragmentHome extends Fragment {
 
     }
 
-    public void additemtoCart(View view, SingleProductModel data, int adapterPosition, int type) {
+    public void additemtoCart(SingleProductModel data, int adapterPosition, int type) {
 
-        activity.animateView(view);
+
+        Toast.makeText(activity, R.string.added_suc, Toast.LENGTH_SHORT).show();
 
         AddCartDataModel addCartDataModel;
 

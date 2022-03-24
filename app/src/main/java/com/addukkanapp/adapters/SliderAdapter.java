@@ -19,7 +19,7 @@ import com.addukkanapp.tags.Tags;
 import java.util.List;
 
 public class SliderAdapter extends PagerAdapter {
-    private List<SliderDataModel.SliderModel> list ;
+    private List<SliderDataModel.SliderModel> list;
     private Context context;
     private LayoutInflater inflater;
 
@@ -36,14 +36,13 @@ public class SliderAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view==object;
+        return view == object;
     }
 
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        SliderRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.slider_row,container,false);
-        Log.e("ttttt", Tags.IMAGE_URL+list.get(position).getSliders_trans_fk().getImage());
+        SliderRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.slider_row, container, false);
         binding.setPhoto(list.get(position).getSliders_trans_fk().getImage());
         container.addView(binding.getRoot());
         return binding.getRoot();

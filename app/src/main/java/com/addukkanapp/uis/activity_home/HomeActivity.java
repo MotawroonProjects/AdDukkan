@@ -24,6 +24,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnimationSet;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.addukkanapp.R;
@@ -743,36 +749,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void animateView(View foodCardView) {
-        Bitmap b = loadBitmapFromView(foodCardView, foodCardView.getWidth(), foodCardView.getHeight());
-        binding.imageDummy.setImageBitmap(b);
-        binding.imageDummy.setVisibility(View.VISIBLE);
-        int u[] = new int[2];
-        binding.flCart.getLocationInWindow(u);
-        binding.imageDummy.setLeft(foodCardView.getLeft());
-        binding.imageDummy.setTop(foodCardView.getTop());
-        AnimatorSet animSetXY = new AnimatorSet();
-        ObjectAnimator y = ObjectAnimator.ofFloat(binding.imageDummy, "translationY", binding.imageDummy.getTop(), u[1] - (2 * actionbarheight));
-        ObjectAnimator x = ObjectAnimator.ofFloat(binding.imageDummy, "translationX", binding.imageDummy.getLeft(), u[0] - (2 * actionbarheight));
-        ObjectAnimator sy = ObjectAnimator.ofFloat(binding.imageDummy, "scaleY", 0.8f, 0.1f);
-        ObjectAnimator sx = ObjectAnimator.ofFloat(binding.imageDummy, "scaleX", 0.8f, 0.1f);
-        animSetXY.playTogether(x, y, sx, sy);
-        animSetXY.setDuration(650);
-        animSetXY.start();
-    }
-
-    public Bitmap loadBitmapFromView(View view, int width, int height) {
-        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(returnedBitmap);
-        Drawable bgDrawable = view.getBackground();
-        if (bgDrawable != null)
-            bgDrawable.draw(canvas);
-        else
-            canvas.drawColor(Color.WHITE);
-        view.draw(canvas);
 
 
-        return returnedBitmap;
-    }
 
 }
