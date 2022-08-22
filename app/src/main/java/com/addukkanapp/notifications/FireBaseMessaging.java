@@ -235,6 +235,8 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
 
         } else {
+            title=map.get("title");
+            body=map.get("message");
             intent = new Intent(this, NotificationActivity.class);
 
 
@@ -263,7 +265,7 @@ public class FireBaseMessaging extends FirebaseMessagingService {
     }
 
     private void createOldNotificationVersion(Map<String, String> map) {
-        String notification_type = map.get("notification_type");
+        String notification_type = map.get("noti_type");
 
         String sound_Path = "";
         if (sound_Path.isEmpty()) {
@@ -313,6 +315,8 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
 
         } else {
+            title=map.get("title");
+            body=map.get("message");
             intent = new Intent(this, NotificationActivity.class);
 
 
